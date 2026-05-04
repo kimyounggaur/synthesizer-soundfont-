@@ -3468,6 +3468,558 @@
     min-width: 0;
   }
 
+  .workstation-page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.8rem;
+    min-width: 0;
+    border: 1px solid rgba(132, 255, 212, 0.18);
+    border-radius: 6px;
+    background:
+      linear-gradient(180deg, rgba(157, 255, 220, 0.07), rgba(0, 0, 0, 0.14)),
+      rgba(4, 12, 10, 0.82);
+    padding: 0.58rem 0.68rem;
+  }
+
+  .workstation-page-header span,
+  .workstation-lcd-control span,
+  .workstation-sample-list-header span,
+  .workstation-zone-header span,
+  .workstation-info-field span,
+  .workstation-info-title span {
+    color: #88b8aa;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.62rem;
+    font-weight: 900;
+    text-transform: uppercase;
+  }
+
+  .workstation-page-header strong,
+  .workstation-sample-list-header strong,
+  .workstation-zone-header strong,
+  .workstation-info-title strong {
+    display: block;
+    min-width: 0;
+    overflow: hidden;
+    color: #d7ffef;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: clamp(0.88rem, 1vw, 1.12rem);
+    font-weight: 900;
+    text-overflow: ellipsis;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .workstation-page-header-metrics {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 0.4rem;
+  }
+
+  .workstation-page-header-metrics span {
+    border: 1px solid rgba(132, 255, 212, 0.17);
+    border-radius: 4px;
+    background: rgba(0, 0, 0, 0.28);
+    color: #9dffdc;
+    padding: 0.32rem 0.48rem;
+  }
+
+  .workstation-lcd-panel {
+    min-width: 0;
+    overflow: hidden;
+    border: 1px solid rgba(132, 255, 212, 0.18);
+    border-radius: 6px;
+    background:
+      linear-gradient(180deg, rgba(141, 255, 216, 0.05), rgba(0, 0, 0, 0.09)),
+      rgba(5, 13, 12, 0.82);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04), inset 0 0 18px rgba(83, 240, 185, 0.04);
+  }
+
+  .workstation-lcd-input {
+    width: 100%;
+    min-height: 2.25rem;
+    border: 1px solid rgba(132, 255, 212, 0.2);
+    border-radius: 5px;
+    background: #07100e;
+    color: #d7ffef;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.75rem;
+    font-weight: 800;
+    outline: none;
+    padding: 0.45rem 0.52rem;
+  }
+
+  .workstation-lcd-input:focus {
+    border-color: rgba(141, 255, 216, 0.64);
+    box-shadow: 0 0 0 1px rgba(90, 244, 190, 0.18), inset 0 0 14px rgba(90, 244, 190, 0.08);
+  }
+
+  .workstation-program-layout {
+    display: grid;
+    grid-template-columns: minmax(148px, 0.35fr) minmax(280px, 0.92fr) minmax(260px, 0.62fr);
+    gap: 0.65rem;
+    min-height: 33rem;
+  }
+
+  .workstation-category-list {
+    display: grid;
+    align-content: start;
+    gap: 0.32rem;
+    padding: 0.52rem;
+  }
+
+  .workstation-category-button {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 0.45rem;
+    min-height: 2.25rem;
+    border: 1px solid rgba(132, 255, 212, 0.13);
+    border-radius: 5px;
+    background: rgba(0, 0, 0, 0.2);
+    color: #cbe5dd;
+    padding: 0.36rem 0.46rem;
+    text-align: left;
+  }
+
+  .workstation-category-button span,
+  .workstation-category-button strong {
+    min-width: 0;
+    overflow: hidden;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.72rem;
+    font-weight: 900;
+    text-overflow: ellipsis;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .workstation-category-button strong {
+    display: grid;
+    min-width: 2rem;
+    height: 1.3rem;
+    place-items: center;
+    border-radius: 4px;
+    background: rgba(157, 255, 220, 0.09);
+    color: #9dffdc;
+  }
+
+  .workstation-category-button:hover,
+  .workstation-category-button.is-active {
+    border-color: rgba(141, 255, 216, 0.58);
+    background: linear-gradient(180deg, rgba(89, 222, 176, 0.22), rgba(13, 50, 40, 0.32));
+    color: #eafff6;
+  }
+
+  .workstation-program-list {
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+    min-height: 0;
+  }
+
+  .workstation-program-search {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.5rem;
+    align-items: center;
+    border-bottom: 1px solid rgba(132, 255, 212, 0.13);
+    padding: 0.52rem;
+  }
+
+  .workstation-program-search span {
+    color: #9dffdc;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.7rem;
+    font-weight: 900;
+    text-transform: uppercase;
+  }
+
+  .workstation-program-rows,
+  .workstation-sample-rows {
+    display: grid;
+    align-content: start;
+    gap: 0.34rem;
+    min-height: 0;
+    max-height: 29rem;
+    overflow: auto;
+    padding: 0.52rem;
+  }
+
+  .workstation-program-row,
+  .workstation-sample-row {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 0.55rem;
+    min-height: 3.25rem;
+    border: 1px solid rgba(132, 255, 212, 0.12);
+    border-radius: 5px;
+    background: rgba(0, 0, 0, 0.24);
+    color: #dceee8;
+    padding: 0.45rem 0.52rem;
+    text-align: left;
+  }
+
+  .workstation-program-row:hover,
+  .workstation-program-row.is-selected,
+  .workstation-sample-row:hover {
+    border-color: rgba(141, 255, 216, 0.45);
+    background: rgba(89, 222, 176, 0.1);
+  }
+
+  .workstation-program-row.is-loaded,
+  .workstation-sample-row.is-active {
+    border-color: rgba(141, 255, 216, 0.78);
+    background: linear-gradient(90deg, rgba(89, 222, 176, 0.28), rgba(89, 222, 176, 0.08));
+    box-shadow: inset 0 0 18px rgba(90, 244, 190, 0.1);
+  }
+
+  .workstation-row-index {
+    display: grid;
+    min-width: 2.45rem;
+    height: 1.55rem;
+    place-items: center;
+    border: 1px solid rgba(132, 255, 212, 0.18);
+    border-radius: 4px;
+    background: rgba(0, 0, 0, 0.32);
+    color: #9dffdc;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.63rem;
+    font-weight: 900;
+  }
+
+  .workstation-program-row strong,
+  .workstation-sample-row strong {
+    display: block;
+    overflow: hidden;
+    color: #effff8;
+    font-size: 0.88rem;
+    font-weight: 900;
+    line-height: 1.12;
+    text-overflow: ellipsis;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .workstation-program-row small,
+  .workstation-sample-row small {
+    display: block;
+    overflow: hidden;
+    color: #89aca2;
+    font-size: 0.66rem;
+    font-weight: 800;
+    text-overflow: ellipsis;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .workstation-program-row em,
+  .workstation-sample-row em {
+    color: #9dffdc;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.64rem;
+    font-style: normal;
+    font-weight: 900;
+    text-transform: uppercase;
+  }
+
+  .workstation-program-info {
+    display: grid;
+    gap: 0.62rem;
+    align-content: start;
+    padding: 0.62rem;
+  }
+
+  .workstation-info-title {
+    display: grid;
+    gap: 0.1rem;
+    min-width: 0;
+    border-bottom: 1px solid rgba(132, 255, 212, 0.14);
+    padding-bottom: 0.52rem;
+  }
+
+  .workstation-info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.42rem;
+  }
+
+  .workstation-info-field {
+    display: grid;
+    gap: 0.18rem;
+    min-width: 0;
+    border: 1px solid rgba(132, 255, 212, 0.12);
+    border-radius: 5px;
+    background: rgba(0, 0, 0, 0.24);
+    padding: 0.42rem;
+  }
+
+  .workstation-info-field strong {
+    overflow: hidden;
+    color: #d7ffef;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.75rem;
+    font-weight: 900;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .workstation-program-description,
+  .workstation-license-line,
+  .workstation-lcd-alert,
+  .workstation-empty-state {
+    color: #a9c3ba;
+    font-size: 0.74rem;
+    line-height: 1.45;
+  }
+
+  .workstation-program-description,
+  .workstation-license-line {
+    border: 1px solid rgba(132, 255, 212, 0.12);
+    border-radius: 5px;
+    background: rgba(0, 0, 0, 0.22);
+    padding: 0.5rem;
+  }
+
+  .workstation-lcd-alert {
+    border: 1px solid rgba(242, 184, 75, 0.38);
+    border-radius: 5px;
+    background: rgba(242, 184, 75, 0.08);
+    color: #ffe1a3;
+    padding: 0.5rem;
+  }
+
+  .workstation-empty-state {
+    border: 1px dashed rgba(132, 255, 212, 0.18);
+    border-radius: 5px;
+    padding: 0.7rem;
+  }
+
+  .workstation-quick-actions {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.36rem;
+  }
+
+  .workstation-action-button {
+    min-height: 2.2rem;
+    border: 1px solid rgba(132, 255, 212, 0.22);
+    border-radius: 5px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(0, 0, 0, 0.26)), #17221f;
+    color: #d7ffef;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.68rem;
+    font-weight: 900;
+    text-transform: uppercase;
+  }
+
+  .workstation-action-button:hover,
+  .workstation-action-button.is-primary {
+    border-color: rgba(141, 255, 216, 0.72);
+    color: #ffffff;
+    box-shadow: 0 0 14px rgba(90, 244, 190, 0.12);
+  }
+
+  .workstation-action-button.is-danger {
+    border-color: rgba(255, 128, 128, 0.38);
+    color: #ffc4c4;
+  }
+
+  .workstation-import-textarea {
+    min-height: 4.25rem;
+    resize: vertical;
+  }
+
+  .workstation-sample-toolbar {
+    display: grid;
+    grid-template-columns: minmax(150px, 0.65fr) minmax(150px, 0.55fr) minmax(220px, 1fr) auto;
+    gap: 0.55rem;
+    align-items: end;
+  }
+
+  .workstation-lcd-control {
+    display: grid;
+    min-width: 0;
+    gap: 0.28rem;
+  }
+
+  .workstation-sample-switch {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    gap: 0.45rem;
+    min-height: 2.25rem;
+    border: 1px solid rgba(132, 255, 212, 0.2);
+    border-radius: 5px;
+    background: rgba(0, 0, 0, 0.24);
+    color: #d7ffef;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.7rem;
+    font-weight: 900;
+    padding: 0 0.58rem;
+    text-transform: uppercase;
+  }
+
+  .workstation-sample-layout {
+    display: grid;
+    grid-template-columns: minmax(230px, 0.62fr) minmax(320px, 1fr) minmax(250px, 0.72fr);
+    gap: 0.65rem;
+    min-height: 31.5rem;
+  }
+
+  .workstation-sample-list {
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+    min-height: 0;
+  }
+
+  .workstation-sample-list-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.6rem;
+    border-bottom: 1px solid rgba(132, 255, 212, 0.13);
+    padding: 0.52rem;
+  }
+
+  .workstation-sample-row {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .workstation-zone-panel {
+    display: grid;
+    gap: 0.62rem;
+    align-content: start;
+    padding: 0.62rem;
+  }
+
+  .workstation-zone-header {
+    display: grid;
+    grid-template-columns: minmax(0, 0.6fr) minmax(0, 1fr);
+    gap: 0.5rem;
+  }
+
+  .workstation-zone-map {
+    display: grid;
+    gap: 0.34rem;
+    min-width: 0;
+    border: 1px solid rgba(132, 255, 212, 0.14);
+    border-radius: 5px;
+    background: rgba(0, 0, 0, 0.22);
+    padding: 0.46rem;
+  }
+
+  .workstation-zone-key-labels {
+    display: grid;
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+    color: #7ea99e;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.58rem;
+    font-weight: 900;
+    text-transform: uppercase;
+  }
+
+  .workstation-zone-key-labels span:last-child {
+    text-align: right;
+  }
+
+  .workstation-zone-track {
+    position: relative;
+    min-height: 7.75rem;
+    overflow: hidden;
+    border: 1px solid rgba(132, 255, 212, 0.15);
+    border-radius: 5px;
+    background:
+      repeating-linear-gradient(90deg, rgba(141, 255, 216, 0.07) 0, rgba(141, 255, 216, 0.07) 1px, transparent 1px, transparent 8.33%),
+      #06100e;
+  }
+
+  .workstation-zone-segment {
+    position: absolute;
+    top: 1rem;
+    bottom: 1rem;
+    display: grid;
+    align-content: center;
+    gap: 0.18rem;
+    min-width: 2.7rem;
+    overflow: hidden;
+    border: 1px solid rgba(141, 255, 216, 0.55);
+    border-radius: 5px;
+    background: linear-gradient(180deg, rgba(89, 222, 176, 0.42), rgba(39, 118, 92, 0.36));
+    color: #eafff6;
+    padding: 0.35rem;
+    box-shadow: 0 0 13px rgba(90, 244, 190, 0.16);
+  }
+
+  .workstation-zone-segment.is-looped {
+    border-color: rgba(242, 184, 75, 0.62);
+    background: linear-gradient(180deg, rgba(242, 184, 75, 0.32), rgba(89, 222, 176, 0.22));
+  }
+
+  .workstation-zone-segment strong,
+  .workstation-zone-segment span {
+    overflow: hidden;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    text-overflow: ellipsis;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .workstation-zone-segment strong {
+    font-size: 0.62rem;
+    font-weight: 900;
+  }
+
+  .workstation-zone-segment span {
+    color: #c9fff0;
+    font-size: 0.58rem;
+    font-weight: 800;
+  }
+
+  .workstation-zone-detail {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.42rem;
+  }
+
+  .workstation-sample-toggles {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.4rem;
+  }
+
+  .workstation-sample-toggles label {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    gap: 0.38rem;
+    min-height: 2.15rem;
+    border: 1px solid rgba(132, 255, 212, 0.14);
+    border-radius: 5px;
+    background: rgba(0, 0, 0, 0.22);
+    color: #d7ffef;
+    font-size: 0.68rem;
+    font-weight: 900;
+    padding: 0 0.48rem;
+    text-transform: uppercase;
+  }
+
+  .workstation-sample-controls {
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+    align-content: start;
+  }
+
+  .workstation-sample-knobs {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(74px, 1fr));
+    gap: 0.58rem;
+    align-items: end;
+    padding: 0.62rem;
+  }
+
   .workstation-lcd-screen .section-panel,
   .workstation-lcd-screen .panel {
     border-color: rgba(132, 255, 212, 0.2);
@@ -3673,7 +4225,9 @@
     .modulation-console-grid,
     .movable-console-grid,
     .workstation-top-bar,
-    .workstation-main-deck {
+    .workstation-main-deck,
+    .workstation-program-layout,
+    .workstation-sample-layout {
       grid-template-columns: 1fr;
     }
 
@@ -3705,6 +4259,11 @@
     .workstation-rack-title {
       grid-column: 1 / -1;
     }
+
+    .workstation-program-rows,
+    .workstation-sample-rows {
+      max-height: 22rem;
+    }
   }
 
   @media (max-width: 760px) {
@@ -3717,7 +4276,10 @@
     .workstation-lcd-toolbar,
     .workstation-performance-strip,
     .workstation-velocity-control,
-    .workstation-status-bar {
+    .workstation-status-bar,
+    .workstation-sample-toolbar,
+    .workstation-zone-header,
+    .workstation-program-search {
       grid-template-columns: 1fr;
     }
 
@@ -3792,8 +4354,22 @@
     .effect-knob-grid,
     .sample-knob-grid,
     .sample-filter-knobs,
-    .workstation-rack-grid {
+    .workstation-rack-grid,
+    .workstation-info-grid,
+    .workstation-zone-detail,
+    .workstation-sample-toggles,
+    .workstation-sample-knobs,
+    .workstation-quick-actions {
       grid-template-columns: 1fr;
+    }
+
+    .workstation-page-header {
+      align-items: stretch;
+      flex-direction: column;
+    }
+
+    .workstation-page-header-metrics {
+      justify-content: flex-start;
     }
   }
 
