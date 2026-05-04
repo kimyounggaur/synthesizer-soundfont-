@@ -4,6 +4,9 @@ export default defineConfig({
     base: '/synthesizer-soundfont-/',
     build: {
         emptyOutDir: false,
+        rollupOptions: {
+            input: 'index.source.html',
+        },
     },
     plugins: [react()],
 });
