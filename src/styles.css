@@ -5914,4 +5914,325 @@
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
   }
+
+  /* MiniLab MK3-inspired color skin: CSS-only, no product marks or image assets. */
+  :root {
+    --ws-bg: #f2c6df;
+    --ws-panel: #efbfd9;
+    --ws-panel-2: #e5acd0;
+    --ws-metal: #ead2e4;
+    --ws-lcd-bg: #05050b;
+    --ws-lcd-bg-2: #11111b;
+    --ws-lcd-text: #89f7ff;
+    --ws-lcd-dim: #6aa8bc;
+    --ws-cyan: #35d9ff;
+    --ws-blue: #5f7dff;
+    --ws-amber: #7a5467;
+    --ws-red: #ff4f8b;
+    --ws-border: rgba(88, 54, 86, 0.28);
+  }
+
+  body,
+  .synth-workbench,
+  .workstation-page {
+    color: #211829;
+    background:
+      radial-gradient(circle at 18% 0%, rgba(255, 255, 255, 0.58), transparent 21rem),
+      radial-gradient(circle at 82% 10%, rgba(113, 213, 255, 0.2), transparent 18rem),
+      linear-gradient(180deg, #f7d4e9, #df9dca 70%, #b875a8);
+  }
+
+  .hardware-shell,
+  .workstation-shell {
+    border-color: rgba(85, 46, 83, 0.24);
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.52), rgba(255, 255, 255, 0.06) 18%),
+      linear-gradient(135deg, #f5cfe7 0%, #e9aed3 52%, #c781b5 100%);
+    box-shadow:
+      0 28px 80px rgba(93, 37, 78, 0.36),
+      inset 0 1px 0 rgba(255, 255, 255, 0.62),
+      inset 0 -2px 0 rgba(113, 59, 101, 0.28);
+  }
+
+  .touch-workstation-shell::before,
+  .touch-workstation-shell::after {
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.52), rgba(154, 77, 134, 0.28)),
+      #cf90be;
+  }
+
+  .command-panel,
+  .workstation-topbar,
+  .nautilus-inspired-top,
+  .workstation-main-deck {
+    border-color: rgba(82, 49, 83, 0.24);
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.42), rgba(255, 255, 255, 0.08)),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.08), rgba(213, 126, 190, 0.28)),
+      #eab9d8;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.55),
+      inset 0 -1px 0 rgba(96, 51, 86, 0.2);
+  }
+
+  .panel,
+  .workstation-card,
+  .module-block,
+  .nautilus-left-controls,
+  .nautilus-right-controls,
+  .nautilus-parameter-rack {
+    border-color: rgba(74, 43, 76, 0.22);
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.35), rgba(255, 255, 255, 0.05)),
+      #e6add1;
+    color: #271b2f;
+  }
+
+  .nautilus-brand-readout,
+  .workstation-program-lcd,
+  .workstation-lcd-frame,
+  .workstation-lcd-bezel,
+  .workstation-page-container,
+  .workstation-lcd-page,
+  .workstation-page-panel,
+  .nautilus-rack-panel {
+    border-color: rgba(55, 217, 255, 0.42);
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.12), rgba(0, 0, 0, 0.08)),
+      #f0c5df;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.48),
+      0 0 0 1px rgba(69, 43, 75, 0.08);
+  }
+
+  .lcd,
+  .workstation-lcd-screen,
+  .program-lcd-screen,
+  .nautilus-touchview,
+  .nautilus-rack-lcd,
+  .nautilus-current-program,
+  .workstation-breadcrumb,
+  .workstation-status-bar,
+  .program-row,
+  .sample-page-row,
+  .effects-empty,
+  .workstation-effects-empty {
+    border-color: rgba(55, 217, 255, 0.34);
+    background:
+      repeating-linear-gradient(180deg, rgba(116, 246, 255, 0.055) 0 1px, transparent 1px 5px),
+      linear-gradient(180deg, #080813, #030309);
+    color: var(--ws-lcd-text);
+    box-shadow:
+      inset 0 0 22px rgba(53, 217, 255, 0.08),
+      0 0 0 1px rgba(0, 0, 0, 0.34);
+  }
+
+  .workstation-lcd-screen::before,
+  .nautilus-touchview::after {
+    opacity: 0.18;
+  }
+
+  .panel-title,
+  .control-label,
+  .workstation-side-title,
+  .nautilus-rack-header,
+  .touch-lcd-title span,
+  .program-category,
+  .sample-page-row span,
+  .nautilus-system-strip label {
+    color: #5d415c;
+  }
+
+  .brand-name,
+  .brand-subtitle,
+  .touch-lcd-title h2,
+  .program-name,
+  .workstation-page-panel h2 {
+    color: #fffaff;
+  }
+
+  .nautilus-brand-readout .brand-mark,
+  .brand-mark {
+    border-color: rgba(53, 217, 255, 0.78);
+    background:
+      radial-gradient(circle at 50% 35%, rgba(53, 217, 255, 0.2), transparent 45%),
+      #080813;
+    color: #eafcff;
+    box-shadow: 0 0 0.72rem rgba(53, 217, 255, 0.28);
+  }
+
+  .soft-button,
+  .workstation-side-button,
+  .workstation-tab,
+  .workstation-subtab,
+  .workstation-soft-key,
+  .touch-mode-button,
+  .engine-mode-button,
+  .nautilus-mini-button,
+  .nautilus-inc-dec button,
+  .nautilus-enter-row button,
+  .program-load-button {
+    border-color: rgba(53, 217, 255, 0.48);
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.09), rgba(0, 0, 0, 0.28)),
+      #090915;
+    color: #e8fbff;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.12),
+      0 0 0.44rem rgba(53, 217, 255, 0.12);
+  }
+
+  .soft-button:hover,
+  .workstation-side-button:hover,
+  .workstation-side-button.is-active,
+  .workstation-side-button[aria-selected="true"],
+  .workstation-tab.is-active,
+  .workstation-tab[aria-selected="true"],
+  .workstation-subtab.is-active,
+  .engine-mode-button.is-active,
+  .engine-mode-button[aria-pressed="true"],
+  .nautilus-setlist-slot.is-active,
+  .program-row:hover,
+  .program-row.is-active,
+  .sample-page-row.is-active {
+    border-color: rgba(55, 217, 255, 0.86);
+    background:
+      linear-gradient(180deg, rgba(55, 217, 255, 0.18), rgba(93, 125, 255, 0.08)),
+      #111126;
+    color: #ffffff;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.16),
+      0 0 0.8rem rgba(55, 217, 255, 0.22);
+  }
+
+  .workstation-side-button::before {
+    background: rgba(38, 27, 43, 0.36);
+  }
+
+  .workstation-button-led,
+  .workstation-led-dot {
+    border-color: rgba(55, 217, 255, 0.42);
+    background: #080813;
+  }
+
+  .workstation-side-button.is-active .workstation-button-led,
+  .workstation-side-button[aria-selected="true"] .workstation-button-led,
+  .sample-page-row.is-active .workstation-led-dot {
+    background: var(--ws-cyan);
+    box-shadow: 0 0 0.7rem rgba(53, 217, 255, 0.86);
+  }
+
+  .mini-input,
+  .mini-select,
+  .panel-input,
+  .program-import-textarea,
+  textarea {
+    border-color: rgba(53, 217, 255, 0.34);
+    background: #070711;
+    color: #eafcff;
+  }
+
+  .nautilus-system-strip .panel-input,
+  .knob-value {
+    border-color: rgba(125, 83, 122, 0.26);
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.42), rgba(166, 120, 159, 0.2)),
+      #e7bfd8;
+    color: #2b1b31;
+  }
+
+  .nautilus-panel-knob i,
+  .knob-face,
+  .knob-dial {
+    border-color: rgba(130, 104, 128, 0.38);
+    background:
+      radial-gradient(circle at 34% 26%, rgba(255, 255, 255, 0.72), transparent 20%),
+      linear-gradient(180deg, #f0eef2, #beb8c5 64%, #81758c);
+    box-shadow:
+      0 0.4rem 0.9rem rgba(81, 43, 75, 0.22),
+      inset 0 1px 0 rgba(255, 255, 255, 0.58);
+  }
+
+  .knob-indicator,
+  .nautilus-panel-knob i::after {
+    background: #17101c;
+  }
+
+  .nautilus-encoder {
+    border-color: #c8bdd0;
+    background:
+      radial-gradient(circle at 42% 28%, rgba(255, 255, 255, 0.36), transparent 24%),
+      radial-gradient(circle, #d7d0dc 0 55%, #867a90 56% 100%);
+  }
+
+  .nautilus-setlist-slot {
+    border-color: rgba(53, 217, 255, 0.52);
+    background:
+      linear-gradient(180deg, rgba(14, 14, 28, 0.98), rgba(4, 4, 10, 0.98)) !important;
+  }
+
+  .nautilus-panic-button,
+  .panic-button,
+  .soft-button.is-danger,
+  .global-hardware-button.is-danger {
+    border-color: rgba(53, 217, 255, 0.78);
+    background:
+      radial-gradient(circle at 18% 50%, rgba(53, 217, 255, 0.86) 0 0.28rem, transparent 0.3rem),
+      linear-gradient(180deg, rgba(53, 217, 255, 0.14), rgba(0, 0, 0, 0.22)),
+      #090915;
+    color: #ffffff;
+  }
+
+  .workstation-keybed-frame,
+  .keyboard-panel,
+  .keyboard-bed {
+    border-color: rgba(76, 45, 76, 0.28);
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.45), rgba(255, 255, 255, 0.1)),
+      #e7acd2;
+  }
+
+  .keyboard-key.bg-slate-200,
+  .keyboard-key.is-white {
+    border-color: rgba(70, 54, 72, 0.34);
+    background:
+      linear-gradient(180deg, #fffefe, #f6f4fb 78%, #d9d4e4) !important;
+    color: #24172d;
+    box-shadow:
+      inset 0 -10px 16px rgba(92, 62, 102, 0.16),
+      0 3px 0 rgba(67, 38, 67, 0.3);
+  }
+
+  .keyboard-key.bg-slate-950,
+  .keyboard-key.is-black {
+    border-color: rgba(9, 8, 13, 0.88);
+    background:
+      linear-gradient(180deg, #181722, #040408 84%, #000000) !important;
+    color: #dffaff;
+    box-shadow:
+      inset 0 8px 12px rgba(255, 255, 255, 0.04),
+      0 3px 0 rgba(44, 25, 49, 0.45);
+  }
+
+  .keyboard-key.is-white.is-active {
+    background:
+      linear-gradient(180deg, #ffffff, rgba(92, 230, 255, 0.44) 58%, rgba(234, 159, 211, 0.86)) !important;
+  }
+
+  .keyboard-key.is-black.is-active {
+    background:
+      linear-gradient(180deg, #39dbff, #12111d 30%, #050408 76%, #e7acd2) !important;
+  }
+
+  .program-list::-webkit-scrollbar-track {
+    background: rgba(11, 9, 18, 0.78);
+  }
+
+  .program-list::-webkit-scrollbar-thumb {
+    background: rgba(53, 217, 255, 0.72);
+  }
+
+  .program-list {
+    scrollbar-color: rgba(53, 217, 255, 0.72) rgba(11, 9, 18, 0.78);
+  }
 }
