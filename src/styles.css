@@ -4020,6 +4020,548 @@
     padding: 0.62rem;
   }
 
+  .workstation-subtabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.34rem;
+  }
+
+  .workstation-subtabs span {
+    border: 1px solid rgba(132, 255, 212, 0.18);
+    border-radius: 5px;
+    background: rgba(0, 0, 0, 0.22);
+    color: #88b8aa;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.66rem;
+    font-weight: 900;
+    padding: 0.42rem 0.62rem;
+    text-transform: uppercase;
+  }
+
+  .workstation-subtabs span.is-active {
+    border-color: rgba(141, 255, 216, 0.62);
+    background: rgba(89, 222, 176, 0.18);
+    color: #d7ffef;
+  }
+
+  .workstation-synth-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(260px, 1fr));
+    gap: 0.65rem;
+  }
+
+  .workstation-editor-card {
+    display: grid;
+    align-content: start;
+    gap: 0.62rem;
+    padding: 0.62rem;
+  }
+
+  .workstation-editor-card-header,
+  .workstation-lfo-header {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 0.55rem;
+    min-width: 0;
+    border-bottom: 1px solid rgba(132, 255, 212, 0.13);
+    padding-bottom: 0.48rem;
+  }
+
+  .workstation-editor-card-header span,
+  .workstation-lfo-header span {
+    color: #88b8aa;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.62rem;
+    font-weight: 900;
+    text-transform: uppercase;
+  }
+
+  .workstation-editor-card-header strong,
+  .workstation-lfo-header strong {
+    display: block;
+    overflow: hidden;
+    color: #d7ffef;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.95rem;
+    font-weight: 900;
+    text-overflow: ellipsis;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .workstation-editor-card-header em,
+  .workstation-lfo-header em {
+    border: 1px solid rgba(132, 255, 212, 0.14);
+    border-radius: 4px;
+    background: rgba(0, 0, 0, 0.24);
+    color: #9dffdc;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.66rem;
+    font-style: normal;
+    font-weight: 900;
+    padding: 0.34rem 0.45rem;
+    text-transform: uppercase;
+  }
+
+  .workstation-editor-knobs {
+    display: grid;
+    gap: 0.58rem;
+    align-items: end;
+  }
+
+  .workstation-editor-knobs-four {
+    grid-template-columns: repeat(4, minmax(64px, 1fr));
+  }
+
+  .workstation-editor-knobs-two {
+    grid-template-columns: repeat(2, minmax(74px, 1fr));
+  }
+
+  .workstation-mix-panel {
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+  }
+
+  .workstation-mix-bars {
+    display: grid;
+    gap: 0.42rem;
+    padding: 0.62rem;
+  }
+
+  .workstation-mix-bar {
+    display: grid;
+    grid-template-columns: 4.4rem minmax(0, 1fr) 3.2rem;
+    align-items: center;
+    gap: 0.52rem;
+    color: #cbe5dd;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.68rem;
+    font-weight: 900;
+    text-transform: uppercase;
+  }
+
+  .workstation-mix-bar div {
+    height: 0.82rem;
+    overflow: hidden;
+    border: 1px solid rgba(132, 255, 212, 0.12);
+    border-radius: 999px;
+    background: rgba(0, 0, 0, 0.34);
+  }
+
+  .workstation-mix-bar i {
+    display: block;
+    height: 100%;
+    border-radius: inherit;
+    box-shadow: 0 0 12px currentColor;
+  }
+
+  .workstation-filteramp-layout {
+    display: grid;
+    grid-template-columns: minmax(280px, 0.9fr) minmax(320px, 1.1fr);
+    gap: 0.65rem;
+  }
+
+  .workstation-filter-display {
+    display: grid;
+    align-content: start;
+    gap: 0.62rem;
+    padding: 0.62rem;
+  }
+
+  .workstation-filter-curve {
+    position: relative;
+    min-height: 11.5rem;
+    overflow: hidden;
+    border: 1px solid rgba(242, 184, 75, 0.22);
+    border-radius: 6px;
+    background:
+      repeating-linear-gradient(90deg, rgba(242, 184, 75, 0.05) 0, rgba(242, 184, 75, 0.05) 1px, transparent 1px, transparent 12.5%),
+      linear-gradient(180deg, rgba(242, 184, 75, 0.08), rgba(0, 0, 0, 0.12)),
+      #07100e;
+  }
+
+  .workstation-filter-curve-line {
+    position: absolute;
+    right: 7%;
+    bottom: 36%;
+    left: 7%;
+    height: 2px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #51f5c6, #f2b84b 66%, #ff9d8f);
+    transform: skewY(-13deg);
+    transform-origin: left center;
+    box-shadow: 0 0 16px rgba(242, 184, 75, 0.3);
+  }
+
+  .workstation-filter-curve-dot {
+    position: absolute;
+    bottom: 35%;
+    width: 0.78rem;
+    height: 0.78rem;
+    margin-left: -0.39rem;
+    border-radius: 999px;
+    background: #f2b84b;
+    box-shadow: 0 0 16px rgba(242, 184, 75, 0.72);
+  }
+
+  .workstation-envelope-graphs,
+  .workstation-envelope-edit-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.65rem;
+  }
+
+  .workstation-adsr-graph {
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+    min-width: 0;
+    overflow: hidden;
+    border: 1px solid rgba(132, 255, 212, 0.18);
+    border-radius: 6px;
+    background: rgba(5, 13, 12, 0.82);
+  }
+
+  .workstation-adsr-graph svg {
+    width: 100%;
+    min-height: 9rem;
+    padding: 0.5rem;
+  }
+
+  .workstation-adsr-base {
+    fill: none;
+    stroke: rgba(132, 255, 212, 0.14);
+    stroke-width: 1;
+  }
+
+  .workstation-adsr-line {
+    fill: none;
+    stroke: #9dffdc;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 3;
+    filter: drop-shadow(0 0 5px rgba(90, 244, 190, 0.42));
+  }
+
+  .workstation-filter-knob-panel,
+  .workstation-envelope-bank {
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+  }
+
+  .workstation-filteramp-knobs {
+    grid-template-columns: repeat(5, minmax(64px, 1fr));
+    padding: 0.62rem;
+  }
+
+  .workstation-envelope-bank .workstation-editor-knobs {
+    padding: 0.62rem;
+  }
+
+  .workstation-mod-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(260px, 1fr));
+    gap: 0.65rem;
+  }
+
+  .workstation-lfo-card {
+    display: grid;
+    align-content: start;
+    gap: 0.62rem;
+    padding: 0.62rem;
+  }
+
+  .workstation-lfo-header {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+  }
+
+  .workstation-lfo-led {
+    width: 0.7rem;
+    height: 0.7rem;
+    border-radius: 999px;
+    background: #28322f;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.7);
+  }
+
+  .workstation-lfo-led.is-active {
+    background: #9dffdc;
+    box-shadow: 0 0 14px rgba(90, 244, 190, 0.7);
+  }
+
+  .workstation-lfo-control-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.52rem;
+  }
+
+  .workstation-routing-panel,
+  .workstation-sync-panel {
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+  }
+
+  .workstation-routing-list,
+  .workstation-sync-readouts {
+    display: grid;
+    gap: 0.42rem;
+    padding: 0.62rem;
+  }
+
+  .workstation-routing-row {
+    display: grid;
+    grid-template-columns: minmax(110px, 0.55fr) minmax(0, 1fr);
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 2.65rem;
+    border: 1px solid rgba(132, 255, 212, 0.12);
+    border-radius: 5px;
+    background: rgba(0, 0, 0, 0.22);
+    color: #d7ffef;
+    font-size: 0.72rem;
+    font-weight: 900;
+    padding: 0.4rem 0.48rem;
+    text-transform: uppercase;
+  }
+
+  .workstation-routing-row.is-active {
+    border-color: rgba(141, 255, 216, 0.5);
+    background: rgba(89, 222, 176, 0.12);
+  }
+
+  .workstation-routing-row div {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+    justify-content: flex-end;
+  }
+
+  .workstation-route-chip {
+    border: 1px solid rgba(132, 255, 212, 0.12);
+    border-radius: 4px;
+    background: rgba(0, 0, 0, 0.28);
+    color: #7ea99e;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.62rem;
+    font-style: normal;
+    font-weight: 900;
+    padding: 0.28rem 0.38rem;
+  }
+
+  .workstation-route-chip.is-active {
+    border-color: rgba(141, 255, 216, 0.55);
+    color: #9dffdc;
+  }
+
+  .workstation-sync-readout {
+    display: grid;
+    gap: 0.18rem;
+    border: 1px solid rgba(132, 255, 212, 0.12);
+    border-radius: 5px;
+    background: rgba(0, 0, 0, 0.22);
+    padding: 0.55rem;
+  }
+
+  .workstation-sync-readout.is-active {
+    border-color: rgba(141, 255, 216, 0.5);
+    background: rgba(89, 222, 176, 0.12);
+  }
+
+  .workstation-sync-readout span,
+  .workstation-sync-readout strong {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-weight: 900;
+    text-transform: uppercase;
+  }
+
+  .workstation-sync-readout span {
+    color: #88b8aa;
+    font-size: 0.62rem;
+  }
+
+  .workstation-sync-readout strong {
+    color: #d7ffef;
+    font-size: 0.9rem;
+  }
+
+  .workstation-wavevector-layout {
+    display: grid;
+    grid-template-columns: minmax(290px, 0.86fr) minmax(360px, 1.16fr) minmax(250px, 0.62fr);
+    gap: 0.65rem;
+  }
+
+  .workstation-vector-section,
+  .workstation-wave-lane-panel,
+  .workstation-step-detail {
+    display: grid;
+    align-content: start;
+    gap: 0.62rem;
+    padding-bottom: 0.62rem;
+  }
+
+  .workstation-vector-pad-lg {
+    position: relative;
+    min-height: 20rem;
+    margin: 0 0.62rem;
+    overflow: hidden;
+    border: 1px solid rgba(132, 255, 212, 0.22);
+    border-radius: 6px;
+    background:
+      radial-gradient(circle at 50% 50%, rgba(89, 222, 176, 0.14), transparent 36%),
+      linear-gradient(135deg, rgba(94, 232, 255, 0.12), transparent 38%, rgba(242, 184, 75, 0.08)),
+      #07100e;
+    cursor: crosshair;
+    touch-action: none;
+  }
+
+  .workstation-vector-axis {
+    position: absolute;
+    background: rgba(141, 255, 216, 0.16);
+  }
+
+  .workstation-vector-axis.is-x {
+    top: 50%;
+    right: 0;
+    left: 0;
+    height: 1px;
+  }
+
+  .workstation-vector-axis.is-y {
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 1px;
+  }
+
+  .workstation-vector-corner {
+    position: absolute;
+    color: #9dffdc;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.66rem;
+    font-weight: 900;
+    text-transform: uppercase;
+  }
+
+  .workstation-vector-corner.is-a {
+    top: 0.55rem;
+    left: 0.6rem;
+  }
+
+  .workstation-vector-corner.is-b {
+    top: 0.55rem;
+    right: 0.6rem;
+  }
+
+  .workstation-vector-corner.is-c {
+    bottom: 0.55rem;
+    left: 0.6rem;
+  }
+
+  .workstation-vector-corner.is-d {
+    right: 0.6rem;
+    bottom: 0.55rem;
+  }
+
+  .workstation-vector-cursor {
+    position: absolute;
+    width: 1.1rem;
+    height: 1.1rem;
+    margin: -0.55rem 0 0 -0.55rem;
+    border: 2px solid #f8fffb;
+    border-radius: 999px;
+    background: #51f5c6;
+    box-shadow: 0 0 18px rgba(90, 244, 190, 0.7);
+  }
+
+  .workstation-vector-weights {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.38rem;
+    padding: 0 0.62rem;
+  }
+
+  .workstation-vector-weights span {
+    border: 1px solid rgba(132, 255, 212, 0.14);
+    border-radius: 4px;
+    background: rgba(0, 0, 0, 0.24);
+    color: #d7ffef;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.65rem;
+    font-weight: 900;
+    padding: 0.38rem 0.4rem;
+    text-align: center;
+    text-transform: uppercase;
+  }
+
+  .workstation-wave-controls,
+  .workstation-step-toggles {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.4rem;
+    padding: 0 0.62rem;
+  }
+
+  .workstation-step-toggles {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    padding: 0;
+  }
+
+  .workstation-wave-lane {
+    display: grid;
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+    gap: 0.34rem;
+    padding: 0 0.62rem;
+  }
+
+  .workstation-wave-step {
+    position: relative;
+    display: grid;
+    align-content: space-between;
+    min-height: 5.2rem;
+    overflow: hidden;
+    border: 1px solid rgba(132, 255, 212, 0.14);
+    border-radius: 5px;
+    background: rgba(0, 0, 0, 0.24);
+    color: #d7ffef;
+    padding: 0.34rem;
+    text-align: center;
+  }
+
+  .workstation-wave-step.is-selected {
+    border-color: rgba(141, 255, 216, 0.7);
+    box-shadow: 0 0 14px rgba(90, 244, 190, 0.14);
+  }
+
+  .workstation-wave-step.is-muted {
+    opacity: 0.48;
+  }
+
+  .workstation-wave-step span,
+  .workstation-wave-step strong {
+    position: relative;
+    z-index: 1;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.62rem;
+    font-weight: 900;
+    text-transform: uppercase;
+  }
+
+  .workstation-wave-step em {
+    position: absolute;
+    right: 0.28rem;
+    bottom: 0.28rem;
+    left: 0.28rem;
+    border-radius: 3px;
+    background: linear-gradient(180deg, rgba(81, 245, 198, 0.62), rgba(81, 245, 198, 0.16));
+  }
+
+  .workstation-step-detail {
+    padding: 0.62rem;
+  }
+
+  .workstation-step-knobs {
+    grid-template-columns: repeat(2, minmax(74px, 1fr));
+  }
+
   .workstation-lcd-screen .section-panel,
   .workstation-lcd-screen .panel {
     border-color: rgba(132, 255, 212, 0.2);
@@ -4227,7 +4769,9 @@
     .workstation-top-bar,
     .workstation-main-deck,
     .workstation-program-layout,
-    .workstation-sample-layout {
+    .workstation-sample-layout,
+    .workstation-filteramp-layout,
+    .workstation-wavevector-layout {
       grid-template-columns: 1fr;
     }
 
@@ -4264,6 +4808,15 @@
     .workstation-sample-rows {
       max-height: 22rem;
     }
+
+    .workstation-mod-grid,
+    .workstation-synth-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .workstation-vector-pad-lg {
+      min-height: 16rem;
+    }
   }
 
   @media (max-width: 760px) {
@@ -4279,7 +4832,11 @@
     .workstation-status-bar,
     .workstation-sample-toolbar,
     .workstation-zone-header,
-    .workstation-program-search {
+    .workstation-program-search,
+    .workstation-lfo-control-grid,
+    .workstation-routing-row,
+    .workstation-wave-controls,
+    .workstation-step-toggles {
       grid-template-columns: 1fr;
     }
 
@@ -4359,8 +4916,26 @@
     .workstation-zone-detail,
     .workstation-sample-toggles,
     .workstation-sample-knobs,
-    .workstation-quick-actions {
+    .workstation-quick-actions,
+    .workstation-editor-knobs-four,
+    .workstation-editor-knobs-two,
+    .workstation-filteramp-knobs,
+    .workstation-envelope-graphs,
+    .workstation-envelope-edit-grid,
+    .workstation-step-knobs {
       grid-template-columns: 1fr;
+    }
+
+    .workstation-wave-lane {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .workstation-vector-weights {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .workstation-routing-row div {
+      justify-content: flex-start;
     }
 
     .workstation-page-header {
