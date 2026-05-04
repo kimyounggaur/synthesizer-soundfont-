@@ -3067,6 +3067,494 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .workstation-page {
+    min-width: 320px;
+    min-height: 100vh;
+    color: #edf6f1;
+    background:
+      radial-gradient(circle at 50% -18%, rgba(89, 222, 176, 0.18), transparent 28rem),
+      linear-gradient(180deg, #13161b 0%, #080a0d 100%);
+    padding: 0.7rem;
+  }
+
+  .workstation-shell {
+    display: grid;
+    gap: 0.85rem;
+    min-height: calc(100vh - 1.4rem);
+    border: 1px solid rgba(193, 205, 198, 0.24);
+    border-radius: 9px;
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.012) 18%),
+      repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.018) 0, rgba(255, 255, 255, 0.018) 1px, transparent 1px, transparent 24px),
+      linear-gradient(135deg, #202329, #101318 54%, #17191d);
+    box-shadow:
+      0 28px 80px rgba(0, 0, 0, 0.56),
+      inset 0 1px 0 rgba(255, 255, 255, 0.12),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.78);
+    padding: 0.8rem;
+  }
+
+  .workstation-top-bar {
+    display: grid;
+    grid-template-columns: minmax(210px, 0.72fr) minmax(340px, 1.15fr) minmax(210px, 0.66fr) minmax(230px, 0.72fr) minmax(330px, 1fr);
+    gap: 0.65rem;
+    align-items: stretch;
+    border: 1px solid rgba(176, 190, 186, 0.22);
+    border-radius: 8px;
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.015)),
+      #15191e;
+    padding: 0.65rem;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.09), inset 0 -1px 0 rgba(0, 0, 0, 0.74);
+  }
+
+  .workstation-brand-plate {
+    display: flex;
+    min-width: 0;
+    align-items: center;
+    gap: 0.72rem;
+    border: 1px solid rgba(89, 222, 176, 0.28);
+    border-radius: 7px;
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(0, 0, 0, 0.16)),
+      #0b1012;
+    padding: 0.72rem;
+  }
+
+  .workstation-brand-mark {
+    display: grid;
+    width: 3.2rem;
+    height: 3.2rem;
+    flex: 0 0 auto;
+    place-items: center;
+    border: 1px solid rgba(141, 255, 216, 0.5);
+    border-radius: 5px;
+    background:
+      linear-gradient(180deg, rgba(141, 255, 216, 0.1), rgba(0, 0, 0, 0.18)),
+      #07100e;
+    color: #9dffdc;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.95rem;
+    font-weight: 900;
+    box-shadow: inset 0 0 18px rgba(90, 244, 190, 0.14), 0 0 14px rgba(90, 244, 190, 0.08);
+  }
+
+  .workstation-brand-name {
+    overflow-wrap: anywhere;
+    color: #f4fbf7;
+    font-size: clamp(0.92rem, 1vw, 1.12rem);
+    font-weight: 900;
+    line-height: 1.05;
+    text-transform: uppercase;
+  }
+
+  .workstation-brand-subtitle {
+    margin-top: 0.22rem;
+    color: #9dada8;
+    font-size: 0.75rem;
+    font-weight: 700;
+  }
+
+  .workstation-mode-panel {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.34rem;
+    align-content: center;
+    border: 1px solid rgba(148, 163, 184, 0.2);
+    border-radius: 7px;
+    background: #0e1216;
+    padding: 0.5rem;
+  }
+
+  .workstation-mode-button,
+  .workstation-small-button,
+  .workstation-hardware-button,
+  .workstation-tab {
+    border: 1px solid rgba(160, 176, 170, 0.24);
+    border-radius: 5px;
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(0, 0, 0, 0.22)),
+      #20252b;
+    color: #d9e4df;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), inset 0 -1px 0 rgba(0, 0, 0, 0.58);
+    transition: border-color 140ms ease, color 140ms ease, transform 120ms ease, background 140ms ease;
+  }
+
+  .workstation-mode-button {
+    min-height: 2.35rem;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.72rem;
+    font-weight: 900;
+    text-transform: uppercase;
+  }
+
+  .workstation-mode-button:hover,
+  .workstation-mode-button.is-active,
+  .workstation-tab:hover,
+  .workstation-tab.is-active,
+  .workstation-hardware-button:hover,
+  .workstation-hardware-button.is-active {
+    border-color: rgba(141, 255, 216, 0.75);
+    background:
+      linear-gradient(180deg, rgba(149, 255, 220, 0.28), rgba(56, 179, 139, 0.24)),
+      #0b1714;
+    color: #c9ffe9;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.16), 0 0 15px rgba(90, 244, 190, 0.16);
+  }
+
+  .workstation-mode-button:active,
+  .workstation-small-button:active,
+  .workstation-hardware-button:active,
+  .workstation-tab:active {
+    transform: translateY(1px);
+  }
+
+  .workstation-top-controls {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(58px, 0.62fr)) minmax(86px, 0.82fr) minmax(76px, 0.64fr);
+    gap: 0.55rem;
+    align-items: center;
+  }
+
+  .workstation-main-deck {
+    display: grid;
+    grid-template-columns: minmax(118px, 150px) minmax(0, 1fr) minmax(270px, 360px);
+    gap: 0.75rem;
+    align-items: stretch;
+    min-height: 42rem;
+  }
+
+  .workstation-side-buttons {
+    display: grid;
+    align-content: start;
+    gap: 0.46rem;
+    border: 1px solid rgba(176, 190, 186, 0.2);
+    border-radius: 8px;
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.055), rgba(0, 0, 0, 0.14)),
+      #12161b;
+    padding: 0.68rem;
+  }
+
+  .workstation-side-label,
+  .workstation-rack-title span,
+  .workstation-lcd-toolbar span,
+  .workstation-rack-section-title {
+    color: #8fa19b;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.66rem;
+    font-weight: 900;
+    text-transform: uppercase;
+  }
+
+  .workstation-hardware-button {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    gap: 0.48rem;
+    min-height: 3rem;
+    padding: 0.42rem 0.5rem;
+    text-align: left;
+  }
+
+  .workstation-button-code {
+    display: grid;
+    min-width: 2rem;
+    height: 1.5rem;
+    place-items: center;
+    border-radius: 4px;
+    background: rgba(0, 0, 0, 0.28);
+    color: #9dffdc;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.68rem;
+    font-weight: 900;
+  }
+
+  .workstation-lcd {
+    min-width: 0;
+    border: 1px solid rgba(6, 10, 9, 0.82);
+    border-radius: 8px;
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(0, 0, 0, 0.42)),
+      #080a0b;
+    padding: 0.8rem;
+    box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.08), inset 0 -2px 0 rgba(0, 0, 0, 0.88);
+  }
+
+  .workstation-lcd-bezel {
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    min-height: 100%;
+    overflow: hidden;
+    border: 1px solid rgba(97, 246, 196, 0.34);
+    border-radius: 7px;
+    background:
+      linear-gradient(180deg, rgba(108, 255, 206, 0.11), rgba(22, 45, 38, 0.08)),
+      #07110f;
+    box-shadow: inset 0 0 26px rgba(83, 240, 185, 0.12), 0 0 24px rgba(83, 240, 185, 0.06);
+  }
+
+  .workstation-lcd-toolbar {
+    display: grid;
+    grid-template-columns: minmax(140px, 0.32fr) minmax(0, 1fr);
+    gap: 0.6rem;
+    align-items: center;
+    border-bottom: 1px solid rgba(131, 255, 214, 0.16);
+    background: rgba(7, 18, 15, 0.86);
+    padding: 0.58rem;
+  }
+
+  .workstation-lcd-toolbar strong {
+    display: block;
+    overflow: hidden;
+    color: #c7ffe9;
+    font-size: clamp(1rem, 1.1vw, 1.32rem);
+    font-weight: 900;
+    line-height: 1.1;
+    text-overflow: ellipsis;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .workstation-tabs {
+    display: grid;
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+    gap: 0.32rem;
+  }
+
+  .workstation-tab {
+    display: grid;
+    gap: 0.1rem;
+    min-height: 2.7rem;
+    padding: 0.3rem 0.36rem;
+    text-align: center;
+  }
+
+  .workstation-tab span,
+  .workstation-hardware-button > span:last-child {
+    overflow: hidden;
+    font-size: 0.78rem;
+    font-weight: 900;
+    text-overflow: ellipsis;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .workstation-tab small {
+    overflow: hidden;
+    color: #87958f;
+    font-size: 0.58rem;
+    font-weight: 800;
+    text-overflow: ellipsis;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .workstation-tab.is-active small,
+  .workstation-tab:hover small {
+    color: rgba(201, 255, 233, 0.7);
+  }
+
+  .workstation-lcd-screen {
+    min-width: 0;
+    min-height: 0;
+    overflow: auto;
+    background:
+      linear-gradient(180deg, rgba(141, 255, 216, 0.045), rgba(0, 0, 0, 0.04)),
+      #091310;
+    padding: 0.65rem;
+  }
+
+  .workstation-lcd-page,
+  .workstation-page-stack {
+    display: grid;
+    gap: 0.75rem;
+    min-width: 0;
+  }
+
+  .workstation-lcd-screen .section-panel,
+  .workstation-lcd-screen .panel {
+    border-color: rgba(132, 255, 212, 0.2);
+    background:
+      linear-gradient(180deg, rgba(141, 255, 216, 0.04), rgba(0, 0, 0, 0.05)),
+      #101816;
+  }
+
+  .workstation-lcd-screen .sample-preset-panel,
+  .workstation-lcd-screen .flex-preset-panel {
+    min-height: 36rem;
+  }
+
+  .workstation-lcd-screen .sample-preset-body {
+    min-height: 32.75rem;
+  }
+
+  .workstation-lcd-screen .sample-preset-list,
+  .workstation-lcd-screen .flex-preset-list {
+    max-height: 28rem;
+  }
+
+  .workstation-status-bar {
+    display: grid;
+    grid-template-columns: minmax(90px, 0.7fr) repeat(4, minmax(0, 1fr));
+    gap: 0.45rem;
+    align-items: center;
+    border-top: 1px solid rgba(131, 255, 214, 0.15);
+    background: rgba(4, 11, 9, 0.9);
+    color: #9dffdc;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.68rem;
+    font-weight: 900;
+    padding: 0.48rem 0.62rem;
+    text-transform: uppercase;
+  }
+
+  .workstation-status-bar span {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .workstation-status-bar .is-hot {
+    color: #ff9d8f;
+  }
+
+  .workstation-parameter-rack {
+    display: grid;
+    align-content: start;
+    gap: 0.68rem;
+    min-width: 0;
+    border: 1px solid rgba(176, 190, 186, 0.2);
+    border-radius: 8px;
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(0, 0, 0, 0.16)),
+      #13171c;
+    padding: 0.72rem;
+  }
+
+  .workstation-rack-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.55rem;
+    min-height: 2rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.09);
+    padding-bottom: 0.52rem;
+  }
+
+  .workstation-rack-title strong {
+    color: #c7ffe9;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+  }
+
+  .workstation-rack-section {
+    display: grid;
+    gap: 0.65rem;
+    border: 1px solid rgba(148, 163, 184, 0.16);
+    border-radius: 7px;
+    background: rgba(8, 12, 15, 0.62);
+    padding: 0.7rem;
+  }
+
+  .workstation-rack-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.6rem;
+  }
+
+  .workstation-rack-empty {
+    border: 1px dashed rgba(148, 163, 184, 0.2);
+    border-radius: 6px;
+    color: #9aa7ad;
+    font-size: 0.78rem;
+    padding: 0.65rem;
+  }
+
+  .workstation-performance-strip {
+    display: grid;
+    grid-template-columns: auto minmax(220px, 1fr) auto minmax(150px, 0.42fr);
+    gap: 0.65rem;
+    align-items: center;
+    border: 1px solid rgba(176, 190, 186, 0.2);
+    border-radius: 8px;
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(0, 0, 0, 0.16)),
+      #14181d;
+    padding: 0.62rem;
+  }
+
+  .workstation-strip-cluster {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.45rem;
+  }
+
+  .workstation-small-button {
+    min-height: 2.25rem;
+    padding: 0 0.75rem;
+    font-size: 0.78rem;
+    font-weight: 900;
+    text-transform: uppercase;
+  }
+
+  .workstation-strip-lcd {
+    min-width: 5.4rem;
+    border: 1px solid rgba(141, 255, 216, 0.36);
+    border-radius: 5px;
+    background: #07110f;
+    color: #9dffdc;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.82rem;
+    font-weight: 900;
+    padding: 0.52rem 0.72rem;
+    text-align: center;
+    box-shadow: inset 0 0 14px rgba(90, 244, 190, 0.12);
+  }
+
+  .workstation-velocity-control {
+    display: grid;
+    grid-template-columns: auto minmax(120px, 1fr) auto;
+    gap: 0.6rem;
+    align-items: center;
+    min-width: 0;
+    color: #dbe7e1;
+    font-size: 0.78rem;
+    font-weight: 900;
+    text-transform: uppercase;
+  }
+
+  .workstation-velocity-control strong {
+    color: #9dffdc;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  }
+
+  .workstation-strip-status {
+    display: grid;
+    gap: 0.08rem;
+    justify-items: end;
+    color: #9dffdc;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.72rem;
+    font-weight: 900;
+    text-transform: uppercase;
+  }
+
+  .workstation-strip-status.is-hot {
+    color: #ff9d8f;
+  }
+
+  .workstation-error-panel {
+    border: 1px solid rgba(242, 184, 75, 0.44);
+    border-radius: 8px;
+    background: rgba(242, 184, 75, 0.08);
+    color: #ffe2a6;
+    padding: 1rem;
+  }
+
   @media (min-width: 1600px) {
     .main-console-grid {
       grid-template-columns: minmax(0, 1fr) minmax(520px, 620px);
@@ -3087,7 +3575,9 @@
     .main-console-grid,
     .primary-module-grid,
     .modulation-console-grid,
-    .movable-console-grid {
+    .movable-console-grid,
+    .workstation-top-bar,
+    .workstation-main-deck {
       grid-template-columns: 1fr;
     }
 
@@ -3102,26 +3592,61 @@
     .side-rack-grid {
       grid-template-columns: 1fr;
     }
+
+    .workstation-side-buttons {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .workstation-side-label {
+      grid-column: 1 / -1;
+    }
+
+    .workstation-parameter-rack {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      align-items: start;
+    }
+
+    .workstation-rack-title {
+      grid-column: 1 / -1;
+    }
   }
 
   @media (max-width: 760px) {
     .top-control-strip,
     .sub-module-grid,
     .filter-display-block,
-    .side-rack-grid {
+    .side-rack-grid,
+    .workstation-top-controls,
+    .workstation-lcd-toolbar,
+    .workstation-performance-strip,
+    .workstation-velocity-control,
+    .workstation-status-bar {
       grid-template-columns: 1fr;
     }
 
     .sub-controls,
     .knob-grid-four,
     .knob-grid-filter,
-    .env-knob-grid {
+    .env-knob-grid,
+    .workstation-tabs,
+    .workstation-side-buttons,
+    .workstation-parameter-rack {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
     .command-panel,
-    .section-panel-body {
+    .section-panel-body,
+    .workstation-shell {
       padding: 0.7rem;
+    }
+
+    .workstation-page {
+      padding: 0;
+    }
+
+    .workstation-shell {
+      min-height: 100vh;
+      border-radius: 0;
     }
 
     .flex-preset-header,
@@ -3154,12 +3679,22 @@
       border-top: 1px solid rgba(255, 255, 255, 0.08);
     }
 
+    .workstation-lcd {
+      padding: 0.45rem;
+    }
+
+    .workstation-status-bar,
+    .workstation-strip-status {
+      justify-items: start;
+    }
+
     .lfo-control-grid,
     .wave-step-grid,
     .effect-slot-header,
     .effect-knob-grid,
     .sample-knob-grid,
-    .sample-filter-knobs {
+    .sample-filter-knobs,
+    .workstation-rack-grid {
       grid-template-columns: 1fr;
     }
   }
@@ -3169,11 +3704,16 @@
     .knob-grid-four,
     .knob-grid-filter,
     .env-knob-grid,
-    .sample-engine-mode {
+    .sample-engine-mode,
+    .workstation-mode-panel,
+    .workstation-tabs,
+    .workstation-side-buttons,
+    .workstation-parameter-rack {
       grid-template-columns: 1fr;
     }
 
-    .brand-plate {
+    .brand-plate,
+    .workstation-brand-plate {
       align-items: flex-start;
     }
   }
