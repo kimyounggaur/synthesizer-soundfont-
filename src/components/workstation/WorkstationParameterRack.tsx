@@ -86,7 +86,7 @@ export function WorkstationParameterRack() {
         </div>
       ) : null}
 
-      {activePage === 'modulation' ? (
+      {activePage === 'mod' ? (
         <div className="workstation-rack-section">
           <div className="workstation-rack-section-title">LFO Quick Edit</div>
           <div className="workstation-rack-grid">
@@ -109,7 +109,7 @@ export function WorkstationParameterRack() {
         </div>
       ) : null}
 
-      {activePage === 'effects' ? (
+      {activePage === 'fx' ? (
         <div className="workstation-rack-section">
           <div className="workstation-rack-section-title">Insert FX</div>
           {firstEffect ? (

@@ -6,7 +6,6 @@ import { selectEngineState, useSynthStore } from '../../store/synthStore';
 import type { EngineMode } from '../../types/soundfont';
 import type { MeterSnapshot } from '../../types/synth';
 import { OutputMeter } from '../OutputMeter';
-import { ProgramDisplay } from '../ProgramDisplay';
 import { Knob } from '../ui/Knob';
 import { LedButton } from '../ui/LedButton';
 
@@ -18,6 +17,10 @@ interface WorkstationTopBarProps {
 
 function modeLabel(mode: EngineMode): string {
   return mode === 'synth' ? 'Synth' : mode === 'sample' ? 'Sample' : 'Hybrid';
+}
+
+function formatVoices(value: number): string {
+  return String(value).padStart(2, '0');
 }
 
 export function WorkstationTopBar({ meter, onPanic, onTestTone }: WorkstationTopBarProps) {
@@ -39,6 +42,13 @@ export function WorkstationTopBar({ meter, onPanic, onTestTone }: WorkstationTop
     () => sampleBankManager.getPreset(engineState.sampleLayer.bankId, engineState.sampleLayer.presetId) ?? undefined,
     [engineState.sampleLayer.bankId, engineState.sampleLayer.presetId],
   );
+  const selectedSampleBank = useMemo(
+    () => sampleBankManager.getBank(engineState.sampleLayer.bankId) ?? undefined,
+    [engineState.sampleLayer.bankId],
+  );
+  const programName = engineState.engineMode === 'sample' && selectedSamplePreset ? selectedSamplePreset.name : selectedPreset?.name ?? selectedSamplePreset?.name ?? 'Init Program';
+  const category = engineState.engineMode === 'sample' && selectedSamplePreset ? selectedSamplePreset.category : selectedPreset?.category ?? selectedSamplePreset?.category ?? 'Manual';
+  const bankName = selectedSampleBank?.name ?? (selectedPreset ? `${selectedPreset.author} Library` : 'User Edit Buffer');
 
   return (
     <header className="workstation-top-bar">
@@ -50,7 +60,36 @@ export function WorkstationTopBar({ meter, onPanic, onTestTone }: WorkstationTop
         </div>
       </div>
 
-      <ProgramDisplay engine={engineState} preset={selectedPreset} samplePreset={selectedSamplePreset} status={meter.clipping ? 'Output clipping' : 'Ready'} />
+      <section className="workstation-program-lcd" aria-label="Program LCD">
+        <div className="workstation-program-lcd-row">
+          <div className="workstation-program-field workstation-program-field-wide">
+            <span>Program</span>
+            <strong>{programName}</strong>
+          </div>
+          <div className="workstation-program-field">
+            <span>Mode</span>
+            <strong>{engineState.engineMode.toUpperCase()}</strong>
+          </div>
+          <div className="workstation-program-field">
+            <span>Cat</span>
+            <strong>{category}</strong>
+          </div>
+        </div>
+        <div className="workstation-program-lcd-row">
+          <div className="workstation-program-field workstation-program-field-wide">
+            <span>Bank</span>
+            <strong>{bankName}</strong>
+          </div>
+          <div className="workstation-program-field">
+            <span>BPM</span>
+            <strong>{bpm}</strong>
+          </div>
+          <div className="workstation-program-field">
+            <span>Voices</span>
+            <strong>{formatVoices(polyphony)}</strong>
+          </div>
+        </div>
+      </section>
 
       <div className="workstation-mode-panel" aria-label="Engine mode">
         {(['synth', 'sample', 'hybrid'] as EngineMode[]).map((mode) => (

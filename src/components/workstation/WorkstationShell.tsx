@@ -1,6 +1,5 @@
-import { createContext, useContext, useMemo, useState, type ReactNode } from 'react';
-
-export type WorkstationPageId = 'program' | 'sample' | 'synth' | 'filterAmp' | 'modulation' | 'waveVector' | 'effects' | 'global';
+import { createContext, useContext, useMemo, type ReactNode } from 'react';
+import { useUiStore, type WorkstationPageId } from '../../store/uiStore';
 
 export interface WorkstationPageDefinition {
   id: WorkstationPageId;
@@ -14,9 +13,9 @@ export const workstationPages: WorkstationPageDefinition[] = [
   { id: 'sample', label: 'Sample', shortLabel: 'Samp', group: 'Library' },
   { id: 'synth', label: 'Synth', shortLabel: 'Synth', group: 'Edit' },
   { id: 'filterAmp', label: 'Filter/Amp', shortLabel: 'Filt', group: 'Edit' },
-  { id: 'modulation', label: 'Modulation', shortLabel: 'Mod', group: 'Edit' },
+  { id: 'mod', label: 'Modulation', shortLabel: 'Mod', group: 'Edit' },
   { id: 'waveVector', label: 'Wave/Vector', shortLabel: 'Wave', group: 'Motion' },
-  { id: 'effects', label: 'Effects', shortLabel: 'FX', group: 'Output' },
+  { id: 'fx', label: 'Effects', shortLabel: 'FX', group: 'Output' },
   { id: 'global', label: 'Global', shortLabel: 'Global', group: 'System' },
 ];
 
@@ -38,7 +37,8 @@ export function useWorkstationNavigation(): WorkstationNavigationContextValue {
 }
 
 export function WorkstationShell({ children }: { children: ReactNode }) {
-  const [activePage, setActivePage] = useState<WorkstationPageId>('sample');
+  const activePage = useUiStore((state) => state.activePage);
+  const setActivePage = useUiStore((state) => state.setActivePage);
   const activePageDefinition = workstationPages.find((page) => page.id === activePage) ?? workstationPages[0];
   const value = useMemo(
     () => ({

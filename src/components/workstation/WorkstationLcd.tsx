@@ -27,13 +27,13 @@ export function WorkstationLcd({ meter }: { meter: MeterSnapshot }) {
     if (activePage === 'filterAmp') {
       return <FilterAmpPage />;
     }
-    if (activePage === 'modulation') {
+    if (activePage === 'mod') {
       return <ModulationPage />;
     }
     if (activePage === 'waveVector') {
       return <WaveVectorPage />;
     }
-    if (activePage === 'effects') {
+    if (activePage === 'fx') {
       return <EffectsPage />;
     }
     return <GlobalPage meter={meter} />;

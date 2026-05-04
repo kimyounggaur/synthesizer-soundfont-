@@ -3155,6 +3155,63 @@
     font-weight: 700;
   }
 
+  .workstation-program-lcd {
+    display: grid;
+    align-content: center;
+    gap: 0.45rem;
+    min-width: 0;
+    border: 1px solid rgba(141, 255, 216, 0.34);
+    border-radius: 7px;
+    background:
+      linear-gradient(180deg, rgba(141, 255, 216, 0.1), rgba(19, 42, 35, 0.1)),
+      #07110f;
+    color: #c7ffe9;
+    padding: 0.58rem;
+    box-shadow: inset 0 0 22px rgba(83, 240, 185, 0.12), 0 0 16px rgba(83, 240, 185, 0.06);
+  }
+
+  .workstation-program-lcd-row {
+    display: grid;
+    grid-template-columns: minmax(150px, 1.4fr) minmax(82px, 0.48fr) minmax(92px, 0.58fr);
+    gap: 0.42rem;
+    min-width: 0;
+  }
+
+  .workstation-program-field {
+    display: grid;
+    min-width: 0;
+    gap: 0.12rem;
+    border: 1px solid rgba(141, 255, 216, 0.13);
+    border-radius: 5px;
+    background: rgba(0, 0, 0, 0.18);
+    padding: 0.38rem 0.46rem;
+  }
+
+  .workstation-program-field span {
+    color: rgba(176, 237, 215, 0.68);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.58rem;
+    font-weight: 900;
+    text-transform: uppercase;
+  }
+
+  .workstation-program-field strong {
+    min-width: 0;
+    overflow: hidden;
+    color: #d7ffef;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: clamp(0.76rem, 0.78vw, 0.95rem);
+    font-weight: 900;
+    line-height: 1.12;
+    text-overflow: ellipsis;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .workstation-program-field-wide strong {
+    font-size: clamp(0.86rem, 0.95vw, 1.12rem);
+  }
+
   .workstation-mode-panel {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -3616,6 +3673,7 @@
     .sub-module-grid,
     .filter-display-block,
     .side-rack-grid,
+    .workstation-program-lcd-row,
     .workstation-top-controls,
     .workstation-lcd-toolbar,
     .workstation-performance-strip,
