@@ -4551,7 +4551,10 @@
     display: grid;
     grid-template-columns: minmax(190px, 0.3fr) minmax(0, 1fr) minmax(260px, 0.42fr);
     gap: 0.75rem;
+    align-items: stretch;
+    min-height: 0;
     min-width: 0;
+    overflow: hidden;
   }
 
   .program-bank-buttons {
@@ -4569,18 +4572,23 @@
 
   .program-list-frame {
     display: grid;
-    min-height: 30rem;
+    height: clamp(24rem, 54vh, 34rem);
+    min-height: 0;
+    overflow: hidden;
   }
 
   .program-list-frame .workstation-lcd-bezel,
   .program-list-frame .workstation-lcd-screen {
+    display: grid;
     min-height: 0;
+    overflow: hidden;
   }
 
   .program-lcd-screen {
     display: grid;
     grid-template-rows: auto minmax(0, 1fr);
     gap: 0.65rem;
+    min-height: 0;
   }
 
   .program-list-heading,
@@ -4601,8 +4609,27 @@
     align-content: start;
     gap: 0.24rem;
     min-height: 0;
-    overflow: auto;
+    max-height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
     padding-right: 0.1rem;
+    scrollbar-color: rgba(185, 255, 232, 0.46) rgba(3, 13, 11, 0.72);
+    scrollbar-width: thin;
+  }
+
+  .program-list::-webkit-scrollbar {
+    width: 0.55rem;
+  }
+
+  .program-list::-webkit-scrollbar-track {
+    background: rgba(3, 13, 11, 0.72);
+    border-radius: 999px;
+  }
+
+  .program-list::-webkit-scrollbar-thumb {
+    background: rgba(185, 255, 232, 0.46);
+    border-radius: 999px;
   }
 
   .program-row {
@@ -5872,6 +5899,10 @@
 
     .program-page .workstation-tab {
       min-width: 6rem;
+    }
+
+    .program-list-frame {
+      height: clamp(18rem, 58vh, 28rem);
     }
   }
 
