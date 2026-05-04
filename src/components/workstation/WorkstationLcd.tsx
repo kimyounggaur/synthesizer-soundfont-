@@ -1,7 +1,8 @@
 import type { MeterSnapshot } from '../../types/synth';
+import { useUiStore } from '../../store/uiStore';
 import { WorkstationStatusBar } from './WorkstationStatusBar';
 import { WorkstationTabs } from './WorkstationTabs';
-import { useWorkstationNavigation } from './WorkstationShell';
+import { workstationPages } from './WorkstationShell';
 import { EffectsPage } from './pages/EffectsPage';
 import { FilterAmpPage } from './pages/FilterAmpPage';
 import { GlobalPage } from './pages/GlobalPage';
@@ -12,7 +13,8 @@ import { SynthPage } from './pages/SynthPage';
 import { WaveVectorPage } from './pages/WaveVectorPage';
 
 export function WorkstationLcd({ meter }: { meter: MeterSnapshot }) {
-  const { activePageDefinition, activePage } = useWorkstationNavigation();
+  const activePage = useUiStore((state) => state.activePage);
+  const activePageDefinition = workstationPages.find((page) => page.id === activePage) ?? workstationPages[0];
 
   const page = (() => {
     if (activePage === 'program') {
@@ -40,7 +42,7 @@ export function WorkstationLcd({ meter }: { meter: MeterSnapshot }) {
   })();
 
   return (
-    <section className="workstation-lcd" aria-label="Central LCD workstation screen">
+    <section className="workstation-lcd-frame" aria-label="Central LCD workstation screen">
       <div className="workstation-lcd-bezel">
         <div className="workstation-lcd-toolbar">
           <div>

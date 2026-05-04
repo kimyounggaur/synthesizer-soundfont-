@@ -1,19 +1,30 @@
-import { useWorkstationNavigation } from './WorkstationShell';
+import { useUiStore, type WorkstationPageId } from '../../store/uiStore';
+
+const tabs: Array<{ id: WorkstationPageId; label: string }> = [
+  { id: 'program', label: 'PROGRAM' },
+  { id: 'sample', label: 'SAMPLE' },
+  { id: 'synth', label: 'SYNTH' },
+  { id: 'filterAmp', label: 'FILTER/AMP' },
+  { id: 'mod', label: 'MOD' },
+  { id: 'waveVector', label: 'WAVE/VECTOR' },
+  { id: 'fx', label: 'FX' },
+  { id: 'global', label: 'GLOBAL' },
+];
 
 export function WorkstationTabs() {
-  const { activePage, pages, setActivePage } = useWorkstationNavigation();
+  const activePage = useUiStore((state) => state.activePage);
+  const setActivePage = useUiStore((state) => state.setActivePage);
 
   return (
     <nav className="workstation-tabs" aria-label="LCD pages">
-      {pages.map((page) => (
+      {tabs.map((tab) => (
         <button
-          key={page.id}
+          key={tab.id}
           type="button"
-          className={activePage === page.id ? 'workstation-tab is-active' : 'workstation-tab'}
-          onClick={() => setActivePage(page.id)}
+          className={activePage === tab.id ? 'workstation-tab is-active' : 'workstation-tab'}
+          onClick={() => setActivePage(tab.id)}
         >
-          <span>{page.shortLabel}</span>
-          <small>{page.group}</small>
+          <span>{tab.label}</span>
         </button>
       ))}
     </nav>

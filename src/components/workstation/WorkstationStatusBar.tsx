@@ -1,7 +1,8 @@
 import { sampleBankManager } from '../../samples/sampleBankLibrary';
 import { useSynthStore } from '../../store/synthStore';
+import { useUiStore } from '../../store/uiStore';
 import type { MeterSnapshot } from '../../types/synth';
-import { useWorkstationNavigation } from './WorkstationShell';
+import { workstationPages } from './WorkstationShell';
 
 function meterState(meter: MeterSnapshot): string {
   if (meter.clipping) {
@@ -14,7 +15,8 @@ function meterState(meter: MeterSnapshot): string {
 }
 
 export function WorkstationStatusBar({ meter }: { meter: MeterSnapshot }) {
-  const { activePageDefinition } = useWorkstationNavigation();
+  const activePage = useUiStore((state) => state.activePage);
+  const activePageDefinition = workstationPages.find((page) => page.id === activePage) ?? workstationPages[0];
   const engineMode = useSynthStore((state) => state.engineMode);
   const sampleLayer = useSynthStore((state) => state.sampleLayer);
   const samplePreset = sampleBankManager.getPreset(sampleLayer.bankId, sampleLayer.presetId);
