@@ -5,7 +5,9 @@ import { sampleFactoryPresets } from '../../presets/sampleFactoryPresets';
 import { getCachedSamplePreset } from '../../samples/sampleBankLibrary';
 import { usePresetStore } from '../../store/presetStore';
 import { selectEngineState, useSynthStore } from '../../store/synthStore';
+import { useUiStore } from '../../store/uiStore';
 import type { EngineMode } from '../../types/soundfont';
+import type { SynthPreset } from '../../types/synth';
 import { OutputMeter } from '../OutputMeter';
 
 const engineModes: EngineMode[] = ['synth', 'sample', 'hybrid'];
@@ -16,6 +18,12 @@ interface WorkstationTopBarProps {
   meter: MeterSnapshot;
 }
 
+interface TopBarProgramBank {
+  id: 'A' | 'B' | 'C';
+  name: string;
+  presets: SynthPreset[];
+}
+
 export function WorkstationTopBar({ onPanic, onTestTone, meter }: WorkstationTopBarProps) {
   const masterVolume = useSynthStore((state) => state.masterVolume);
   const bpm = useSynthStore((state) => state.bpm);
@@ -23,6 +31,8 @@ export function WorkstationTopBar({ onPanic, onTestTone, meter }: WorkstationTop
   const currentPreset = useSynthStore((state) => state.currentPreset);
   const engineState = useSynthStore((state) => selectEngineState(state));
   const userPresets = usePresetStore((state) => state.userPresets);
+  const programBankId = useUiStore((state) => state.programBankId);
+  const programCategory = useUiStore((state) => state.programCategory);
   const setMasterVolume = useSynthStore((state) => state.setMasterVolume);
   const setBpm = useSynthStore((state) => state.setBpm);
   const setPolyphony = useSynthStore((state) => state.setPolyphony);
@@ -37,13 +47,29 @@ export function WorkstationTopBar({ onPanic, onTestTone, meter }: WorkstationTop
     [engineState.sampleLayer.bankId, engineState.sampleLayer.presetId],
   );
   const status = meter.audioState === 'suspended' ? 'Audio suspended' : meter.clipping ? 'Output clipping' : 'Ready';
-  const setListPrograms = useMemo(() => [...factoryPresets, ...sampleFactoryPresets, ...userPresets].slice(0, 16), [userPresets]);
-  const currentProgramName = selectedPreset?.name ?? selectedSamplePreset?.name ?? 'Init Program';
-  const currentProgramMeta = selectedPreset
-    ? `${selectedPreset.category} / ${selectedPreset.author}`
-    : selectedSamplePreset
-      ? `${selectedSamplePreset.category} sample / ${selectedSamplePreset.author}`
-      : 'Manual engine buffer';
+  const programBanks = useMemo<TopBarProgramBank[]>(
+    () => [
+      { id: 'A', name: 'SYNTH', presets: factoryPresets },
+      { id: 'B', name: 'SAMPLE', presets: sampleFactoryPresets },
+      { id: 'C', name: 'USER', presets: userPresets },
+    ],
+    [userPresets],
+  );
+  const selectedProgramBank = programBanks.find((bank) => bank.id === programBankId) ?? programBanks[0];
+  const setListPrograms = useMemo(
+    () => selectedProgramBank.presets.filter((preset) => programCategory === 'All' || preset.category === programCategory),
+    [programCategory, selectedProgramBank.presets],
+  );
+  const filteredCurrentPreset = setListPrograms.find((preset) => preset.id === currentPreset) ?? setListPrograms[0] ?? null;
+  const currentProgramName = filteredCurrentPreset?.name ?? selectedPreset?.name ?? selectedSamplePreset?.name ?? 'Init Program';
+  const currentProgramMeta = filteredCurrentPreset
+    ? `${filteredCurrentPreset.category} / ${filteredCurrentPreset.author}`
+    : selectedPreset
+      ? `${selectedPreset.category} / ${selectedPreset.author}`
+      : selectedSamplePreset
+        ? `${selectedSamplePreset.category} sample / ${selectedSamplePreset.author}`
+        : `${selectedProgramBank.name} / ${programCategory}`;
+  const currentProgramNumber = filteredCurrentPreset ? String(Math.max(0, setListPrograms.findIndex((preset) => preset.id === filteredCurrentPreset.id))).padStart(2, '0') : '000';
 
   return (
     <header className="command-panel workstation-topbar nautilus-inspired-top">
@@ -74,10 +100,10 @@ export function WorkstationTopBar({ onPanic, onTestTone, meter }: WorkstationTop
           <em>{status}</em>
         </div>
         <div className="nautilus-current-program">
-          <span>000</span>
+          <span>{currentProgramNumber}</span>
           <div>
             <h2>{currentProgramName}</h2>
-            <p>{currentProgramMeta}</p>
+            <p>{programBankId}: {selectedProgramBank.name} / {programCategory} / {currentProgramMeta}</p>
           </div>
         </div>
         <div className="nautilus-setlist-grid" aria-label="Set list slots">
@@ -88,6 +114,7 @@ export function WorkstationTopBar({ onPanic, onTestTone, meter }: WorkstationTop
               <em>{preset.category}</em>
             </button>
           ))}
+          {setListPrograms.length === 0 ? <div className="nautilus-setlist-empty">No programs in this bank/category.</div> : null}
         </div>
       </section>
 

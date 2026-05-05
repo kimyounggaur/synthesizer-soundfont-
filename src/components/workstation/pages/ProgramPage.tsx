@@ -3,14 +3,13 @@ import { factoryPresets, presetCategoryOrder } from '../../../presets/factoryPre
 import { sampleFactoryPresets } from '../../../presets/sampleFactoryPresets';
 import { usePresetStore } from '../../../store/presetStore';
 import { selectEngineState, useSynthStore } from '../../../store/synthStore';
+import { useUiStore } from '../../../store/uiStore';
+import type { ProgramBankId, ProgramCategoryFilter } from '../../../store/uiStore';
 import type { SynthPreset } from '../../../types/synth';
 import { createUserPreset, exportPresets, parsePresetImport } from '../../../utils/presetStorage';
 import { MiniDisplay } from '../../ui/MiniDisplay';
 import { PresetArtwork } from '../../PresetArtwork';
 import { WorkstationBreadcrumb, WorkstationPageTabs, WorkstationSoftKeys, WorkstationStatusBar } from '../WorkstationLCDChrome';
-
-type ProgramBankId = 'A' | 'B' | 'C';
-type ProgramCategoryFilter = SynthPreset['category'] | 'All';
 
 interface ProgramBank {
   id: ProgramBankId;
@@ -31,10 +30,12 @@ function bankTitle(bank: ProgramBank): string {
 }
 
 export function ProgramPage() {
-  const [selectedBankId, setSelectedBankId] = useState<ProgramBankId>('A');
-  const [selectedCategory, setSelectedCategory] = useState<ProgramCategoryFilter>('All');
   const [query, setQuery] = useState('');
   const [importText, setImportText] = useState('');
+  const selectedBankId = useUiStore((state) => state.programBankId);
+  const selectedCategory = useUiStore((state) => state.programCategory);
+  const setSelectedBankId = useUiStore((state) => state.setProgramBankId);
+  const setSelectedCategory = useUiStore((state) => state.setProgramCategory);
   const currentPreset = useSynthStore((state) => state.currentPreset);
   const engineMode = useSynthStore((state) => state.engineMode);
   const loadPreset = useSynthStore((state) => state.loadPreset);
