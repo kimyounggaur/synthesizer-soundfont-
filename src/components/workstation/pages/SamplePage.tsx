@@ -18,6 +18,10 @@ interface BrowserSamplePreset {
   preset: SamplePresetDefinition;
 }
 
+interface SamplePageProps {
+  onAuditionNote?: (note: number, velocity: number, durationMs?: number) => void;
+}
+
 const engineModes: EngineMode[] = ['synth', 'sample', 'hybrid'];
 const sampleCategoryOrder: SampleCategory[] = [
   'Piano',
@@ -108,7 +112,7 @@ async function presetWillUseFallbackForUi(bankId: string, preset: SamplePresetDe
   }
 }
 
-export function SamplePage() {
+export function SamplePage({ onAuditionNote }: SamplePageProps) {
   const [query, setQuery] = useState('');
   const [selectedFilter, setSelectedFilter] = useState<SampleFilter>('All');
   const [selectedBankId, setSelectedBankId] = useState<string>('All');
@@ -119,6 +123,7 @@ export function SamplePage() {
   const selectedZoneId = useUiStore((state) => state.selectedSampleZoneId);
   const setSelectedSampleZoneId = useUiStore((state) => state.setSelectedSampleZoneId);
   const engineMode = useSynthStore((state) => state.engineMode);
+  const defaultVelocity = useSynthStore((state) => state.defaultVelocity);
   const sampleLayer = useSynthStore((state) => state.sampleLayer);
   const setEngineMode = useSynthStore((state) => state.setEngineMode);
   const updateSampleLayer = useSynthStore((state) => state.updateSampleLayer);
@@ -191,6 +196,10 @@ export function SamplePage() {
   const selectedZoneOverride = selectedZone ? sampleLayer.zoneOverrides?.[selectedZone.id] : undefined;
   const currentZone = selectedZone ? mergeSampleZoneOverride(selectedZone, sampleLayer) : null;
   const editedZoneCount = activePreset?.zones.filter((zone) => Boolean(sampleLayer.zoneOverrides?.[zone.id])).length ?? 0;
+  const currentZoneLowVelocity = currentZone?.lowVelocity ?? 0;
+  const currentZoneHighVelocity = currentZone?.highVelocity ?? 1;
+  const defaultVelocityInZone = Boolean(currentZone && defaultVelocity >= currentZoneLowVelocity && defaultVelocity <= currentZoneHighVelocity);
+  const auditionVelocity = currentZone ? clampNumber(defaultVelocity, currentZoneLowVelocity, currentZoneHighVelocity) : defaultVelocity;
 
   useEffect(() => {
     if (!activePreset) {
@@ -415,6 +424,19 @@ export function SamplePage() {
     setMessage('All zone edits reset.');
   };
 
+  const handleAuditionZone = () => {
+    if (!currentZone || !activePreset) {
+      setMessage('Select a sample zone before auditioning.');
+      return;
+    }
+
+    setEngineMode('sample');
+    updateSampleLayer({ enabled: true });
+    onAuditionNote?.(currentZone.rootNote, auditionVelocity, 720);
+    setSampleStatus('READY');
+    setMessage(`Auditioning ${currentZone.id} at ${formatNote(currentZone.rootNote)} / velocity ${formatVelocity(auditionVelocity)}${defaultVelocityInZone ? '' : ' (adjusted into zone range)'}`);
+  };
+
   return (
     <div className="workstation-page workstation-lcd-page sample-page">
       <header className="workstation-page-header">
@@ -553,7 +575,8 @@ export function SamplePage() {
                   <>
                     <div className="sample-zone-readout">
                       <span>KEY {formatNote(currentZone.lowNote)}-{formatNote(currentZone.highNote)}</span>
-                      <span>VEL {formatVelocity(currentZone.lowVelocity ?? 0)}-{formatVelocity(currentZone.highVelocity ?? 1)}</span>
+                      <span>VEL {formatVelocity(currentZoneLowVelocity)}-{formatVelocity(currentZoneHighVelocity)}</span>
+                      <span className={defaultVelocityInZone ? 'is-ready' : 'is-warning'}>{defaultVelocityInZone ? 'VEL READY' : 'VEL OUT'}</span>
                       <span>{selectedZoneOverride ? 'EDITED' : 'ORIGINAL'}</span>
                     </div>
 
@@ -593,6 +616,9 @@ export function SamplePage() {
                     </div>
 
                     <div className="sample-page-toggle-grid">
+                      <button type="button" className="performance-button is-accent" onClick={handleAuditionZone} disabled={!onAuditionNote}>
+                        Audition Zone
+                      </button>
                       <LedButton active={Boolean(currentZone.loop)} onClick={() => handleUpdateZone({ loop: !currentZone.loop })}>
                         Loop
                       </LedButton>

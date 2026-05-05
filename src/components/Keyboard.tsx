@@ -246,16 +246,17 @@ export function Keyboard({ onNoteOn, onNoteOff }: KeyboardProps) {
             const selectedZone = matchingZones.find((zone) => zone.id === selectedSampleZoneId);
             const hasSampleZone = matchingZones.length > 0;
             const selectedSampleZone = Boolean(selectedZone);
+            const selectedZoneVelocityReady = selectedZone ? defaultVelocity >= (selectedZone.lowVelocity ?? 0) && defaultVelocity <= (selectedZone.highVelocity ?? 1) : true;
             const zoneLabel = selectedZone?.id ?? matchingZones[0]?.id;
             return (
               <button
                 key={note}
-                className={`keyboard-key ${black ? 'is-black' : 'is-white'} ${active ? 'is-active' : ''} ${hasSampleZone ? 'is-sample-zone' : ''} ${selectedSampleZone ? 'is-selected-sample-zone' : ''} relative px-1 pb-3 font-mono text-[0.68rem] ${
+                className={`keyboard-key ${black ? 'is-black' : 'is-white'} ${active ? 'is-active' : ''} ${hasSampleZone ? 'is-sample-zone' : ''} ${selectedSampleZone ? 'is-selected-sample-zone' : ''} ${selectedSampleZone && !selectedZoneVelocityReady ? 'is-sample-velocity-out' : ''} relative px-1 pb-3 font-mono text-[0.68rem] ${
                   black
                     ? 'bg-slate-950 text-slate-400 shadow-inner'
                     : 'bg-slate-200 text-slate-950'
                 }`}
-                aria-label={`${noteName(note)}${hasSampleZone ? `, sample zone ${zoneLabel}${selectedSampleZone ? ', selected zone' : ''}` : ''}`}
+                aria-label={`${noteName(note)}${hasSampleZone ? `, sample zone ${zoneLabel}${selectedSampleZone ? `, selected zone${selectedZoneVelocityReady ? '' : ', velocity out of range'}` : ''}` : ''}`}
                 style={{
                   ['--key-velocity' as string]: velocity,
                 }}

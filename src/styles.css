@@ -4383,6 +4383,19 @@
     box-shadow: 0 0 14px rgba(81, 245, 198, 0.78);
   }
 
+  .performance-button.is-accent {
+    border-color: rgba(242, 184, 75, 0.58);
+    background:
+      linear-gradient(180deg, rgba(242, 184, 75, 0.18), rgba(242, 184, 75, 0.05)),
+      #141216;
+    color: #ffe4a6;
+  }
+
+  .performance-button.is-accent:hover {
+    border-color: rgba(242, 184, 75, 0.86);
+    color: #fff3cf;
+  }
+
   .performance-button.is-danger {
     border-color: rgba(255, 115, 115, 0.5);
     color: #ffd0d0;
@@ -4597,7 +4610,7 @@
 
   .sample-zone-readout {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 0.35rem;
     min-width: 0;
   }
@@ -4618,6 +4631,18 @@
     text-overflow: ellipsis;
     text-transform: uppercase;
     white-space: nowrap;
+  }
+
+  .sample-zone-readout span.is-ready {
+    border-color: rgba(81, 245, 198, 0.46);
+    color: #b9ffe8;
+    box-shadow: inset 0 0 10px rgba(81, 245, 198, 0.08);
+  }
+
+  .sample-zone-readout span.is-warning {
+    border-color: rgba(242, 184, 75, 0.56);
+    color: #ffd778;
+    box-shadow: inset 0 0 10px rgba(242, 184, 75, 0.08);
   }
 
   .sample-zone-map {
@@ -6377,6 +6402,14 @@
       0 3px 0 rgba(67, 38, 67, 0.3) !important;
   }
 
+  .keyboard-key.is-sample-velocity-out {
+    outline-color: rgba(255, 115, 115, 0.95);
+    box-shadow:
+      inset 0 -10px 16px rgba(255, 115, 115, 0.2),
+      0 0 0 2px rgba(255, 115, 115, 0.38),
+      0 3px 0 rgba(67, 38, 67, 0.3) !important;
+  }
+
   .keyboard-zone-overlay {
     position: absolute;
     right: 0.16rem;
@@ -6394,6 +6427,11 @@
     height: 0.48rem;
     background: linear-gradient(90deg, rgba(255, 216, 111, 0.96), rgba(255, 133, 196, 0.78));
     box-shadow: 0 0 13px rgba(255, 216, 111, 0.52);
+  }
+
+  .keyboard-key.is-sample-velocity-out .keyboard-zone-overlay {
+    background: linear-gradient(90deg, rgba(255, 115, 115, 0.96), rgba(242, 184, 75, 0.78));
+    box-shadow: 0 0 13px rgba(255, 115, 115, 0.5);
   }
 
   .keyboard-key.is-black .keyboard-zone-overlay {

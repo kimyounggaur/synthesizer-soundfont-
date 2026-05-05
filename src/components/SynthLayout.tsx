@@ -25,6 +25,8 @@ const silentMeter: MeterSnapshot = { peak: 0, rms: 0, clipping: false, audioStat
 export function SynthLayout() {
   const engineRef = useRef<AudioEngine | null>(null);
   const testToneTimerRef = useRef<number | null>(null);
+  const auditionTimerRef = useRef<number | null>(null);
+  const auditionNoteRef = useRef<number | null>(null);
   const [engineError, setEngineError] = useState<string | null>(null);
   const [meter, setMeter] = useState<MeterSnapshot>(silentMeter);
   const activeWorkstationPage = useUiStore((state) => state.activeWorkstationPage);
@@ -45,6 +47,14 @@ export function SynthLayout() {
         if (testToneTimerRef.current !== null) {
           window.clearTimeout(testToneTimerRef.current);
           testToneTimerRef.current = null;
+        }
+        if (auditionTimerRef.current !== null) {
+          window.clearTimeout(auditionTimerRef.current);
+          auditionTimerRef.current = null;
+        }
+        if (auditionNoteRef.current !== null) {
+          engine.noteOff(auditionNoteRef.current);
+          auditionNoteRef.current = null;
         }
         engine.close();
         engineRef.current = null;
@@ -85,6 +95,7 @@ export function SynthLayout() {
     }
     engineRef.current?.panic();
     clearActiveNotes();
+    auditionNoteRef.current = null;
   }, [clearActiveNotes]);
 
   const handleTestTone = useCallback(() => {
@@ -106,12 +117,38 @@ export function SynthLayout() {
     }, 650);
   }, [clearActiveNote, setActiveNote]);
 
+  const handleAuditionNote = useCallback(
+    (note: number, velocity: number, durationMs = 720) => {
+      if (auditionTimerRef.current !== null) {
+        window.clearTimeout(auditionTimerRef.current);
+        auditionTimerRef.current = null;
+      }
+
+      if (auditionNoteRef.current !== null) {
+        engineRef.current?.noteOff(auditionNoteRef.current);
+        clearActiveNote(auditionNoteRef.current);
+      }
+
+      auditionNoteRef.current = note;
+      setActiveNote(note, velocity);
+      void engineRef.current?.noteOn(note, velocity);
+
+      auditionTimerRef.current = window.setTimeout(() => {
+        engineRef.current?.noteOff(note);
+        clearActiveNote(note);
+        auditionTimerRef.current = null;
+        auditionNoteRef.current = null;
+      }, durationMs);
+    },
+    [clearActiveNote, setActiveNote],
+  );
+
   const renderPage = () => {
     if (activeWorkstationPage === 'program') {
       return <ProgramPage />;
     }
     if (activeWorkstationPage === 'sample') {
-      return <SamplePage />;
+      return <SamplePage onAuditionNote={handleAuditionNote} />;
     }
     if (activeWorkstationPage === 'synth') {
       return <SynthPage />;
