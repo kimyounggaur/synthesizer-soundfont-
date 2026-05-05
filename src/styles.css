@@ -6918,4 +6918,36 @@
     clip: rect(0 0 0 0);
     white-space: nowrap;
   }
+
+  .keyboard-performance-surface {
+    align-items: stretch;
+  }
+
+  .keyboard-bed {
+    --keyboard-bed-height: clamp(13.8rem, 18vw, 16.5rem);
+    align-items: flex-start;
+    height: var(--keyboard-bed-height);
+    min-height: var(--keyboard-bed-height);
+    padding-bottom: 0.55rem;
+  }
+
+  .keyboard-key.is-white {
+    height: calc(var(--keyboard-bed-height) - 1.1rem);
+  }
+
+  .keyboard-key.is-black {
+    height: calc((var(--keyboard-bed-height) - 1.1rem) * 0.72);
+  }
+
+  @media (max-width: 900px) {
+    .keyboard-bed {
+      --keyboard-bed-height: clamp(12rem, 34vw, 15rem);
+    }
+  }
+
+  @media (max-width: 540px) {
+    .keyboard-bed {
+      --keyboard-bed-height: 12rem;
+    }
+  }
 }
