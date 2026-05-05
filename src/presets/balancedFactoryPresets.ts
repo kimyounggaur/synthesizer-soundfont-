@@ -21,7 +21,7 @@ type EngineOverrides = Omit<
   sampleLayer?: Partial<SynthEngineState['sampleLayer']>;
 };
 
-const createdAt = '2026-05-05T00:00:00.000Z';
+const createdAt = '2026-05-05T08:45:00.000Z';
 
 const balancedGroups = [
   { category: 'Bass', names: ['Obsidian Mono Bass', 'Soft Ladder Bass', 'PWM Pocket Bass', 'Deep House Sub', 'Acid Rubber Line', 'Cinema Low Pulse', 'Liquid Reese Bass', 'Square Root Bass'] },
