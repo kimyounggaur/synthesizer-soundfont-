@@ -9,17 +9,6 @@ import type { EngineMode } from '../../types/soundfont';
 import { OutputMeter } from '../OutputMeter';
 
 const engineModes: EngineMode[] = ['synth', 'sample', 'hybrid'];
-const hardwareKnobs = [
-  { number: '1', label: 'Cutoff' },
-  { number: '2', label: 'Resonance' },
-  { number: '3', label: 'EG Int' },
-  { number: '4', label: 'EG Release' },
-  { number: '5', label: 'Effect' },
-  { number: '6', label: 'Reverb' },
-];
-
-const utilityButtons = ['Latch', 'ARP', 'Drum', 'Audio In', 'MFX', 'TFX'];
-const quickAccessButtons = ['A', 'B', 'C', 'D', 'E', 'F'];
 
 interface WorkstationTopBarProps {
   onPanic: () => void;
@@ -76,23 +65,6 @@ export function WorkstationTopBar({ onPanic, onTestTone, meter }: WorkstationTop
           </div>
         </div>
 
-        <div className="nautilus-knob-bank" aria-label="Realtime control knobs">
-          {hardwareKnobs.map((knob) => (
-            <div key={knob.number} className="nautilus-panel-knob">
-              <span>{knob.number}</span>
-              <i aria-hidden="true" />
-              <strong>{knob.label}</strong>
-            </div>
-          ))}
-        </div>
-
-        <div className="nautilus-utility-buttons" aria-label="Performance switches">
-          {utilityButtons.map((label) => (
-            <button key={label} type="button" className="nautilus-mini-button">
-              {label}
-            </button>
-          ))}
-        </div>
       </section>
 
       <section className="nautilus-touchview" aria-label="Set list touch screen">
@@ -117,38 +89,9 @@ export function WorkstationTopBar({ onPanic, onTestTone, meter }: WorkstationTop
             </button>
           ))}
         </div>
-        <div className="nautilus-touchview-footer">
-          <button type="button">Play</button>
-          <button type="button">Mixer</button>
-          <button type="button">EQ</button>
-          <button type="button">ARP/Drum</button>
-          <button type="button">Tone Adj</button>
-        </div>
       </section>
 
-      <section className="nautilus-right-controls" aria-label="Navigation and quick access">
-        <div className="nautilus-encoder-area">
-          <div className="nautilus-encoder" aria-hidden="true" />
-          <div className="nautilus-inc-dec">
-            <button type="button">-</button>
-            <button type="button">+</button>
-          </div>
-          <div className="nautilus-enter-row">
-            <button type="button">Exit</button>
-            <button type="button">Enter</button>
-          </div>
-        </div>
-
-        <div className="nautilus-quick-access" aria-label="Quick access buttons">
-          <button type="button" className="nautilus-mini-button">Mode</button>
-          <button type="button" className="nautilus-mini-button">Page</button>
-          {quickAccessButtons.map((label) => (
-            <button key={label} type="button" className="nautilus-mini-button">
-              {label}
-            </button>
-          ))}
-        </div>
-
+      <section className="nautilus-right-controls" aria-label="System controls">
         <div className="nautilus-system-strip">
           <label>
             <span>BPM</span>

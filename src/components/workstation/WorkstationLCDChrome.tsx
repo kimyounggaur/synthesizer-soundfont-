@@ -1,15 +1,6 @@
 export type WorkstationStatus = 'READY' | 'LOADING SAMPLE' | 'FALLBACK SAMPLE' | 'CLIPPING' | 'AUDIO SUSPENDED';
 
-const softKeys = [
-  { id: 'F1', label: 'Bank' },
-  { id: 'F2', label: 'Category' },
-  { id: 'F3', label: 'Edit' },
-  { id: 'F4', label: 'FX' },
-  { id: 'F5', label: 'Save' },
-  { id: 'F6', label: 'Utility' },
-] as const;
-
-export type WorkstationSoftKeyId = (typeof softKeys)[number]['id'];
+export type WorkstationSoftKeyId = never;
 
 interface WorkstationBreadcrumbProps {
   items: Array<string | null | undefined>;
@@ -47,37 +38,15 @@ export function WorkstationBreadcrumb({ items }: WorkstationBreadcrumbProps) {
 }
 
 export function WorkstationSoftKeys({ enabledKeys = [] }: WorkstationSoftKeysProps) {
-  return (
-    <div className="workstation-soft-keys" aria-label="LCD soft keys">
-      {softKeys.map((key) => {
-        const enabled = enabledKeys.includes(key.id);
-        return (
-          <button key={key.id} type="button" className={enabled ? 'workstation-soft-key is-active' : 'workstation-soft-key'} disabled={!enabled}>
-            <strong>{key.id}</strong>
-            <span>{key.label}</span>
-          </button>
-        );
-      })}
-    </div>
-  );
+  void enabledKeys;
+  return null;
 }
 
 export function WorkstationPageTabs({ labels, ariaLabel, variant = 'subtabs' }: WorkstationPageTabsProps) {
-  const className = variant === 'tabs' ? 'workstation-tabs' : 'workstation-subtabs';
-  const tabClassName = variant === 'tabs' ? 'workstation-tab' : 'workstation-subtab';
-
-  return (
-    <nav className={className} role="tablist" aria-label={ariaLabel}>
-      {labels.map((label, index) => {
-        const active = index === 0;
-        return (
-          <button key={label} type="button" role="tab" aria-selected={active} tabIndex={active ? 0 : -1} className={active ? `${tabClassName} is-active` : tabClassName}>
-            {label}
-          </button>
-        );
-      })}
-    </nav>
-  );
+  void labels;
+  void ariaLabel;
+  void variant;
+  return null;
 }
 
 export function WorkstationStatusBar({ message, status = 'READY' }: WorkstationStatusBarProps) {

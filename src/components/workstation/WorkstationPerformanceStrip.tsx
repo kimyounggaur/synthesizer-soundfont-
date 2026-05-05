@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import type { EngineMode } from '../../types/soundfont';
 import { useSynthStore } from '../../store/synthStore';
 
@@ -18,7 +17,6 @@ function formatPercent(value: number): string {
 }
 
 export function WorkstationPerformanceStrip({ onPanic, onTestTone }: WorkstationPerformanceStripProps) {
-  const [holdEnabled, setHoldEnabled] = useState(false);
   const keyboardOctave = useSynthStore((state) => state.keyboardOctave);
   const defaultVelocity = useSynthStore((state) => state.defaultVelocity);
   const engineMode = useSynthStore((state) => state.engineMode);
@@ -47,10 +45,6 @@ export function WorkstationPerformanceStrip({ onPanic, onTestTone }: Workstation
       </label>
 
       <div className="performance-strip-section performance-toggle-section">
-        <button type="button" className={holdEnabled ? 'performance-button is-active' : 'performance-button'} aria-pressed={holdEnabled} onClick={() => setHoldEnabled((current) => !current)}>
-          <span className="workstation-led-dot is-small" />
-          HOLD
-        </button>
         <button
           type="button"
           className={sampleLayer.enabled ? 'performance-button is-active' : 'performance-button'}
