@@ -36,6 +36,7 @@ export function ProgramPage() {
   const [query, setQuery] = useState('');
   const [importText, setImportText] = useState('');
   const currentPreset = useSynthStore((state) => state.currentPreset);
+  const engineMode = useSynthStore((state) => state.engineMode);
   const loadPreset = useSynthStore((state) => state.loadPreset);
   const savePresetMarker = useSynthStore((state) => state.savePreset);
   const userPresets = usePresetStore((state) => state.userPresets);
@@ -85,6 +86,8 @@ export function ProgramPage() {
     });
   }, [selectedBank.presets, selectedCategory, query]);
   const activeProgram = visiblePrograms.find((preset) => preset.id === currentPreset) ?? visiblePrograms[0] ?? selectedBank.presets[0] ?? null;
+  const activeProgramIndex = activeProgram ? visiblePrograms.findIndex((preset) => preset.id === activeProgram.id) : -1;
+  const activeProgramNumber = activeProgramIndex >= 0 ? programNumber(activeProgramIndex) : '000';
 
   const handleSave = () => {
     const name = window.prompt('Preset name');
@@ -157,9 +160,19 @@ export function ProgramPage() {
         <section className="workstation-lcd-frame program-list-frame">
           <div className="workstation-lcd-bezel">
             <div className="workstation-lcd-screen program-lcd-screen">
-              <div className="program-list-heading">
-                <MiniDisplay eyebrow={bankTitle(selectedBank)} value={`${visiblePrograms.length} PROGRAMS`} detail={selectedCategory === 'All' ? selectedBank.detail : selectedCategory} tone="mint" />
-                <input className="mini-input panel-input" value={query} placeholder="Search programs" onChange={(event) => setQuery(event.target.value)} />
+              <div className="program-setlist-topbar">
+                <strong>Set List</strong>
+                <input className="program-setlist-search" value={query} aria-label="Search programs" placeholder="Search programs" onChange={(event) => setQuery(event.target.value)} />
+                <span>{engineMode.toUpperCase()}</span>
+                <span>Ready</span>
+              </div>
+
+              <div className="program-current-strip">
+                <span className="program-current-number">{activeProgramNumber}</span>
+                <div>
+                  <strong>{activeProgram?.name ?? 'No Program'}</strong>
+                  <em>{activeProgram ? `${activeProgram.category} / ${activeProgram.author}` : `${bankTitle(selectedBank)} / ${visiblePrograms.length} programs`}</em>
+                </div>
               </div>
 
               <div className="program-list" aria-label="Program list">
