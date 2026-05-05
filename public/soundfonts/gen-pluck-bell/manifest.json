@@ -1,0 +1,21 @@
+{
+  "id": "gen-pluck-bell",
+  "name": "Generated Plucks & Bells",
+  "author": "Project",
+  "description": "Generated mallet, bell, and plucked colors.",
+  "license": "Generated demo only",
+  "presets": [
+    { "id": "soft-vibes-generated", "name": "Soft Vibes Generated", "category": "Mallet", "author": "Project", "description": "Generated vibraphone-like mallet.", "license": "Generated demo", "zones": [{ "id": "soft-vibes-c4", "url": "generated://mallet-vibes-c4", "rootNote": 60, "lowNote": 24, "highNote": 96, "loop": false, "gain": 0.78 }] },
+    { "id": "wood-marimba-generated", "name": "Wood Marimba Generated", "category": "Mallet", "author": "Project", "description": "Generated marimba-like tone.", "license": "Generated demo", "zones": [{ "id": "wood-marimba-c4", "url": "generated://mallet-marimba-wood-c4", "rootNote": 60, "lowNote": 24, "highNote": 96, "loop": false, "gain": 0.8 }] },
+    { "id": "kalimba-generated", "name": "Kalimba Generated", "category": "Mallet", "author": "Project", "description": "Generated kalimba-style pluck.", "license": "Generated demo", "zones": [{ "id": "kalimba-c4", "url": "generated://mallet-kalimba-c4", "rootNote": 60, "lowNote": 24, "highNote": 96, "loop": false, "gain": 0.74 }] },
+    { "id": "rubber-mallet-generated", "name": "Rubber Mallet Generated", "category": "Mallet", "author": "Project", "description": "Generated muted mallet.", "license": "Generated demo", "zones": [{ "id": "rubber-mallet-c4", "url": "generated://mallet-rubber-c4", "rootNote": 60, "lowNote": 24, "highNote": 96, "loop": false, "gain": 0.76 }] },
+    { "id": "ice-chime-generated", "name": "Ice Chime Generated", "category": "Bell", "author": "Project", "description": "Generated icy chime.", "license": "Generated demo", "zones": [{ "id": "ice-chime-c4", "url": "generated://bell-ice-chime-c4", "rootNote": 60, "lowNote": 24, "highNote": 96, "loop": false, "gain": 0.78 }] },
+    { "id": "temple-bell-generated", "name": "Temple Bell Generated", "category": "Bell", "author": "Project", "description": "Generated temple bell.", "license": "Generated demo", "zones": [{ "id": "temple-bell-c4", "url": "generated://bell-temple-c4", "rootNote": 60, "lowNote": 24, "highNote": 96, "loop": false, "gain": 0.78 }] },
+    { "id": "digital-glock-generated", "name": "Digital Glock Generated", "category": "Bell", "author": "Project", "description": "Generated digital glock.", "license": "Generated demo", "zones": [{ "id": "digital-glock-c4", "url": "generated://bell-digital-glock-c4", "rootNote": 60, "lowNote": 24, "highNote": 96, "loop": false, "gain": 0.8 }] },
+    { "id": "moon-bell-generated", "name": "Moon Bell Generated", "category": "Bell", "author": "Project", "description": "Generated moon bell.", "license": "Generated demo", "zones": [{ "id": "moon-bell-c4", "url": "generated://bell-moon-c4", "rootNote": 60, "lowNote": 24, "highNote": 96, "loop": false, "gain": 0.76 }] },
+    { "id": "harp-pluck-generated", "name": "Harp Pluck Generated", "category": "Guitar", "author": "Project", "description": "Generated harp-like pluck.", "license": "Generated demo", "zones": [{ "id": "harp-pluck-c4", "url": "generated://pluck-harp-c4", "rootNote": 60, "lowNote": 24, "highNote": 96, "loop": false, "gain": 0.76 }] },
+    { "id": "muted-pluck-generated", "name": "Muted Pluck Generated", "category": "Guitar", "author": "Project", "description": "Generated muted pluck.", "license": "Generated demo", "zones": [{ "id": "muted-pluck-c4", "url": "generated://pluck-muted-c4", "rootNote": 60, "lowNote": 24, "highNote": 96, "loop": false, "gain": 0.74 }] },
+    { "id": "rubber-pluck-generated", "name": "Rubber Pluck Generated", "category": "Guitar", "author": "Project", "description": "Generated rubber pluck.", "license": "Generated demo", "zones": [{ "id": "rubber-pluck-c4", "url": "generated://pluck-rubber-c4", "rootNote": 60, "lowNote": 24, "highNote": 96, "loop": false, "gain": 0.76 }] },
+    { "id": "crystal-pluck-generated", "name": "Crystal Pluck Generated", "category": "Guitar", "author": "Project", "description": "Generated bright crystal pluck.", "license": "Generated demo", "zones": [{ "id": "crystal-pluck-c4", "url": "generated://pluck-crystal-c4", "rootNote": 60, "lowNote": 24, "highNote": 96, "loop": false, "gain": 0.78 }] }
+  ]
+}

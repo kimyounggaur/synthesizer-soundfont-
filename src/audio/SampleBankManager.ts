@@ -183,7 +183,8 @@ export class SampleBankManager {
   private async createGeneratedBuffer(url: string): Promise<AudioBuffer> {
     const id = url.slice(generatedUrlPrefix.length);
     const sampleRate = this.context.sampleRate;
-    const seconds = id.includes('drum') || id.includes('hit') ? 1.1 : id.includes('organ') ? 1.6 : 2.4;
+    const seconds =
+      id.includes('drum') || id.includes('hit') || id.includes('fx') ? 1.15 : id.includes('organ') || id.includes('bass') ? 1.8 : 2.6;
     const buffer = this.context.createBuffer(1, Math.ceil(sampleRate * seconds), sampleRate);
     const channel = buffer.getChannelData(0);
     const random = seededRandom(seedFromString(id));
@@ -194,7 +195,49 @@ export class SampleBankManager {
       const attack = 1 - Math.exp(-time * 180);
       let sample = 0;
 
-      if (id.includes('organ')) {
+      if (id.includes('drum') || id.includes('hit')) {
+        const sweep = baseFrequency * (1 + Math.exp(-time * 18) * (id.includes('kick') || id.includes('drop') ? 7 : 3));
+        const envelope = Math.exp(-time * (id.includes('hat') || id.includes('clave') ? 18 : 8.5));
+        sample = Math.sin(Math.PI * 2 * sweep * time) * 0.64 * envelope + random() * 0.22 * Math.exp(-time * 18);
+      } else if (id.includes('fx')) {
+        const sweepDirection = id.includes('riser') || id.includes('sweep') ? time / seconds : 1 - time / seconds;
+        const sweep = baseFrequency * (0.5 + sweepDirection * 5.5);
+        const envelope = Math.sin(Math.PI * Math.min(1, time / seconds));
+        sample = Math.sin(Math.PI * 2 * sweep * time) * 0.28 * envelope + random() * 0.18 * envelope;
+      } else if (id.includes('pad') || id.includes('ambient') || id.includes('strings') || id.includes('choir')) {
+        const slowAttack = Math.min(1, time / 0.45);
+        const shimmer = Math.sin(Math.PI * 2 * baseFrequency * 1.997 * time) * 0.22 + Math.sin(Math.PI * 2 * baseFrequency * 3.01 * time) * 0.08;
+        sample =
+          Math.sin(Math.PI * 2 * baseFrequency * time) * 0.44 +
+          Math.sin(Math.PI * 2 * baseFrequency * 0.5 * time) * 0.2 +
+          shimmer +
+          random() * 0.018;
+        sample *= slowAttack * (0.78 + Math.sin(Math.PI * 2 * 0.22 * time) * 0.05);
+      } else if (id.includes('brass') || id.includes('wind')) {
+        const attackCurve = Math.min(1, time / (id.includes('brass') ? 0.12 : 0.18));
+        sample =
+          Math.sin(Math.PI * 2 * baseFrequency * time) * 0.5 +
+          Math.sin(Math.PI * 2 * baseFrequency * 2 * time) * 0.22 +
+          Math.sin(Math.PI * 2 * baseFrequency * 3 * time) * 0.08 +
+          random() * (id.includes('wind') ? 0.025 : 0.01);
+        sample *= attackCurve * 0.74;
+      } else if (id.includes('bass')) {
+        const attackCurve = Math.min(1, time / 0.04);
+        sample =
+          Math.sin(Math.PI * 2 * baseFrequency * time) * 0.7 +
+          Math.sin(Math.PI * 2 * baseFrequency * 2 * time) * 0.18 +
+          Math.sin(Math.PI * 2 * baseFrequency * 3 * time) * 0.06 +
+          random() * 0.006;
+        sample *= attackCurve * (0.92 + Math.sin(Math.PI * 2 * 0.4 * time) * 0.025);
+      } else if (id.includes('guitar') || id.includes('pluck') || id.includes('mallet')) {
+        const envelope = attack * Math.exp(-time * (id.includes('mallet') ? 2.35 : 3.1));
+        sample =
+          Math.sin(Math.PI * 2 * baseFrequency * time) * 0.45 +
+          Math.sin(Math.PI * 2 * baseFrequency * 2.01 * time) * 0.28 +
+          Math.sin(Math.PI * 2 * baseFrequency * 3.02 * time) * 0.12 +
+          random() * 0.012;
+        sample *= envelope;
+      } else if (id.includes('organ')) {
         const steady = Math.min(1, time / 0.08);
         sample =
           Math.sin(Math.PI * 2 * baseFrequency * time) * 0.56 +
@@ -208,10 +251,6 @@ export class SampleBankManager {
           Math.sin(Math.PI * 2 * baseFrequency * 2.01 * time) * 0.34 +
           Math.sin(Math.PI * 2 * baseFrequency * 3.98 * time) * 0.18;
         sample *= envelope;
-      } else if (id.includes('drum') || id.includes('hit')) {
-        const sweep = baseFrequency * (1 + Math.exp(-time * 18) * 5);
-        const envelope = Math.exp(-time * 8.5);
-        sample = Math.sin(Math.PI * 2 * sweep * time) * 0.64 * envelope + random() * 0.22 * Math.exp(-time * 18);
       } else {
         const envelope = attack * Math.exp(-time * 1.45);
         sample =

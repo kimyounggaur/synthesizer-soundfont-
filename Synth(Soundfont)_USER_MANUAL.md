@@ -182,7 +182,7 @@ Sample Page는 샘플 뱅크, 샘플 프리셋, 샘플 레이어 파라미터를
 
 ### 샘플 뱅크 선택
 
-Bank 드롭다운에서 사용할 샘플 뱅크를 선택합니다. 현재 기본 샘플 뱅크로 `Demo Lite`가 제공됩니다.
+Bank 드롭다운에서 사용할 샘플 뱅크를 선택합니다. `Demo Lite` 외에도 Generated Keys, Generated Orchestral, Generated Bass & Guitar, Generated Plucks & Bells, Generated Drums & FX, Generated Ambient, Generated Sequence, Generated Experimental bank가 제공됩니다.
 
 뱅크를 선택하면 UI가 manifest를 읽어 프리셋 목록을 표시합니다.
 
@@ -466,7 +466,7 @@ Parameter Rack은 어느 페이지에 있든 빠르게 조작할 수 있는 컨�
 ### 샘플 피아노를 고르고 연주하기
 
 1. 왼쪽에서 `SAMPLE`을 누릅니다.
-2. Bank에서 `Demo Lite`를 선택합니다.
+2. Bank에서 `Demo Lite` 또는 `Generated Keys`를 선택합니다.
 3. Piano 계열 샘플 프리셋을 선택합니다.
 4. 엔진 모드가 `SAMPLE`로 바뀌었는지 확인합니다.
 5. `Layer`가 켜져 있는지 확인합니다.

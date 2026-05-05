@@ -1,0 +1,21 @@
+{
+  "id": "gen-drums-fx",
+  "name": "Generated Drums & FX",
+  "author": "Project",
+  "description": "Generated drum hit and sound effect sample bank.",
+  "license": "Generated demo only",
+  "presets": [
+    { "id": "tight-kick-generated", "name": "Tight Kick Generated", "category": "Drum", "author": "Project", "description": "Generated kick drum.", "license": "Generated demo", "zones": [{ "id": "tight-kick-c3", "url": "generated://drum-kick-tight-c3", "rootNote": 48, "lowNote": 24, "highNote": 84, "loop": false, "gain": 0.95 }] },
+    { "id": "deep-kick-generated", "name": "Deep Kick Generated", "category": "Drum", "author": "Project", "description": "Generated deep kick.", "license": "Generated demo", "zones": [{ "id": "deep-kick-c3", "url": "generated://drum-kick-deep-c3", "rootNote": 48, "lowNote": 24, "highNote": 84, "loop": false, "gain": 0.98 }] },
+    { "id": "noise-snare-generated", "name": "Noise Snare Generated", "category": "Drum", "author": "Project", "description": "Generated snare drum.", "license": "Generated demo", "zones": [{ "id": "noise-snare-c3", "url": "generated://drum-snare-noise-c3", "rootNote": 48, "lowNote": 24, "highNote": 84, "loop": false, "gain": 0.82 }] },
+    { "id": "rim-tap-generated", "name": "Rim Tap Generated", "category": "Drum", "author": "Project", "description": "Generated rim percussion.", "license": "Generated demo", "zones": [{ "id": "rim-tap-c3", "url": "generated://drum-rim-tap-c3", "rootNote": 48, "lowNote": 24, "highNote": 84, "loop": false, "gain": 0.76 }] },
+    { "id": "closed-hat-generated", "name": "Closed Hat Generated", "category": "Drum", "author": "Project", "description": "Generated closed hat.", "license": "Generated demo", "zones": [{ "id": "closed-hat-c3", "url": "generated://drum-hat-closed-c3", "rootNote": 48, "lowNote": 24, "highNote": 84, "loop": false, "gain": 0.68 }] },
+    { "id": "open-hat-generated", "name": "Open Hat Generated", "category": "Drum", "author": "Project", "description": "Generated open hat.", "license": "Generated demo", "zones": [{ "id": "open-hat-c3", "url": "generated://drum-hat-open-c3", "rootNote": 48, "lowNote": 24, "highNote": 84, "loop": false, "gain": 0.66 }] },
+    { "id": "electro-tom-generated", "name": "Electro Tom Generated", "category": "Drum", "author": "Project", "description": "Generated tom.", "license": "Generated demo", "zones": [{ "id": "electro-tom-c3", "url": "generated://drum-tom-electro-c3", "rootNote": 48, "lowNote": 24, "highNote": 84, "loop": false, "gain": 0.84 }] },
+    { "id": "metal-clave-generated", "name": "Metal Clave Generated", "category": "Drum", "author": "Project", "description": "Generated metallic clave.", "license": "Generated demo", "zones": [{ "id": "metal-clave-c3", "url": "generated://drum-clave-metal-c3", "rootNote": 48, "lowNote": 24, "highNote": 84, "loop": false, "gain": 0.72 }] },
+    { "id": "sub-drop-generated", "name": "Sub Drop Generated", "category": "FX", "author": "Project", "description": "Generated sub drop FX.", "license": "Generated demo", "zones": [{ "id": "sub-drop-c3", "url": "generated://hit-sub-drop-c3", "rootNote": 48, "lowNote": 24, "highNote": 84, "loop": false, "gain": 0.9 }] },
+    { "id": "noise-riser-generated", "name": "Noise Riser Generated", "category": "FX", "author": "Project", "description": "Generated riser FX.", "license": "Generated demo", "zones": [{ "id": "noise-riser-c4", "url": "generated://fx-noise-riser-c4", "rootNote": 60, "lowNote": 24, "highNote": 96, "loop": false, "gain": 0.72 }] },
+    { "id": "laser-zap-generated", "name": "Laser Zap Generated", "category": "FX", "author": "Project", "description": "Generated laser zap.", "license": "Generated demo", "zones": [{ "id": "laser-zap-c4", "url": "generated://fx-laser-zap-c4", "rootNote": 60, "lowNote": 24, "highNote": 96, "loop": false, "gain": 0.74 }] },
+    { "id": "digital-burst-generated", "name": "Digital Burst Generated", "category": "FX", "author": "Project", "description": "Generated digital burst.", "license": "Generated demo", "zones": [{ "id": "digital-burst-c4", "url": "generated://fx-digital-burst-c4", "rootNote": 60, "lowNote": 24, "highNote": 96, "loop": false, "gain": 0.72 }] }
+  ]
+}

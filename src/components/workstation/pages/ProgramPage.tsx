@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { factoryPresets } from '../../../presets/factoryPresets';
+import { factoryPresets, presetCategoryOrder } from '../../../presets/factoryPresets';
 import { sampleFactoryPresets } from '../../../presets/sampleFactoryPresets';
 import { usePresetStore } from '../../../store/presetStore';
 import { selectEngineState, useSynthStore } from '../../../store/synthStore';
@@ -20,7 +20,7 @@ interface ProgramBank {
   presets: SynthPreset[];
 }
 
-const programCategories: ProgramCategoryFilter[] = ['All', 'Bass', 'Lead', 'Pad', 'Piano', 'Strings', 'Drum'];
+const programCategories: ProgramCategoryFilter[] = ['All', ...presetCategoryOrder];
 
 function programNumber(index: number): string {
   return String(index + 1).padStart(3, '0');
