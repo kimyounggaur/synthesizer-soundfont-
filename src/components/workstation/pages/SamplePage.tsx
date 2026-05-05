@@ -1,7 +1,9 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react';
 import { getCachedSampleBank, getCachedSamplePreset, loadPublicSampleBanks } from '../../../samples/sampleBankLibrary';
 import { useSynthStore } from '../../../store/synthStore';
-import type { EngineMode, SampleBankManifest, SampleCategory, SampleLayerState, SamplePresetDefinition, SampleZone } from '../../../types/soundfont';
+import { useUiStore } from '../../../store/uiStore';
+import type { EngineMode, SampleBankManifest, SampleCategory, SamplePresetDefinition } from '../../../types/soundfont';
+import { mergeSampleZoneOverride } from '../../../utils/sampleZoneUtils';
 import { Knob } from '../../ui/Knob';
 import { LedButton } from '../../ui/LedButton';
 import { MiniDisplay } from '../../ui/MiniDisplay';
@@ -71,25 +73,13 @@ function clampNumber(value: number, min: number, max: number): number {
   return Math.min(max, Math.max(min, value));
 }
 
-function mergeZoneOverride(zone: SampleZone, sampleLayer: SampleLayerState): SampleZone {
-  const override = sampleLayer.zoneOverrides?.[zone.id];
-  if (!override) {
-    return zone;
+function ratioFromPointer(track: HTMLElement, clientX: number): number {
+  const rect = track.getBoundingClientRect();
+  if (rect.width <= 0) {
+    return 0;
   }
 
-  return {
-    ...zone,
-    rootNote: override.rootNote ?? zone.rootNote,
-    lowNote: override.lowNote ?? zone.lowNote,
-    highNote: override.highNote ?? zone.highNote,
-    lowVelocity: override.lowVelocity ?? zone.lowVelocity,
-    highVelocity: override.highVelocity ?? zone.highVelocity,
-    loop: override.loop ?? zone.loop,
-    loopStart: override.loopStart ?? zone.loopStart,
-    loopEnd: override.loopEnd ?? zone.loopEnd,
-    gain: override.gain ?? zone.gain,
-    pan: override.pan ?? zone.pan,
-  };
+  return clampNumber((clientX - rect.left) / rect.width, 0, 1);
 }
 
 function isGeneratedSampleUrl(url: string): boolean {
@@ -125,8 +115,9 @@ export function SamplePage() {
   const [banks, setBanks] = useState<SampleBankManifest[]>([]);
   const [message, setMessage] = useState<string | null>(null);
   const [sampleStatus, setSampleStatus] = useState<WorkstationStatus>('LOADING SAMPLE');
-  const [selectedZoneId, setSelectedZoneId] = useState('');
   const sampleSelectionRequestId = useRef(0);
+  const selectedZoneId = useUiStore((state) => state.selectedSampleZoneId);
+  const setSelectedSampleZoneId = useUiStore((state) => state.setSelectedSampleZoneId);
   const engineMode = useSynthStore((state) => state.engineMode);
   const sampleLayer = useSynthStore((state) => state.sampleLayer);
   const setEngineMode = useSynthStore((state) => state.setEngineMode);
@@ -198,23 +189,21 @@ export function SamplePage() {
   const activeBank = getCachedSampleBank(sampleLayer.bankId);
   const selectedZone = activePreset?.zones.find((zone) => zone.id === selectedZoneId) ?? activePreset?.zones[0] ?? null;
   const selectedZoneOverride = selectedZone ? sampleLayer.zoneOverrides?.[selectedZone.id] : undefined;
-  const currentZone = selectedZone ? mergeZoneOverride(selectedZone, sampleLayer) : null;
+  const currentZone = selectedZone ? mergeSampleZoneOverride(selectedZone, sampleLayer) : null;
   const editedZoneCount = activePreset?.zones.filter((zone) => Boolean(sampleLayer.zoneOverrides?.[zone.id])).length ?? 0;
 
   useEffect(() => {
     if (!activePreset) {
-      setSelectedZoneId('');
+      setSelectedSampleZoneId(null);
       return;
     }
 
-    setSelectedZoneId((currentId) => {
-      if (activePreset.zones.some((zone) => zone.id === currentId)) {
-        return currentId;
-      }
+    if (activePreset.zones.some((zone) => zone.id === selectedZoneId)) {
+      return;
+    }
 
-      return activePreset.zones[0]?.id ?? '';
-    });
-  }, [activePreset]);
+    setSelectedSampleZoneId(activePreset.zones[0]?.id ?? null);
+  }, [activePreset, selectedZoneId, setSelectedSampleZoneId]);
 
   const handlePreload = () => {
     if (!sampleLayer.bankId || !sampleLayer.presetId || !activePreset) {
@@ -322,6 +311,92 @@ export function SamplePage() {
     }
 
     handleUpdateZone({ loop: true, loopEnd: clampNumber(value, currentZone.loopStart ?? 0, 4) });
+  };
+
+  const handleZoneRangePointerDown = (range: 'key' | 'velocity', event: ReactPointerEvent<HTMLDivElement>) => {
+    if (!currentZone) {
+      return;
+    }
+
+    event.preventDefault();
+    const track = event.currentTarget;
+    const pointerId = event.pointerId;
+    track.setPointerCapture(pointerId);
+
+    if (range === 'key') {
+      let lowNote = currentZone.lowNote;
+      let highNote = currentZone.highNote;
+      let rootNote = currentZone.rootNote;
+      const firstNote = Math.round(ratioFromPointer(track, event.clientX) * 127);
+      const handle = Math.abs(firstNote - lowNote) <= Math.abs(firstNote - highNote) ? 'low' : 'high';
+
+      const applyKeyDrag = (clientX: number) => {
+        const note = Math.round(ratioFromPointer(track, clientX) * 127);
+        if (handle === 'low') {
+          lowNote = Math.min(note, highNote);
+        } else {
+          highNote = Math.max(note, lowNote);
+        }
+        rootNote = Math.round(clampNumber(rootNote, lowNote, highNote));
+        handleUpdateZone({ lowNote, highNote, rootNote });
+      };
+
+      const handleMove = (moveEvent: PointerEvent) => {
+        if (moveEvent.pointerId === pointerId) {
+          applyKeyDrag(moveEvent.clientX);
+        }
+      };
+
+      const handleEnd = () => {
+        window.removeEventListener('pointermove', handleMove);
+        window.removeEventListener('pointerup', handleEnd);
+        window.removeEventListener('pointercancel', handleEnd);
+        if (track.hasPointerCapture(pointerId)) {
+          track.releasePointerCapture(pointerId);
+        }
+      };
+
+      applyKeyDrag(event.clientX);
+      window.addEventListener('pointermove', handleMove);
+      window.addEventListener('pointerup', handleEnd);
+      window.addEventListener('pointercancel', handleEnd);
+      return;
+    }
+
+    let lowVelocity = currentZone.lowVelocity ?? 0;
+    let highVelocity = currentZone.highVelocity ?? 1;
+    const firstVelocity = ratioFromPointer(track, event.clientX);
+    const handle = Math.abs(firstVelocity - lowVelocity) <= Math.abs(firstVelocity - highVelocity) ? 'low' : 'high';
+
+    const applyVelocityDrag = (clientX: number) => {
+      const velocity = ratioFromPointer(track, clientX);
+      if (handle === 'low') {
+        lowVelocity = Math.min(velocity, highVelocity);
+      } else {
+        highVelocity = Math.max(velocity, lowVelocity);
+      }
+      handleUpdateZone({ lowVelocity, highVelocity });
+    };
+
+    const handleMove = (moveEvent: PointerEvent) => {
+      if (moveEvent.pointerId === pointerId) {
+        applyVelocityDrag(moveEvent.clientX);
+      }
+    };
+
+    const handleEnd = () => {
+      window.removeEventListener('pointermove', handleMove);
+      window.removeEventListener('pointerup', handleEnd);
+      window.removeEventListener('pointercancel', handleEnd);
+      if (track.hasPointerCapture(pointerId)) {
+        track.releasePointerCapture(pointerId);
+      }
+    };
+
+    applyVelocityDrag(event.clientX);
+    window.addEventListener('pointermove', handleMove);
+    window.addEventListener('pointerup', handleEnd);
+    window.addEventListener('pointercancel', handleEnd);
   };
 
   const handleResetZone = () => {
@@ -458,10 +533,10 @@ export function SamplePage() {
                 <div className="sample-zone-list" aria-label="Sample zones">
                   {activePreset.zones.map((zone) => {
                     const zoneOverride = sampleLayer.zoneOverrides?.[zone.id];
-                    const zoneValue = mergeZoneOverride(zone, sampleLayer);
+                    const zoneValue = mergeSampleZoneOverride(zone, sampleLayer);
                     const active = zone.id === currentZone?.id;
                     return (
-                      <button key={zone.id} type="button" className={active ? 'sample-zone-button is-active' : 'sample-zone-button'} aria-pressed={active} onClick={() => setSelectedZoneId(zone.id)}>
+                      <button key={zone.id} type="button" className={active ? 'sample-zone-button is-active' : 'sample-zone-button'} aria-pressed={active} onClick={() => setSelectedSampleZoneId(zone.id)}>
                         <span>{zone.id}</span>
                         <small>
                           {formatNote(zoneValue.lowNote)}-{formatNote(zoneValue.highNote)}
@@ -482,7 +557,7 @@ export function SamplePage() {
                       <span>{selectedZoneOverride ? 'EDITED' : 'ORIGINAL'}</span>
                     </div>
 
-                    <div className="sample-zone-map" aria-label="Selected sample zone range">
+                    <div className="sample-zone-map is-draggable" aria-label="Selected sample zone range. Drag near the left or right edge to edit the key range." onPointerDown={(event) => handleZoneRangePointerDown('key', event)}>
                       <span
                         className="sample-zone-map-range"
                         style={{
@@ -490,8 +565,10 @@ export function SamplePage() {
                           width: `${Math.max(4, ((currentZone.highNote - currentZone.lowNote + 1) / 128) * 100)}%`,
                         }}
                       />
+                      <span className="sample-zone-map-handle is-low" style={{ left: `${(currentZone.lowNote / 127) * 100}%` }} />
+                      <span className="sample-zone-map-handle is-high" style={{ left: `${(currentZone.highNote / 127) * 100}%` }} />
                     </div>
-                    <div className="sample-zone-map sample-zone-velocity-map" aria-label="Selected sample velocity range">
+                    <div className="sample-zone-map sample-zone-velocity-map is-draggable" aria-label="Selected sample velocity range. Drag near the left or right edge to edit the velocity range." onPointerDown={(event) => handleZoneRangePointerDown('velocity', event)}>
                       <span
                         className="sample-zone-map-range sample-zone-velocity-range"
                         style={{
@@ -499,6 +576,8 @@ export function SamplePage() {
                           width: `${Math.max(4, (((currentZone.highVelocity ?? 1) - (currentZone.lowVelocity ?? 0)) * 100))}%`,
                         }}
                       />
+                      <span className="sample-zone-map-handle is-low" style={{ left: `${(currentZone.lowVelocity ?? 0) * 100}%` }} />
+                      <span className="sample-zone-map-handle is-high" style={{ left: `${(currentZone.highVelocity ?? 1) * 100}%` }} />
                     </div>
 
                     <div className="workstation-knob-grid sample-page-knobs sample-zone-knobs">

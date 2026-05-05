@@ -4641,6 +4641,36 @@
     box-shadow: 0 0 14px rgba(81, 245, 198, 0.42);
   }
 
+  .sample-zone-map.is-draggable {
+    cursor: ew-resize;
+    touch-action: none;
+  }
+
+  .sample-zone-map-handle {
+    position: absolute;
+    top: 50%;
+    z-index: 1;
+    width: 0.62rem;
+    height: 1.32rem;
+    border: 1px solid rgba(255, 255, 255, 0.62);
+    border-radius: 999px;
+    background:
+      linear-gradient(180deg, #ffffff, #9fffea 58%, #2ed2b1);
+    box-shadow:
+      0 0 12px rgba(81, 245, 198, 0.5),
+      inset 0 1px 0 rgba(255, 255, 255, 0.7);
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+  }
+
+  .sample-zone-map-handle.is-high {
+    background:
+      linear-gradient(180deg, #ffffff, #ffd27a 58%, #f2b84b);
+    box-shadow:
+      0 0 12px rgba(242, 184, 75, 0.5),
+      inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  }
+
   .sample-zone-velocity-map {
     border-color: rgba(242, 184, 75, 0.28);
     background:
@@ -6332,6 +6362,49 @@
   .keyboard-key.is-black.is-active {
     background:
       linear-gradient(180deg, #39dbff, #12111d 30%, #050408 76%, #e7acd2) !important;
+  }
+
+  .keyboard-key.is-sample-zone {
+    outline: 1px solid rgba(53, 217, 255, 0.42);
+    outline-offset: -3px;
+  }
+
+  .keyboard-key.is-selected-sample-zone {
+    outline-color: rgba(255, 208, 107, 0.9);
+    box-shadow:
+      inset 0 -10px 16px rgba(255, 208, 107, 0.18),
+      0 0 0 2px rgba(255, 208, 107, 0.38),
+      0 3px 0 rgba(67, 38, 67, 0.3) !important;
+  }
+
+  .keyboard-zone-overlay {
+    position: absolute;
+    right: 0.16rem;
+    bottom: 0.32rem;
+    left: 0.16rem;
+    z-index: 0;
+    height: 0.36rem;
+    border-radius: 999px;
+    background: linear-gradient(90deg, rgba(53, 217, 255, 0.86), rgba(137, 247, 255, 0.62));
+    box-shadow: 0 0 10px rgba(53, 217, 255, 0.34);
+    pointer-events: none;
+  }
+
+  .keyboard-key.is-selected-sample-zone .keyboard-zone-overlay {
+    height: 0.48rem;
+    background: linear-gradient(90deg, rgba(255, 216, 111, 0.96), rgba(255, 133, 196, 0.78));
+    box-shadow: 0 0 13px rgba(255, 216, 111, 0.52);
+  }
+
+  .keyboard-key.is-black .keyboard-zone-overlay {
+    bottom: 0.24rem;
+    height: 0.24rem;
+  }
+
+  .keyboard-shortcut-label,
+  .keyboard-note-label {
+    position: relative;
+    z-index: 1;
   }
 
   .program-list::-webkit-scrollbar-track {

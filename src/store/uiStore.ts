@@ -9,16 +9,20 @@ interface UiStore {
   activeWorkstationPage: WorkstationPageId;
   programBankId: ProgramBankId;
   programCategory: ProgramCategoryFilter;
+  selectedSampleZoneId: string | null;
   setActiveWorkstationPage: (page: WorkstationPageId) => void;
   setProgramBankId: (bankId: ProgramBankId) => void;
   setProgramCategory: (category: ProgramCategoryFilter) => void;
+  setSelectedSampleZoneId: (zoneId: string | null) => void;
 }
 
 export const useUiStore = create<UiStore>((set) => ({
   activeWorkstationPage: 'program',
   programBankId: 'A',
   programCategory: 'All',
+  selectedSampleZoneId: null,
   setActiveWorkstationPage: (page) => set({ activeWorkstationPage: page }),
   setProgramBankId: (bankId) => set({ programBankId: bankId }),
   setProgramCategory: (category) => set({ programCategory: category }),
+  setSelectedSampleZoneId: (zoneId) => set({ selectedSampleZoneId: zoneId }),
 }));

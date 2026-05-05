@@ -1,5 +1,8 @@
-import { useEffect, useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { getCachedSamplePreset, loadPublicSampleBanks } from '../samples/sampleBankLibrary';
 import { useSynthStore } from '../store/synthStore';
+import { useUiStore } from '../store/uiStore';
+import { isNoteInSampleZone, mergeSampleZoneOverride } from '../utils/sampleZoneUtils';
 import { PitchModWheels } from './PitchModWheels';
 
 interface KeyboardProps {
@@ -106,17 +109,48 @@ function isEditableTarget(target: EventTarget | null): boolean {
 }
 
 export function Keyboard({ onNoteOn, onNoteOff }: KeyboardProps) {
+  const [sampleManifestVersion, setSampleManifestVersion] = useState(0);
   const keyboardOctave = useSynthStore((state) => state.keyboardOctave);
   const defaultVelocity = useSynthStore((state) => state.defaultVelocity);
   const activeNotes = useSynthStore((state) => state.activeNotes);
+  const sampleLayer = useSynthStore((state) => state.sampleLayer);
   const setKeyboardOctave = useSynthStore((state) => state.setKeyboardOctave);
   const setDefaultVelocity = useSynthStore((state) => state.setDefaultVelocity);
+  const selectedSampleZoneId = useUiStore((state) => state.selectedSampleZoneId);
   const heldKeys = useRef(new Map<string, number>());
 
   const notes = useMemo(() => {
     const base = (keyboardOctave + 1) * 12;
     return Array.from({ length: visibleKeyCount }, (_, index) => base + index);
   }, [keyboardOctave]);
+
+  useEffect(() => {
+    if (!sampleLayer.bankId || !sampleLayer.presetId) {
+      return undefined;
+    }
+
+    let mounted = true;
+    loadPublicSampleBanks()
+      .then(() => {
+        if (mounted) {
+          setSampleManifestVersion((version) => version + 1);
+        }
+      })
+      .catch(() => undefined);
+
+    return () => {
+      mounted = false;
+    };
+  }, [sampleLayer.bankId, sampleLayer.presetId]);
+
+  const sampleZones = useMemo(() => {
+    const preset = getCachedSamplePreset(sampleLayer.bankId, sampleLayer.presetId);
+    if (!preset) {
+      return [];
+    }
+
+    return preset.zones.map((zone) => mergeSampleZoneOverride(zone, sampleLayer));
+  }, [sampleLayer, sampleManifestVersion]);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -208,14 +242,20 @@ export function Keyboard({ onNoteOn, onNoteOff }: KeyboardProps) {
             const active = activeNotes[note] !== undefined;
             const velocity = activeNotes[note] ?? 0;
             const keyLabel = computerKeyLabels.get(note - (keyboardOctave + 1) * 12);
+            const matchingZones = sampleZones.filter((zone) => isNoteInSampleZone(note, zone));
+            const selectedZone = matchingZones.find((zone) => zone.id === selectedSampleZoneId);
+            const hasSampleZone = matchingZones.length > 0;
+            const selectedSampleZone = Boolean(selectedZone);
+            const zoneLabel = selectedZone?.id ?? matchingZones[0]?.id;
             return (
               <button
                 key={note}
-                className={`keyboard-key ${black ? 'is-black' : 'is-white'} ${active ? 'is-active' : ''} relative px-1 pb-3 font-mono text-[0.68rem] ${
+                className={`keyboard-key ${black ? 'is-black' : 'is-white'} ${active ? 'is-active' : ''} ${hasSampleZone ? 'is-sample-zone' : ''} ${selectedSampleZone ? 'is-selected-sample-zone' : ''} relative px-1 pb-3 font-mono text-[0.68rem] ${
                   black
                     ? 'bg-slate-950 text-slate-400 shadow-inner'
                     : 'bg-slate-200 text-slate-950'
                 }`}
+                aria-label={`${noteName(note)}${hasSampleZone ? `, sample zone ${zoneLabel}${selectedSampleZone ? ', selected zone' : ''}` : ''}`}
                 style={{
                   ['--key-velocity' as string]: velocity,
                 }}
@@ -234,6 +274,7 @@ export function Keyboard({ onNoteOn, onNoteOff }: KeyboardProps) {
                   }
                 }}
               >
+                {hasSampleZone ? <span className="keyboard-zone-overlay" aria-hidden="true" /> : null}
                 <span className="keyboard-shortcut-label">{keyLabel}</span>
                 <span className="keyboard-note-label">{noteName(note)}</span>
               </button>
