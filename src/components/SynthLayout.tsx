@@ -8,6 +8,7 @@ import { WorkstationLcd } from './workstation/WorkstationLcd';
 import { WorkstationParameterRack } from './workstation/WorkstationParameterRack';
 import { WorkstationPerformanceStrip } from './workstation/WorkstationPerformanceStrip';
 import { WorkstationShell } from './workstation/WorkstationShell';
+import { WorkstationSliderRack } from './workstation/WorkstationSliderRack';
 import { WorkstationTabs } from './workstation/WorkstationTabs';
 import { WorkstationTopBar } from './workstation/WorkstationTopBar';
 import { EffectsPage } from './workstation/pages/EffectsPage';
@@ -136,6 +137,7 @@ export function SynthLayout() {
       tabs={<WorkstationTabs />}
       lcd={<WorkstationLcd activePageId={activeWorkstationPage}>{renderPage()}</WorkstationLcd>}
       parameterRack={<WorkstationParameterRack meter={meter} onPanic={handlePanic} onTestTone={handleTestTone} />}
+      sliderRack={<WorkstationSliderRack />}
       performanceStrip={<WorkstationPerformanceStrip onPanic={handlePanic} onTestTone={handleTestTone} />}
       keybed={<Keyboard onNoteOn={handleNoteOn} onNoteOff={handleNoteOff} />}
       engineError={engineError}

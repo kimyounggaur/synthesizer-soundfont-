@@ -5,12 +5,13 @@ interface WorkstationShellProps {
   tabs: ReactNode;
   lcd: ReactNode;
   parameterRack: ReactNode;
+  sliderRack: ReactNode;
   performanceStrip: ReactNode;
   keybed: ReactNode;
   engineError?: string | null;
 }
 
-export function WorkstationShell({ topBar, tabs, lcd, parameterRack, performanceStrip, keybed, engineError }: WorkstationShellProps) {
+export function WorkstationShell({ topBar, tabs, lcd, parameterRack, sliderRack, performanceStrip, keybed, engineError }: WorkstationShellProps) {
   return (
     <main className="synth-workbench workstation-page min-h-screen p-2 text-slate-100 md:p-3">
       <div className="hardware-shell workstation-shell touch-workstation-shell flex w-full max-w-none flex-col gap-4 p-3 md:p-4">
@@ -23,9 +24,12 @@ export function WorkstationShell({ topBar, tabs, lcd, parameterRack, performance
         ) : (
           <>
             <section className="workstation-main-deck workstation-workspace-grid" aria-label="Workstation edit area">
-              {tabs}
+              <div className="workstation-left-stack">
+                {tabs}
+                {parameterRack}
+              </div>
               {lcd}
-              {parameterRack}
+              {sliderRack}
             </section>
             {performanceStrip}
             <div className="workstation-keybed-frame">{keybed}</div>
