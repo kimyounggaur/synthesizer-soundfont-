@@ -7296,6 +7296,20 @@
     font-weight: 700;
   }
 
+  .program-page .touch-lcd-title {
+    background:
+      linear-gradient(180deg, #20202a, #0d0d13);
+  }
+
+  .program-page .touch-lcd-title span {
+    color: #f4f4f6;
+  }
+
+  .program-page .touch-lcd-title h2 {
+    color: #ffffff;
+    text-transform: uppercase;
+  }
+
   .program-list {
     display: grid;
     grid-template-columns: repeat(4, minmax(8.5rem, 1fr));

@@ -124,14 +124,14 @@ export function ProgramPage() {
     <div className="workstation-page workstation-lcd-page program-page">
       <header className="workstation-page-header">
         <div className="touch-lcd-title">
-          <span>Touch LCD</span>
-          <h2>Program</h2>
-          <p>{activeProgram?.name ?? bankTitle(selectedBank)}</p>
+          <span>Set List</span>
+          <h2>Program Set List</h2>
+          <p>{activeProgram ? `${activeProgramNumber} ${activeProgram.name}` : `${bankTitle(selectedBank)} / ${visiblePrograms.length} programs`}</p>
         </div>
         <WorkstationPageTabs labels={['BANK', 'CATEGORY', 'PROGRAM LIST']} ariaLabel="Program sections" variant="tabs" />
       </header>
 
-      <WorkstationBreadcrumb items={['PROGRAM', selectedBank.label, selectedCategory === 'All' ? 'All' : selectedCategory, activeProgram?.name ?? 'No Program']} />
+      <WorkstationBreadcrumb items={['SET LIST', selectedBank.label, selectedCategory === 'All' ? 'All' : selectedCategory, activeProgram?.name ?? 'No Program']} />
 
       <div className="program-page-layout">
         <aside className="workstation-side-buttons program-bank-buttons" aria-label="Program banks">
