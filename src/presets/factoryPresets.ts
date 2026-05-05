@@ -1,5 +1,6 @@
 import { createDefaultEngineState } from '../store/synthStore';
 import type { SampleLayerState } from '../types/soundfont';
+import { balancedFactoryPresets } from './balancedFactoryPresets';
 import { expandedFactoryPresets } from './expandedFactoryPresets';
 import type {
   EffectState,
@@ -1224,4 +1225,5 @@ export const factoryPresets: SynthPreset[] = [
     effects: [fx('chaos-mallet-reverb', 'reverb', 0.24, { decay: 1.8 })],
   }),
   ...expandedFactoryPresets,
+  ...balancedFactoryPresets,
 ];
