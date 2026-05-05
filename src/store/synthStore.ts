@@ -230,6 +230,7 @@ export interface SynthStore extends SynthEngineState {
   updateSampleLayer: (partial: Partial<SampleLayerState>) => void;
   updateSampleZoneOverride: (zoneId: string, partial: Partial<Omit<SampleZoneOverrideState, 'zoneId'>>) => void;
   clearSampleZoneOverride: (zoneId: string) => void;
+  clearAllSampleZoneOverrides: () => void;
   selectSamplePreset: (bankId: string, presetId: string) => void;
   addEffect: (effect: EffectState) => void;
   updateEffect: (id: string, partial: Partial<EffectState>) => void;
@@ -329,6 +330,13 @@ export const useSynthStore = create<SynthStore>((set) => ({
         },
       };
     }),
+  clearAllSampleZoneOverrides: () =>
+    set((state) => ({
+      sampleLayer: {
+        ...state.sampleLayer,
+        zoneOverrides: {},
+      },
+    })),
   selectSamplePreset: (bankId, presetId) =>
     set((state) => ({
       engineMode: 'sample',
@@ -337,6 +345,7 @@ export const useSynthStore = create<SynthStore>((set) => ({
         enabled: true,
         bankId,
         presetId,
+        zoneOverrides: state.sampleLayer.bankId === bankId && state.sampleLayer.presetId === presetId ? state.sampleLayer.zoneOverrides : {},
       },
       currentPreset: `sample:${bankId}:${presetId}`,
       activeNotes: {},

@@ -4547,6 +4547,116 @@
     grid-template-columns: repeat(3, minmax(64px, 1fr));
   }
 
+  .sample-zone-editor {
+    gap: 0.7rem;
+  }
+
+  .sample-zone-list {
+    display: grid;
+    max-height: 8rem;
+    min-height: 0;
+    gap: 0.38rem;
+    overflow: auto;
+    padding-right: 0.18rem;
+  }
+
+  .sample-zone-button {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 0.45rem;
+    min-width: 0;
+    border: 1px solid rgba(81, 245, 198, 0.22);
+    border-radius: 5px;
+    background: rgba(7, 18, 15, 0.78);
+    color: var(--ws-lcd-text);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.66rem;
+    font-weight: 900;
+    text-align: left;
+  }
+
+  .sample-zone-button:hover,
+  .sample-zone-button.is-active {
+    border-color: rgba(81, 245, 198, 0.72);
+    background: rgba(81, 245, 198, 0.14);
+  }
+
+  .sample-zone-button span,
+  .sample-zone-button small {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .sample-zone-button small {
+    color: var(--ws-amber);
+    font-size: 0.56rem;
+  }
+
+  .sample-zone-readout {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.35rem;
+    min-width: 0;
+  }
+
+  .sample-zone-readout span {
+    min-width: 0;
+    overflow: hidden;
+    border: 1px solid rgba(81, 245, 198, 0.18);
+    border-radius: 4px;
+    background: rgba(0, 0, 0, 0.3);
+    color: var(--ws-lcd-text);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.56rem;
+    font-weight: 900;
+    line-height: 1.45rem;
+    padding: 0 0.36rem;
+    text-align: center;
+    text-overflow: ellipsis;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .sample-zone-map {
+    position: relative;
+    height: 1.05rem;
+    overflow: hidden;
+    border: 1px solid rgba(81, 245, 198, 0.26);
+    border-radius: 999px;
+    background:
+      repeating-linear-gradient(90deg, rgba(185, 255, 232, 0.12) 0, rgba(185, 255, 232, 0.12) 1px, transparent 1px, transparent 12.5%),
+      rgba(0, 0, 0, 0.34);
+  }
+
+  .sample-zone-map-range {
+    position: absolute;
+    top: 0.16rem;
+    bottom: 0.16rem;
+    min-width: 0.65rem;
+    border-radius: 999px;
+    background: linear-gradient(90deg, var(--ws-cyan), var(--ws-amber));
+    box-shadow: 0 0 14px rgba(81, 245, 198, 0.42);
+  }
+
+  .sample-zone-velocity-map {
+    border-color: rgba(242, 184, 75, 0.28);
+    background:
+      repeating-linear-gradient(90deg, rgba(242, 184, 75, 0.13) 0, rgba(242, 184, 75, 0.13) 1px, transparent 1px, transparent 25%),
+      rgba(0, 0, 0, 0.34);
+  }
+
+  .sample-zone-velocity-range {
+    background: linear-gradient(90deg, #f2b84b, #ff7373);
+    box-shadow: 0 0 14px rgba(242, 184, 75, 0.36);
+  }
+
+  .sample-zone-knobs {
+    grid-template-columns: repeat(3, minmax(62px, 1fr));
+  }
+
   .program-page-layout {
     display: grid;
     grid-template-columns: minmax(190px, 0.3fr) minmax(0, 1fr) minmax(260px, 0.42fr);

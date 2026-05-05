@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { getCachedSampleBank, getCachedSamplePreset, loadPublicSampleBanks } from '../../../samples/sampleBankLibrary';
 import { useSynthStore } from '../../../store/synthStore';
-import type { EngineMode, SampleBankManifest, SampleCategory, SamplePresetDefinition } from '../../../types/soundfont';
+import type { EngineMode, SampleBankManifest, SampleCategory, SampleLayerState, SamplePresetDefinition, SampleZone } from '../../../types/soundfont';
 import { Knob } from '../../ui/Knob';
 import { LedButton } from '../../ui/LedButton';
 import { MiniDisplay } from '../../ui/MiniDisplay';
@@ -50,6 +50,48 @@ function formatPercent(value: number): string {
   return `${Math.round(value * 100)}%`;
 }
 
+function formatNote(note: number): string {
+  const noteNames = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+  return `${noteNames[note % 12]}${Math.floor(note / 12) - 1}`;
+}
+
+function formatPan(value: number): string {
+  if (Math.abs(value) < 0.01) {
+    return 'C';
+  }
+
+  return value < 0 ? `L${Math.round(Math.abs(value) * 100)}` : `R${Math.round(value * 100)}`;
+}
+
+function formatVelocity(value: number): string {
+  return `${Math.round(value * 127)}`;
+}
+
+function clampNumber(value: number, min: number, max: number): number {
+  return Math.min(max, Math.max(min, value));
+}
+
+function mergeZoneOverride(zone: SampleZone, sampleLayer: SampleLayerState): SampleZone {
+  const override = sampleLayer.zoneOverrides?.[zone.id];
+  if (!override) {
+    return zone;
+  }
+
+  return {
+    ...zone,
+    rootNote: override.rootNote ?? zone.rootNote,
+    lowNote: override.lowNote ?? zone.lowNote,
+    highNote: override.highNote ?? zone.highNote,
+    lowVelocity: override.lowVelocity ?? zone.lowVelocity,
+    highVelocity: override.highVelocity ?? zone.highVelocity,
+    loop: override.loop ?? zone.loop,
+    loopStart: override.loopStart ?? zone.loopStart,
+    loopEnd: override.loopEnd ?? zone.loopEnd,
+    gain: override.gain ?? zone.gain,
+    pan: override.pan ?? zone.pan,
+  };
+}
+
 function isGeneratedSampleUrl(url: string): boolean {
   return url.startsWith('generated://') || url.startsWith('data:');
 }
@@ -83,11 +125,15 @@ export function SamplePage() {
   const [banks, setBanks] = useState<SampleBankManifest[]>([]);
   const [message, setMessage] = useState<string | null>(null);
   const [sampleStatus, setSampleStatus] = useState<WorkstationStatus>('LOADING SAMPLE');
+  const [selectedZoneId, setSelectedZoneId] = useState('');
   const sampleSelectionRequestId = useRef(0);
   const engineMode = useSynthStore((state) => state.engineMode);
   const sampleLayer = useSynthStore((state) => state.sampleLayer);
   const setEngineMode = useSynthStore((state) => state.setEngineMode);
   const updateSampleLayer = useSynthStore((state) => state.updateSampleLayer);
+  const updateSampleZoneOverride = useSynthStore((state) => state.updateSampleZoneOverride);
+  const clearSampleZoneOverride = useSynthStore((state) => state.clearSampleZoneOverride);
+  const clearAllSampleZoneOverrides = useSynthStore((state) => state.clearAllSampleZoneOverrides);
   const selectSamplePreset = useSynthStore((state) => state.selectSamplePreset);
 
   useEffect(() => {
@@ -150,6 +196,25 @@ export function SamplePage() {
 
   const activePreset = getCachedSamplePreset(sampleLayer.bankId, sampleLayer.presetId);
   const activeBank = getCachedSampleBank(sampleLayer.bankId);
+  const selectedZone = activePreset?.zones.find((zone) => zone.id === selectedZoneId) ?? activePreset?.zones[0] ?? null;
+  const selectedZoneOverride = selectedZone ? sampleLayer.zoneOverrides?.[selectedZone.id] : undefined;
+  const currentZone = selectedZone ? mergeZoneOverride(selectedZone, sampleLayer) : null;
+  const editedZoneCount = activePreset?.zones.filter((zone) => Boolean(sampleLayer.zoneOverrides?.[zone.id])).length ?? 0;
+
+  useEffect(() => {
+    if (!activePreset) {
+      setSelectedZoneId('');
+      return;
+    }
+
+    setSelectedZoneId((currentId) => {
+      if (activePreset.zones.some((zone) => zone.id === currentId)) {
+        return currentId;
+      }
+
+      return activePreset.zones[0]?.id ?? '';
+    });
+  }, [activePreset]);
 
   const handlePreload = () => {
     if (!sampleLayer.bankId || !sampleLayer.presetId || !activePreset) {
@@ -185,6 +250,94 @@ export function SamplePage() {
 
     setSampleStatus(usesFallback ? 'FALLBACK SAMPLE' : 'READY');
     setMessage(usesFallback ? 'Using fallback buffer' : 'Preset ready');
+  };
+
+  const handleUpdateZone = (partial: Parameters<typeof updateSampleZoneOverride>[1]) => {
+    if (!selectedZone) {
+      return;
+    }
+
+    updateSampleZoneOverride(selectedZone.id, partial);
+  };
+
+  const handleUpdateRootNote = (value: number) => {
+    if (!currentZone) {
+      return;
+    }
+
+    handleUpdateZone({ rootNote: Math.round(clampNumber(value, currentZone.lowNote, currentZone.highNote)) });
+  };
+
+  const handleUpdateLowNote = (value: number) => {
+    if (!currentZone) {
+      return;
+    }
+
+    const lowNote = Math.round(clampNumber(value, 0, currentZone.highNote));
+    handleUpdateZone({
+      lowNote,
+      rootNote: Math.round(clampNumber(currentZone.rootNote, lowNote, currentZone.highNote)),
+    });
+  };
+
+  const handleUpdateHighNote = (value: number) => {
+    if (!currentZone) {
+      return;
+    }
+
+    const highNote = Math.round(clampNumber(value, currentZone.lowNote, 127));
+    handleUpdateZone({
+      highNote,
+      rootNote: Math.round(clampNumber(currentZone.rootNote, currentZone.lowNote, highNote)),
+    });
+  };
+
+  const handleUpdateLowVelocity = (value: number) => {
+    if (!currentZone) {
+      return;
+    }
+
+    handleUpdateZone({ lowVelocity: clampNumber(value, 0, currentZone.highVelocity ?? 1) });
+  };
+
+  const handleUpdateHighVelocity = (value: number) => {
+    if (!currentZone) {
+      return;
+    }
+
+    handleUpdateZone({ highVelocity: clampNumber(value, currentZone.lowVelocity ?? 0, 1) });
+  };
+
+  const handleUpdateLoopStart = (value: number) => {
+    if (!currentZone) {
+      return;
+    }
+
+    handleUpdateZone({ loop: true, loopStart: clampNumber(value, 0, currentZone.loopEnd ?? 4) });
+  };
+
+  const handleUpdateLoopEnd = (value: number) => {
+    if (!currentZone) {
+      return;
+    }
+
+    handleUpdateZone({ loop: true, loopEnd: clampNumber(value, currentZone.loopStart ?? 0, 4) });
+  };
+
+  const handleResetZone = () => {
+    if (!selectedZone) {
+      return;
+    }
+
+    clearSampleZoneOverride(selectedZone.id);
+    setSampleStatus('READY');
+    setMessage('Zone reset.');
+  };
+
+  const handleResetAllZones = () => {
+    clearAllSampleZoneOverrides();
+    setSampleStatus('READY');
+    setMessage('All zone edits reset.');
   };
 
   return (
@@ -296,6 +449,87 @@ export function SamplePage() {
                 </button>
               ))}
             </div>
+          </section>
+
+          <section className="module-block module-block-violet workstation-card sample-zone-editor">
+            <MiniDisplay eyebrow="Zone Editor" value={currentZone?.id.toUpperCase() ?? 'NO ZONE'} detail={currentZone ? `${formatNote(currentZone.lowNote)}-${formatNote(currentZone.highNote)} / ${editedZoneCount} edited` : 'Select sample preset'} tone="cyan" />
+            {activePreset ? (
+              <>
+                <div className="sample-zone-list" aria-label="Sample zones">
+                  {activePreset.zones.map((zone) => {
+                    const zoneOverride = sampleLayer.zoneOverrides?.[zone.id];
+                    const zoneValue = mergeZoneOverride(zone, sampleLayer);
+                    const active = zone.id === currentZone?.id;
+                    return (
+                      <button key={zone.id} type="button" className={active ? 'sample-zone-button is-active' : 'sample-zone-button'} aria-pressed={active} onClick={() => setSelectedZoneId(zone.id)}>
+                        <span>{zone.id}</span>
+                        <small>
+                          {formatNote(zoneValue.lowNote)}-{formatNote(zoneValue.highNote)}
+                          {' / '}
+                          V{formatVelocity(zoneValue.lowVelocity ?? 0)}-{formatVelocity(zoneValue.highVelocity ?? 1)}
+                          {zoneOverride ? ' / edited' : ''}
+                        </small>
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {currentZone ? (
+                  <>
+                    <div className="sample-zone-readout">
+                      <span>KEY {formatNote(currentZone.lowNote)}-{formatNote(currentZone.highNote)}</span>
+                      <span>VEL {formatVelocity(currentZone.lowVelocity ?? 0)}-{formatVelocity(currentZone.highVelocity ?? 1)}</span>
+                      <span>{selectedZoneOverride ? 'EDITED' : 'ORIGINAL'}</span>
+                    </div>
+
+                    <div className="sample-zone-map" aria-label="Selected sample zone range">
+                      <span
+                        className="sample-zone-map-range"
+                        style={{
+                          left: `${(currentZone.lowNote / 127) * 100}%`,
+                          width: `${Math.max(4, ((currentZone.highNote - currentZone.lowNote + 1) / 128) * 100)}%`,
+                        }}
+                      />
+                    </div>
+                    <div className="sample-zone-map sample-zone-velocity-map" aria-label="Selected sample velocity range">
+                      <span
+                        className="sample-zone-map-range sample-zone-velocity-range"
+                        style={{
+                          left: `${((currentZone.lowVelocity ?? 0) * 100)}%`,
+                          width: `${Math.max(4, (((currentZone.highVelocity ?? 1) - (currentZone.lowVelocity ?? 0)) * 100))}%`,
+                        }}
+                      />
+                    </div>
+
+                    <div className="workstation-knob-grid sample-page-knobs sample-zone-knobs">
+                      <Knob label="Root" min={0} max={127} step={1} value={currentZone.rootNote} onChange={handleUpdateRootNote} displayValue={formatNote(currentZone.rootNote)} tone="cyan" />
+                      <Knob label="Low" min={0} max={127} step={1} value={currentZone.lowNote} onChange={handleUpdateLowNote} displayValue={formatNote(currentZone.lowNote)} tone="mint" />
+                      <Knob label="High" min={0} max={127} step={1} value={currentZone.highNote} onChange={handleUpdateHighNote} displayValue={formatNote(currentZone.highNote)} tone="mint" />
+                      <Knob label="V Low" min={0} max={1} step={0.01} value={currentZone.lowVelocity ?? 0} onChange={handleUpdateLowVelocity} displayValue={formatVelocity(currentZone.lowVelocity ?? 0)} tone="amber" />
+                      <Knob label="V High" min={0} max={1} step={0.01} value={currentZone.highVelocity ?? 1} onChange={handleUpdateHighVelocity} displayValue={formatVelocity(currentZone.highVelocity ?? 1)} tone="amber" />
+                      <Knob label="Gain" min={0} max={1.5} step={0.01} value={currentZone.gain ?? 1} onChange={(value) => handleUpdateZone({ gain: value })} displayValue={formatPercent(currentZone.gain ?? 1)} tone="mint" />
+                      <Knob label="Pan" min={-1} max={1} step={0.01} value={currentZone.pan ?? 0} onChange={(value) => handleUpdateZone({ pan: value })} displayValue={formatPan(currentZone.pan ?? 0)} tone="violet" />
+                      <Knob label="Loop S" min={0} max={4} step={0.01} value={currentZone.loopStart ?? 0} onChange={handleUpdateLoopStart} displayValue={formatTime(currentZone.loopStart ?? 0)} tone="cyan" />
+                      <Knob label="Loop E" min={0} max={4} step={0.01} value={currentZone.loopEnd ?? 1} onChange={handleUpdateLoopEnd} displayValue={formatTime(currentZone.loopEnd ?? 1)} tone="cyan" />
+                    </div>
+
+                    <div className="sample-page-toggle-grid">
+                      <LedButton active={Boolean(currentZone.loop)} onClick={() => handleUpdateZone({ loop: !currentZone.loop })}>
+                        Loop
+                      </LedButton>
+                      <button type="button" className="performance-button" onClick={handleResetZone} disabled={!selectedZoneOverride}>
+                        Reset Zone
+                      </button>
+                      <button type="button" className="performance-button" onClick={handleResetAllZones} disabled={editedZoneCount === 0}>
+                        Reset All
+                      </button>
+                    </div>
+                  </>
+                ) : null}
+              </>
+            ) : (
+              <div className="effects-empty workstation-effects-empty">Select a sample preset to edit zones.</div>
+            )}
           </section>
 
           {message ? <div className={sampleStatus === 'FALLBACK SAMPLE' ? 'sample-bank-message is-warning' : 'sample-bank-message'}>{message}</div> : null}

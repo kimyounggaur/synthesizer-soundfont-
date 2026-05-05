@@ -29,7 +29,7 @@ export class AudioEngine {
   private readonly fxReturnPanner: StereoPannerNode;
   private readonly compressor: DynamicsCompressorNode;
   private readonly analyser: AnalyserNode;
-  private readonly voices = new Map<number, ActiveVoice>();
+  private readonly voices = new Map<number, ActiveVoice[]>();
   private state: SynthEngineState;
   private maxPolyphony: number;
   private analyserBuffer: Float32Array<ArrayBuffer>;
@@ -96,12 +96,14 @@ export class AudioEngine {
     this.setMasterVolume(state.masterVolume);
     this.applyPartMixer(state);
     this.effectsChain?.update(state.effects);
-    this.voices.forEach((voice) => {
-      if (isSynthVoice(voice)) {
-        voice.updateState(state);
-      } else {
-        voice.updateState(state.sampleLayer, state.pitchBend, state.modWheel);
-      }
+    this.voices.forEach((voices) => {
+      voices.forEach((voice) => {
+        if (isSynthVoice(voice)) {
+          voice.updateState(state);
+        } else {
+          voice.updateState(state.sampleLayer, state.pitchBend, state.modWheel);
+        }
+      });
     });
     const sampleKey = `${state.sampleLayer.bankId ?? ''}:${state.sampleLayer.presetId ?? ''}`;
     if (state.sampleLayer.enabled && state.sampleLayer.preload && state.sampleLayer.bankId && state.sampleLayer.presetId && sampleKey !== this.preloadedSampleKey) {
@@ -117,7 +119,7 @@ export class AudioEngine {
 
     const existing = this.voices.get(note);
     if (existing) {
-      existing.stopImmediately();
+      existing.forEach((voice) => voice.stopImmediately());
       this.voices.delete(note);
     }
 
@@ -141,7 +143,7 @@ export class AudioEngine {
     if (!voice) {
       return;
     }
-    voice.noteOff();
+    voice.forEach((activeVoice) => activeVoice.noteOff());
   }
 
   setMasterVolume(value: number): void {
@@ -149,7 +151,7 @@ export class AudioEngine {
   }
 
   panic(): void {
-    this.voices.forEach((voice) => voice.stopImmediately());
+    this.voices.forEach((voices) => voices.forEach((voice) => voice.stopImmediately()));
     this.voices.clear();
   }
 
@@ -202,35 +204,47 @@ export class AudioEngine {
       if (oldest === undefined) {
         return;
       }
-      const voice = this.voices.get(oldest);
-      voice?.stopImmediately();
+      const voices = this.voices.get(oldest);
+      voices?.forEach((voice) => voice.stopImmediately());
       this.voices.delete(oldest);
     }
   }
 
   private noteOnSynth(note: number, velocity: number): void {
-    const voice = new Voice(this.context, note, velocity, this.state, (endedVoice) => this.removeVoice(endedVoice));
-    this.voices.set(note, voice);
+    const voice = this.createSynthVoice(note, velocity);
+    this.voices.set(note, [voice]);
     voice.connect(this.synthPartGain);
     voice.start();
   }
 
+  private createSynthVoice(note: number, velocity: number): Voice {
+    return new Voice(this.context, note, velocity, this.state, (endedVoice) => this.removeVoice(endedVoice));
+  }
+
   private async noteOnSample(note: number, velocity: number): Promise<void> {
+    const voice = await this.createSampleVoice(note, velocity);
+    if (!voice) {
+      this.noteOnSynth(note, velocity);
+      return;
+    }
+
+    this.voices.set(note, [voice]);
+    voice.start();
+  }
+
+  private async createSampleVoice(note: number, velocity: number): Promise<SamplerVoice | null> {
     const layer = this.state.sampleLayer;
 
     if (!layer.enabled || !layer.bankId || !layer.presetId) {
-      this.noteOnSynth(note, velocity);
-      return;
+      return null;
     }
 
     try {
       await this.sampleBankManager.loadBank(layer.bankId);
       const preset = this.sampleBankManager.getPreset(layer.bankId, layer.presetId);
-
       if (!preset) {
         console.warn('[AudioEngine] Sample preset not found. Falling back to synth voice.');
-        this.noteOnSynth(note, velocity);
-        return;
+        return null;
       }
 
       const presetWithOverrides = this.applySampleZoneOverrides(preset, layer);
@@ -238,8 +252,7 @@ export class AudioEngine {
 
       if (!zone) {
         console.warn('[AudioEngine] No sample zone matched. Falling back to synth voice.');
-        this.noteOnSynth(note, velocity);
-        return;
+        return null;
       }
 
       const buffer = await this.sampleBankManager.getBufferForZone(layer.bankId, zone);
@@ -256,29 +269,41 @@ export class AudioEngine {
         onEnded: (endedVoice) => this.removeVoice(endedVoice),
       });
 
-      this.voices.set(note, voice);
       voice.connect(preset.category === 'Drum' ? this.drumPartGain : this.samplePartGain);
-      voice.start();
+      return voice;
     } catch (error) {
       console.warn('[AudioEngine] Sample voice failed. Falling back to synth voice.', error);
-      this.noteOnSynth(note, velocity);
+      return null;
     }
   }
 
   private async noteOnHybrid(note: number, velocity: number): Promise<void> {
-    // MVP: hybrid mode currently uses sample layer when available.
-    // Future: create HybridVoice that contains both Voice and SamplerVoice.
-    await this.noteOnSample(note, velocity);
+    const synthVoice = this.createSynthVoice(note, velocity);
+    synthVoice.connect(this.synthPartGain);
+
+    const sampleVoice = await this.createSampleVoice(note, velocity);
+    const voices = sampleVoice ? [synthVoice, sampleVoice] : [synthVoice];
+    this.voices.set(note, voices);
+    voices.forEach((voice) => voice.start());
   }
 
   private removeVoice(voice: ActiveVoice): void {
-    if (this.voices.get(voice.note) === voice) {
-      this.voices.delete(voice.note);
+    const voices = this.voices.get(voice.note);
+    if (!voices) {
+      return;
     }
+
+    const remainingVoices = voices.filter((activeVoice) => activeVoice !== voice);
+    if (remainingVoices.length === 0) {
+      this.voices.delete(voice.note);
+      return;
+    }
+
+    this.voices.set(voice.note, remainingVoices);
   }
 
   private voiceCount(): number {
-    return this.voices.size;
+    return Array.from(this.voices.values()).reduce((sum, voices) => sum + voices.length, 0);
   }
 
   private applyPartMixer(state: SynthEngineState): void {
