@@ -4645,6 +4645,41 @@
     box-shadow: inset 0 0 10px rgba(242, 184, 75, 0.08);
   }
 
+  .sample-zone-save-status {
+    display: grid;
+    grid-template-columns: minmax(7rem, auto) minmax(0, 1fr);
+    gap: 0.45rem;
+    align-items: center;
+    min-width: 0;
+    border: 1px solid rgba(81, 245, 198, 0.22);
+    border-radius: 5px;
+    background:
+      linear-gradient(180deg, rgba(81, 245, 198, 0.08), rgba(0, 0, 0, 0.08)),
+      rgba(0, 0, 0, 0.28);
+    padding: 0.42rem 0.52rem;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    text-transform: uppercase;
+  }
+
+  .sample-zone-save-status strong,
+  .sample-zone-save-status span {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .sample-zone-save-status strong {
+    color: var(--ws-amber);
+    font-size: 0.62rem;
+  }
+
+  .sample-zone-save-status span {
+    color: var(--ws-lcd-dim);
+    font-size: 0.56rem;
+    text-align: right;
+  }
+
   .sample-zone-map {
     position: relative;
     height: 1.05rem;
@@ -4911,7 +4946,7 @@
 
   .program-bank-stats {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-columns: minmax(4.8rem, 0.75fr) minmax(0, 1.25fr);
     gap: 0.4rem 0.65rem;
     align-items: center;
   }

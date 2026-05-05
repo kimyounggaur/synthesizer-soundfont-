@@ -122,6 +122,7 @@ export function SamplePage({ onAuditionNote }: SamplePageProps) {
   const sampleSelectionRequestId = useRef(0);
   const selectedZoneId = useUiStore((state) => state.selectedSampleZoneId);
   const setSelectedSampleZoneId = useUiStore((state) => state.setSelectedSampleZoneId);
+  const currentPresetId = useSynthStore((state) => state.currentPreset);
   const engineMode = useSynthStore((state) => state.engineMode);
   const defaultVelocity = useSynthStore((state) => state.defaultVelocity);
   const sampleLayer = useSynthStore((state) => state.sampleLayer);
@@ -196,6 +197,19 @@ export function SamplePage({ onAuditionNote }: SamplePageProps) {
   const selectedZoneOverride = selectedZone ? sampleLayer.zoneOverrides?.[selectedZone.id] : undefined;
   const currentZone = selectedZone ? mergeSampleZoneOverride(selectedZone, sampleLayer) : null;
   const editedZoneCount = activePreset?.zones.filter((zone) => Boolean(sampleLayer.zoneOverrides?.[zone.id])).length ?? 0;
+  const totalZoneOverrideCount = Object.keys(sampleLayer.zoneOverrides).length;
+  const zoneRoundtripLabel =
+    !sampleLayer.bankId || !sampleLayer.presetId
+      ? 'NO SAMPLE PRESET'
+      : totalZoneOverrideCount === 0
+        ? 'NO ZONE EDITS'
+        : currentPresetId?.startsWith('user-preset')
+          ? `${totalZoneOverrideCount} EDITS RESTORED`
+          : 'READY TO SAVE';
+  const zoneRoundtripDetail =
+    totalZoneOverrideCount > 0
+      ? `${sampleLayer.bankId ?? 'no-bank'} / ${sampleLayer.presetId ?? 'no-preset'}`
+      : 'Zone edits save with user presets';
   const currentZoneLowVelocity = currentZone?.lowVelocity ?? 0;
   const currentZoneHighVelocity = currentZone?.highVelocity ?? 1;
   const defaultVelocityInZone = Boolean(currentZone && defaultVelocity >= currentZoneLowVelocity && defaultVelocity <= currentZoneHighVelocity);
@@ -552,6 +566,10 @@ export function SamplePage({ onAuditionNote }: SamplePageProps) {
             <MiniDisplay eyebrow="Zone Editor" value={currentZone?.id.toUpperCase() ?? 'NO ZONE'} detail={currentZone ? `${formatNote(currentZone.lowNote)}-${formatNote(currentZone.highNote)} / ${editedZoneCount} edited` : 'Select sample preset'} tone="cyan" />
             {activePreset ? (
               <>
+                <div className="sample-zone-save-status" aria-label="Sample zone save status">
+                  <strong>{zoneRoundtripLabel}</strong>
+                  <span>{zoneRoundtripDetail}</span>
+                </div>
                 <div className="sample-zone-list" aria-label="Sample zones">
                   {activePreset.zones.map((zone) => {
                     const zoneOverride = sampleLayer.zoneOverrides?.[zone.id];
@@ -642,7 +660,7 @@ export function SamplePage({ onAuditionNote }: SamplePageProps) {
       </div>
 
       <WorkstationSoftKeys />
-      <WorkstationStatusBar message={message ?? (activePreset ? `${activePreset.name} ready` : 'No sample loaded')} status={sampleStatus} />
+      <WorkstationStatusBar message={message ?? (activePreset ? `${activePreset.name} ready / ${zoneRoundtripLabel}` : 'No sample loaded')} status={sampleStatus} />
     </div>
   );
 }

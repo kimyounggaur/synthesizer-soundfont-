@@ -29,15 +29,34 @@ function bankTitle(bank: ProgramBank): string {
   return `BANK ${bank.id}: ${bank.name}`;
 }
 
+function sampleZoneEditCount(preset: SynthPreset | null): number {
+  return Object.keys(preset?.engine.sampleLayer.zoneOverrides ?? {}).length;
+}
+
+function sampleRefLabel(preset: SynthPreset | null): string {
+  const sampleLayer = preset?.engine.sampleLayer;
+  if (!sampleLayer?.bankId || !sampleLayer.presetId) {
+    return 'None';
+  }
+
+  return `${sampleLayer.bankId} / ${sampleLayer.presetId}`;
+}
+
+function engineModeLabel(preset: SynthPreset | null): string {
+  return preset?.engine.engineMode.toUpperCase() ?? 'NONE';
+}
+
 export function ProgramPage() {
   const [query, setQuery] = useState('');
   const [importText, setImportText] = useState('');
+  const [programStatusMessage, setProgramStatusMessage] = useState<string | null>(null);
   const selectedBankId = useUiStore((state) => state.programBankId);
   const selectedCategory = useUiStore((state) => state.programCategory);
   const setSelectedBankId = useUiStore((state) => state.setProgramBankId);
   const setSelectedCategory = useUiStore((state) => state.setProgramCategory);
   const currentPreset = useSynthStore((state) => state.currentPreset);
   const engineMode = useSynthStore((state) => state.engineMode);
+  const sampleLayer = useSynthStore((state) => state.sampleLayer);
   const loadPreset = useSynthStore((state) => state.loadPreset);
   const savePresetMarker = useSynthStore((state) => state.savePreset);
   const userPresets = usePresetStore((state) => state.userPresets);
@@ -89,16 +108,33 @@ export function ProgramPage() {
   const activeProgram = visiblePrograms.find((preset) => preset.id === currentPreset) ?? visiblePrograms[0] ?? selectedBank.presets[0] ?? null;
   const activeProgramIndex = activeProgram ? visiblePrograms.findIndex((preset) => preset.id === activeProgram.id) : -1;
   const activeProgramNumber = activeProgramIndex >= 0 ? programNumber(activeProgramIndex) : '000';
+  const activeZoneEditCount = sampleZoneEditCount(activeProgram);
+  const saveZoneEditCount = Object.keys(sampleLayer.zoneOverrides).length;
+  const saveReadiness = !sampleLayer.bankId || !sampleLayer.presetId ? 'NO SAMPLE PRESET' : saveZoneEditCount > 0 ? 'READY TO SAVE' : 'NO ZONE EDITS';
+
+  const handleLoadProgram = (preset: SynthPreset) => {
+    loadPreset(preset);
+    const loadedZoneEditCount = sampleZoneEditCount(preset);
+    setProgramStatusMessage(loadedZoneEditCount > 0 ? `${loadedZoneEditCount} zone edits restored from preset.` : `${preset.name} loaded.`);
+  };
 
   const handleSave = () => {
     const name = window.prompt('Preset name');
     if (!name?.trim()) {
       return;
     }
-    const preset = createUserPreset(name.trim(), selectEngineState(useSynthStore.getState()));
+    const engine = selectEngineState(useSynthStore.getState());
+    const preset = createUserPreset(name.trim(), engine);
+    const snapshotZoneEditCount = Object.keys(engine.sampleLayer.zoneOverrides).length;
+    const savedZoneEditCount = sampleZoneEditCount(preset);
     saveUserPreset(preset);
     savePresetMarker(preset.id);
     setSelectedBankId('C');
+    setProgramStatusMessage(
+      snapshotZoneEditCount === savedZoneEditCount
+        ? `${savedZoneEditCount} zone edits saved in user preset.`
+        : `Zone edit save check mismatch: ${snapshotZoneEditCount} current / ${savedZoneEditCount} saved.`,
+    );
   };
 
   const handleExport = async () => {
@@ -182,7 +218,7 @@ export function ProgramPage() {
                   const userOwned = preset.author === 'User';
                   return (
                     <div key={preset.id} className={active ? 'program-row is-active' : 'program-row'}>
-                      <button type="button" className="program-row-load" onClick={() => loadPreset(preset)}>
+                      <button type="button" className="program-row-load" onClick={() => handleLoadProgram(preset)}>
                         <span className="program-number">{programNumber(index)}</span>
                         <span className="program-name">{preset.name}</span>
                         <span className="program-category">{preset.category}</span>
@@ -208,13 +244,13 @@ export function ProgramPage() {
             {activeProgram ? (
               <PresetArtwork preset={activeProgram} engine={activeProgram.engine} size="thumb" />
             ) : null}
-            <button type="button" className="soft-button program-load-button" disabled={!activeProgram} onClick={() => activeProgram && loadPreset(activeProgram)}>
+            <button type="button" className="soft-button program-load-button" disabled={!activeProgram} onClick={() => activeProgram && handleLoadProgram(activeProgram)}>
               Load Program
             </button>
           </section>
 
           <section className="module-block module-block-mint workstation-card">
-            <MiniDisplay eyebrow="Program Tools" value="STORE" detail={`${userPresets.length} user programs`} tone="mint" />
+            <MiniDisplay eyebrow="Program Tools" value={saveReadiness} detail={`${saveZoneEditCount} active zone edits`} tone="mint" />
             <div className="program-tool-grid">
               <button type="button" className="soft-button program-load-button" onClick={handleSave}>
                 Save
@@ -238,13 +274,19 @@ export function ProgramPage() {
               <strong>{visiblePrograms.length}</strong>
               <span>Category</span>
               <strong>{selectedCategory}</strong>
+              <span>Mode</span>
+              <strong>{engineModeLabel(activeProgram)}</strong>
+              <span>Sample</span>
+              <strong>{sampleRefLabel(activeProgram)}</strong>
+              <span>Zone Edits</span>
+              <strong>{activeZoneEditCount}</strong>
             </div>
           </section>
         </details>
       </div>
 
       <WorkstationSoftKeys />
-      <WorkstationStatusBar message={activeProgram ? `${bankTitle(selectedBank)} / ${activeProgram.name}` : bankTitle(selectedBank)} status="READY" />
+      <WorkstationStatusBar message={programStatusMessage ?? (activeProgram ? `${bankTitle(selectedBank)} / ${activeProgram.name} / ${activeZoneEditCount} zone edits` : bankTitle(selectedBank))} status="READY" />
     </div>
   );
 }
