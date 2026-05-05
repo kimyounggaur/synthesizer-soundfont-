@@ -8,6 +8,8 @@ export interface SamplerVoiceOptions {
   zone: SampleZone;
   buffer: AudioBuffer;
   sampleLayer: SampleLayerState;
+  pitchBend: number;
+  modWheel: number;
   onEnded: (voice: SamplerVoice) => void;
 }
 
@@ -15,7 +17,7 @@ export class SamplerVoice {
   readonly note: number;
 
   private readonly context: AudioContext;
-  private readonly sampleLayer: SampleLayerState;
+  private sampleLayer: SampleLayerState;
   private readonly onEnded: (voice: SamplerVoice) => void;
   private readonly source: AudioBufferSourceNode;
   private readonly sourceGain: GainNode;
@@ -23,6 +25,7 @@ export class SamplerVoice {
   private readonly ampGain: GainNode;
   private readonly panner: StereoPannerNode;
   private readonly targetGain: number;
+  private readonly basePlaybackRate: number;
   private stopScheduled = false;
   private releaseTimer: number | null = null;
   private ended = false;
@@ -53,6 +56,7 @@ export class SamplerVoice {
       this.source.loopStart = clamp(options.zone.loopStart ?? 0, 0, options.buffer.duration);
       this.source.loopEnd = clamp(options.zone.loopEnd ?? options.buffer.duration, this.source.loopStart, options.buffer.duration);
     }
+    this.basePlaybackRate = this.source.playbackRate.value;
 
     this.source.onended = () => this.finish();
     this.sourceGain.gain.value = 1;
@@ -72,6 +76,7 @@ export class SamplerVoice {
     }
 
     this.ampGain.connect(this.panner);
+    this.updateState(options.sampleLayer, options.pitchBend, options.modWheel);
   }
 
   connect(destination: AudioNode): void {
@@ -124,6 +129,20 @@ export class SamplerVoice {
     this.ampGain.gain.setTargetAtTime(0.0001, now, 0.01);
     this.stopSource(stopAt);
     this.releaseTimer = window.setTimeout(() => this.finish(), 70);
+  }
+
+  updateState(sampleLayer: SampleLayerState, pitchBend: number, modWheel: number): void {
+    this.sampleLayer = sampleLayer;
+    const now = this.context.currentTime;
+    const bendSemitones = clamp(pitchBend, -1, 1) * 2;
+    this.source.playbackRate.setTargetAtTime(this.basePlaybackRate * 2 ** (bendSemitones / 12), now, 0.012);
+    this.sourceGain.gain.setTargetAtTime(1 + clamp(modWheel, 0, 1) * 0.1, now, 0.025);
+
+    if (this.filter) {
+      const cutoff = clamp(sampleLayer.filterCutoff * 2 ** (clamp(modWheel, 0, 1) * 1.25), 24, 20000);
+      this.filter.frequency.setTargetAtTime(cutoff, now, 0.025);
+      this.filter.Q.setTargetAtTime(clamp(sampleLayer.filterResonance + modWheel * 1.6, 0.1, 24), now, 0.025);
+    }
   }
 
   dispose(): void {

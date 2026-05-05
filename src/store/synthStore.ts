@@ -54,6 +54,8 @@ export function createDefaultEngineState(): SynthEngineState {
     masterVolume: 0.72,
     bpm: 118,
     polyphony: 8,
+    pitchBend: 0,
+    modWheel: 0,
     oscA: {
       waveform: 'sawtooth',
       octave: 0,
@@ -184,6 +186,8 @@ export interface SynthStore extends SynthEngineState {
   setMasterVolume: (value: number) => void;
   setBpm: (value: number) => void;
   setPolyphony: (value: number) => void;
+  setPitchBend: (value: number) => void;
+  setModWheel: (value: number) => void;
   setKeyboardOctave: (value: number) => void;
   setDefaultVelocity: (value: number) => void;
   setActiveNote: (note: number, velocity: number) => void;
@@ -255,6 +259,8 @@ export const useSynthStore = create<SynthStore>((set) => ({
   setMasterVolume: (value) => set({ masterVolume: value }),
   setBpm: (value) => set({ bpm: value }),
   setPolyphony: (value) => set({ polyphony: value }),
+  setPitchBend: (value) => set({ pitchBend: Math.min(1, Math.max(-1, value)) }),
+  setModWheel: (value) => set({ modWheel: Math.min(1, Math.max(0, value)) }),
   setKeyboardOctave: (value) => set({ keyboardOctave: Math.min(6, Math.max(1, value)) }),
   setDefaultVelocity: (value) => set({ defaultVelocity: Math.min(1, Math.max(0.05, value)) }),
   setActiveNote: (note, velocity) => set((state) => ({ activeNotes: { ...state.activeNotes, [note]: velocity } })),
@@ -273,6 +279,8 @@ export function selectEngineState(state: SynthStore): SynthEngineState {
     masterVolume: state.masterVolume,
     bpm: state.bpm,
     polyphony: state.polyphony,
+    pitchBend: state.pitchBend,
+    modWheel: state.modWheel,
     oscA: state.oscA,
     oscB: state.oscB,
     subOsc: state.subOsc,

@@ -72,6 +72,8 @@ export class AudioEngine {
     this.voices.forEach((voice) => {
       if (isSynthVoice(voice)) {
         voice.updateState(state);
+      } else {
+        voice.updateState(state.sampleLayer, state.pitchBend, state.modWheel);
       }
     });
     const sampleKey = `${state.sampleLayer.bankId ?? ''}:${state.sampleLayer.presetId ?? ''}`;
@@ -217,6 +219,8 @@ export class AudioEngine {
         zone,
         buffer,
         sampleLayer: layer,
+        pitchBend: this.state.pitchBend,
+        modWheel: this.state.modWheel,
         onEnded: (endedVoice) => this.removeVoice(endedVoice),
       });
 

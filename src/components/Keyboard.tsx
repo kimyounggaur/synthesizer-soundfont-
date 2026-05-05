@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef } from 'react';
 import { useSynthStore } from '../store/synthStore';
+import { PitchModWheels } from './PitchModWheels';
 
 interface KeyboardProps {
   onNoteOn: (note: number, velocity: number) => void;
@@ -172,7 +173,7 @@ export function Keyboard({ onNoteOn, onNoteOff }: KeyboardProps) {
   }, [defaultVelocity, keyboardOctave, onNoteOff, onNoteOn, setKeyboardOctave]);
 
   return (
-    <section className="panel grid gap-3 p-4">
+    <section className="panel keyboard-panel grid gap-3 p-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h2 className="panel-title">Keyboard</h2>
         <div className="flex flex-wrap items-center gap-3">
@@ -198,43 +199,47 @@ export function Keyboard({ onNoteOn, onNoteOff }: KeyboardProps) {
         </div>
       </div>
 
-      <div className="keyboard-bed">
-        {notes.map((note) => {
-          const black = isBlack(note);
-          const active = activeNotes[note] !== undefined;
-          const velocity = activeNotes[note] ?? 0;
-          const keyLabel = computerKeyLabels.get(note - (keyboardOctave + 1) * 12);
-          return (
-            <button
-              key={note}
-              className={`keyboard-key ${black ? 'is-black' : 'is-white'} ${active ? 'is-active' : ''} relative px-1 pb-3 font-mono text-[0.68rem] ${
-                black
-                  ? 'bg-slate-950 text-slate-400 shadow-inner'
-                  : 'bg-slate-200 text-slate-950'
-              }`}
-              style={{
-                ['--key-velocity' as string]: velocity,
-              }}
-              onPointerDown={(event) => {
-                event.currentTarget.setPointerCapture(event.pointerId);
-                onNoteOn(note, defaultVelocity);
-              }}
-              onPointerUp={(event) => {
-                event.currentTarget.releasePointerCapture(event.pointerId);
-                onNoteOff(note);
-              }}
-              onPointerCancel={() => onNoteOff(note)}
-              onPointerLeave={(event) => {
-                if (event.buttons > 0) {
+      <div className="keyboard-performance-surface">
+        <PitchModWheels />
+
+        <div className="keyboard-bed">
+          {notes.map((note) => {
+            const black = isBlack(note);
+            const active = activeNotes[note] !== undefined;
+            const velocity = activeNotes[note] ?? 0;
+            const keyLabel = computerKeyLabels.get(note - (keyboardOctave + 1) * 12);
+            return (
+              <button
+                key={note}
+                className={`keyboard-key ${black ? 'is-black' : 'is-white'} ${active ? 'is-active' : ''} relative px-1 pb-3 font-mono text-[0.68rem] ${
+                  black
+                    ? 'bg-slate-950 text-slate-400 shadow-inner'
+                    : 'bg-slate-200 text-slate-950'
+                }`}
+                style={{
+                  ['--key-velocity' as string]: velocity,
+                }}
+                onPointerDown={(event) => {
+                  event.currentTarget.setPointerCapture(event.pointerId);
+                  onNoteOn(note, defaultVelocity);
+                }}
+                onPointerUp={(event) => {
+                  event.currentTarget.releasePointerCapture(event.pointerId);
                   onNoteOff(note);
-                }
-              }}
-            >
-              <span className="keyboard-shortcut-label">{keyLabel}</span>
-              <span className="keyboard-note-label">{noteName(note)}</span>
-            </button>
-          );
-        })}
+                }}
+                onPointerCancel={() => onNoteOff(note)}
+                onPointerLeave={(event) => {
+                  if (event.buttons > 0) {
+                    onNoteOff(note);
+                  }
+                }}
+              >
+                <span className="keyboard-shortcut-label">{keyLabel}</span>
+                <span className="keyboard-note-label">{noteName(note)}</span>
+              </button>
+            );
+          })}
+        </div>
       </div>
     </section>
   );

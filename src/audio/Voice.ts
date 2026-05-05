@@ -168,15 +168,16 @@ export class Voice {
       d: state.noise.enabled ? state.noise.level : 0,
     });
     this.filter.setParams(state.filter, noteFrequency);
+    this.applyLfoFrame();
     this.syncModulators();
   }
 
   private syncModulators(): void {
-    const hasLfo = this.state.lfo1.depth > 0.001 || this.state.lfo2.depth > 0.001;
-    if (hasLfo && this.lfoTimer === null) {
+    const hasContinuousModulation = this.state.lfo1.depth > 0.001 || this.state.lfo2.depth > 0.001 || this.state.modWheel > 0.001;
+    if (hasContinuousModulation && this.lfoTimer === null) {
       this.lfoTimer = window.setInterval(() => this.applyLfoFrame(), 32);
     }
-    if (!hasLfo && this.lfoTimer !== null) {
+    if (!hasContinuousModulation && this.lfoTimer !== null) {
       window.clearInterval(this.lfoTimer);
       this.lfoTimer = null;
       this.resetLfoModulation();
@@ -193,9 +194,10 @@ export class Voice {
 
   private resetLfoModulation(): void {
     const now = this.context.currentTime;
-    this.oscA.setPitchMod(0);
-    this.oscB.setPitchMod(0);
-    this.subOsc.setPitchMod(0);
+    const pitchBendCents = clamp(this.state.pitchBend, -1, 1) * 200;
+    this.oscA.setPitchMod(pitchBendCents);
+    this.oscB.setPitchMod(pitchBendCents);
+    this.subOsc.setPitchMod(pitchBendCents);
     this.lfoAmpGain.gain.setTargetAtTime(1, now, 0.03);
     this.panner.pan.setTargetAtTime(0, now, 0.03);
     this.vectorMixer.setPosition(this.state.vectorMixer.x, this.state.vectorMixer.y);
@@ -219,14 +221,17 @@ export class Voice {
     }
 
     const now = this.context.currentTime;
-    const pitchCents = clamp(sums.pitch, -1, 1) * 1200;
+    const modAmount = clamp(this.state.modWheel, 0, 1);
+    const pitchBendCents = clamp(this.state.pitchBend, -1, 1) * 200;
+    const modVibratoCents = Math.sin(now * Math.PI * 2 * 5.2) * modAmount * 35;
+    const pitchCents = pitchBendCents + clamp(sums.pitch, -1, 1) * 1200 + modVibratoCents;
     this.oscA.setPitchMod(pitchCents);
     this.oscB.setPitchMod(pitchCents);
     this.subOsc.setPitchMod(pitchCents);
 
-    if (Math.abs(sums.filterCutoff) > 0.001) {
+    if (Math.abs(sums.filterCutoff) > 0.001 || modAmount > 0.001) {
       const base = this.filter.getBaseCutoff();
-      const cutoff = clamp(base * 2 ** (sums.filterCutoff * 2), 24, 18000);
+      const cutoff = clamp(base * 2 ** (sums.filterCutoff * 2 + modAmount * 1.5), 24, 18000);
       this.filter.frequency.setTargetAtTime(cutoff, now, 0.035);
     }
 

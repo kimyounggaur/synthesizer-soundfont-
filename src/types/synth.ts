@@ -123,6 +123,8 @@ export interface SynthEngineState {
   masterVolume: number;
   bpm: number;
   polyphony: number;
+  pitchBend: number;
+  modWheel: number;
   oscA: OscillatorState;
   oscB: OscillatorState;
   subOsc: SubOscillatorState;
