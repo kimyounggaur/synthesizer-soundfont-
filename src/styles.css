@@ -6235,4 +6235,257 @@
   .program-list {
     scrollbar-color: rgba(53, 217, 255, 0.72) rgba(11, 9, 18, 0.78);
   }
+
+  /* TouchView-style LCD skin only: keeps the pink hardware skin intact. */
+  .workstation-lcd-frame,
+  .program-list-frame,
+  .sample-page-browser {
+    border-color: rgba(12, 11, 18, 0.86);
+    background:
+      linear-gradient(135deg, rgba(255, 255, 255, 0.22), transparent 8%, rgba(0, 0, 0, 0.18) 92%),
+      #1c1b24;
+    box-shadow:
+      inset 0 0 0 0.28rem rgba(39, 38, 48, 0.96),
+      inset 0 0 0 0.42rem rgba(6, 6, 10, 0.92),
+      0 0.55rem 1.4rem rgba(55, 31, 55, 0.24);
+  }
+
+  .workstation-lcd-bezel {
+    border-color: rgba(0, 0, 0, 0.82);
+    background:
+      linear-gradient(180deg, #2a2934, #111119);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.14),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.78);
+  }
+
+  .workstation-page-container,
+  .workstation-lcd-page,
+  .workstation-page-panel {
+    border-color: rgba(13, 12, 18, 0.72);
+    background:
+      linear-gradient(180deg, rgba(40, 39, 49, 0.86), rgba(4, 4, 8, 0.96)),
+      #060609;
+    color: #f3f3f5;
+  }
+
+  .lcd,
+  .workstation-lcd-screen,
+  .program-lcd-screen,
+  .nautilus-touchview {
+    border-color: #000000;
+    border-radius: 2px;
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.035), transparent 3.8rem),
+      #020203;
+    color: #f2f2f4;
+    box-shadow:
+      inset 0 0 0 1px rgba(255, 255, 255, 0.055),
+      inset 0 0 1.2rem rgba(0, 0, 0, 0.72);
+  }
+
+  .workstation-lcd-screen::before,
+  .nautilus-touchview::after {
+    background:
+      repeating-linear-gradient(180deg, rgba(255, 255, 255, 0.025) 0 1px, transparent 1px 3px),
+      linear-gradient(90deg, rgba(125, 168, 255, 0.035), transparent 24%, transparent 76%, rgba(177, 115, 150, 0.035));
+    opacity: 0.22;
+  }
+
+  .touch-lcd-title {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.12rem 0.6rem;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.16);
+    background:
+      linear-gradient(180deg, #20202a, #0d0d13);
+    margin: -0.85rem -0.85rem 0;
+    padding: 0.38rem 0.55rem;
+  }
+
+  .touch-lcd-title span {
+    grid-column: 1 / -1;
+    color: #c8c8cf;
+    font-size: 0.62rem;
+    line-height: 1;
+  }
+
+  .touch-lcd-title h2 {
+    color: #f2f2f4;
+    font-size: 1.15rem;
+    line-height: 1;
+  }
+
+  .touch-lcd-title p {
+    color: #bfc0ca;
+    font-size: 0.68rem;
+  }
+
+  .workstation-breadcrumb,
+  .workstation-status-bar,
+  .nautilus-touchview-top,
+  .nautilus-current-program {
+    border-color: rgba(255, 255, 255, 0.12);
+    background:
+      linear-gradient(180deg, #3d3d49, #262631);
+    color: #f1f1f3;
+  }
+
+  .workstation-breadcrumb span,
+  .workstation-status-bar strong,
+  .nautilus-current-program h2 {
+    color: #f4f4f5;
+  }
+
+  .workstation-status-bar,
+  .workstation-breadcrumb,
+  .nautilus-current-program p {
+    color: #c1c1c8;
+  }
+
+  .program-page .workstation-tab,
+  .workstation-tab,
+  .workstation-subtab,
+  .workstation-soft-key,
+  .nautilus-touchview-footer button {
+    border-color: rgba(255, 255, 255, 0.14);
+    border-radius: 2px;
+    background:
+      linear-gradient(180deg, #2c2c37, #14141c);
+    color: #cfcfd5;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.08),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.62);
+  }
+
+  .program-page .workstation-tab.is-active,
+  .workstation-tab.is-active,
+  .workstation-tab[aria-selected="true"],
+  .workstation-soft-key.is-active {
+    border-color: rgba(199, 217, 104, 0.64);
+    background:
+      linear-gradient(180deg, #b8c85f, #8d9a3c);
+    color: #111217;
+  }
+
+  .program-list-heading {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    background:
+      linear-gradient(180deg, #15151c, #09090d);
+    margin: -0.15rem -0.15rem 0;
+    padding: 0.42rem;
+  }
+
+  .program-list {
+    gap: 0.34rem;
+    padding: 0.1rem 0.2rem 0.2rem 0.05rem;
+    scrollbar-color: rgba(200, 201, 208, 0.72) rgba(8, 8, 12, 0.88);
+  }
+
+  .program-row {
+    min-height: 3rem;
+    border-color: rgba(255, 255, 255, 0.08);
+    border-radius: 2px;
+    background:
+      linear-gradient(180deg, rgba(34, 34, 34, 0.98), rgba(17, 18, 18, 0.98)) !important;
+    color: #ffffff;
+  }
+
+  .program-row:nth-child(6n + 1) {
+    background: linear-gradient(180deg, #7f252d, #5d191f) !important;
+  }
+
+  .program-row:nth-child(6n + 2) {
+    background: linear-gradient(180deg, #b05e24, #833f18) !important;
+  }
+
+  .program-row:nth-child(6n + 3) {
+    background: linear-gradient(180deg, #5d669d, #424a7c) !important;
+  }
+
+  .program-row:nth-child(6n + 4) {
+    background: linear-gradient(180deg, #a88d33, #7a6422) !important;
+  }
+
+  .program-row:nth-child(6n + 5) {
+    background: linear-gradient(180deg, #28292b, #161718) !important;
+  }
+
+  .program-row:nth-child(6n) {
+    background: linear-gradient(180deg, #9b802f, #6b5620) !important;
+  }
+
+  .program-row:hover,
+  .program-row.is-active {
+    border-color: rgba(239, 239, 243, 0.9);
+    box-shadow:
+      inset 0 0 0 1px rgba(0, 0, 0, 0.65),
+      0 0 0 2px rgba(196, 211, 103, 0.42);
+    filter: brightness(1.08);
+  }
+
+  .program-number {
+    color: #dce96d;
+  }
+
+  .program-name {
+    color: #ffffff;
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.54);
+  }
+
+  .program-category {
+    color: rgba(255, 255, 255, 0.78);
+  }
+
+  .program-list::-webkit-scrollbar-track {
+    background: #07070a;
+  }
+
+  .program-list::-webkit-scrollbar-thumb {
+    background: #a6a7ad;
+    border: 1px solid #292932;
+  }
+
+  .nautilus-setlist-grid {
+    gap: 0.34rem;
+    background: #020203;
+  }
+
+  .nautilus-setlist-slot {
+    min-height: 3.1rem;
+    border-color: rgba(255, 255, 255, 0.1);
+    border-radius: 2px;
+    color: #ffffff;
+  }
+
+  .nautilus-setlist-slot:nth-child(4n + 1) {
+    background: linear-gradient(180deg, #84262d, #5f191f) !important;
+  }
+
+  .nautilus-setlist-slot:nth-child(4n + 2) {
+    background: linear-gradient(180deg, #ba6425, #894017) !important;
+  }
+
+  .nautilus-setlist-slot:nth-child(4n + 3) {
+    background: linear-gradient(180deg, #656da6, #465083) !important;
+  }
+
+  .nautilus-setlist-slot:nth-child(4n) {
+    background: linear-gradient(180deg, #aa8e34, #756122) !important;
+  }
+
+  .nautilus-setlist-slot.is-active {
+    border-color: rgba(240, 240, 244, 0.92);
+    box-shadow:
+      inset 0 0 0 1px rgba(0, 0, 0, 0.74),
+      0 0 0 2px rgba(196, 211, 103, 0.44);
+  }
+
+  .nautilus-touchview-footer {
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+    background: #060609;
+    margin: 0 -0.05rem -0.05rem;
+    padding-top: 0.28rem;
+  }
 }
