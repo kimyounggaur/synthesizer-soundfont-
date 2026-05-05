@@ -1,5 +1,6 @@
 import { createDefaultEngineState } from '../store/synthStore';
 import type { SampleLayerState } from '../types/soundfont';
+import { expandedFactoryPresets } from './expandedFactoryPresets';
 import type {
   EffectState,
   EffectType,
@@ -1221,4 +1222,5 @@ export const factoryPresets: SynthPreset[] = [
     vectorMixer: { x: 0.58, y: 0.12 },
     effects: [fx('chaos-mallet-reverb', 'reverb', 0.24, { decay: 1.8 })],
   }),
+  ...expandedFactoryPresets,
 ];
