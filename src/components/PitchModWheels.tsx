@@ -143,8 +143,8 @@ export function PitchModWheels() {
 
   return (
     <section className="pitch-mod-wheels" aria-label="Pitch and modulation wheels">
-      <WheelControl kind="pitch" label="Pitch" value={pitchBend} onChange={setPitchBend} />
-      <WheelControl kind="mod" label="Mod" value={modWheel} onChange={setModWheel} />
+      <WheelControl kind="pitch" label="Pitch Bend" value={pitchBend} onChange={setPitchBend} />
+      <WheelControl kind="mod" label="Modulation" value={modWheel} onChange={setModWheel} />
     </section>
   );
 }
