@@ -1,5 +1,6 @@
 import { Voice } from './Voice';
-import type { MeterSnapshot, SynthEngineState } from '../types/synth';
+import type { MeterSnapshot, PartMixerPartId, PartMixerPartState, SynthEngineState } from '../types/synth';
+import type { SampleLayerState, SamplePresetDefinition, SampleZone } from '../types/soundfont';
 import { clamp } from '../utils/audioMath';
 import { EffectsChain } from './EffectsChain';
 import { SamplerVoice } from './SamplerVoice';
@@ -18,6 +19,14 @@ function isSynthVoice(voice: ActiveVoice): voice is Voice {
 export class AudioEngine {
   private readonly context: AudioContext;
   private readonly masterGain: GainNode;
+  private readonly synthPartGain: GainNode;
+  private readonly synthPartPanner: StereoPannerNode;
+  private readonly samplePartGain: GainNode;
+  private readonly samplePartPanner: StereoPannerNode;
+  private readonly drumPartGain: GainNode;
+  private readonly drumPartPanner: StereoPannerNode;
+  private readonly fxReturnGain: GainNode;
+  private readonly fxReturnPanner: StereoPannerNode;
   private readonly compressor: DynamicsCompressorNode;
   private readonly analyser: AnalyserNode;
   private readonly voices = new Map<number, ActiveVoice>();
@@ -36,6 +45,14 @@ export class AudioEngine {
 
     this.context = new AudioContextCtor();
     this.masterGain = this.context.createGain();
+    this.synthPartGain = this.context.createGain();
+    this.synthPartPanner = this.context.createStereoPanner();
+    this.samplePartGain = this.context.createGain();
+    this.samplePartPanner = this.context.createStereoPanner();
+    this.drumPartGain = this.context.createGain();
+    this.drumPartPanner = this.context.createStereoPanner();
+    this.fxReturnGain = this.context.createGain();
+    this.fxReturnPanner = this.context.createStereoPanner();
     this.compressor = this.context.createDynamicsCompressor();
     this.analyser = this.context.createAnalyser();
     this.sampleBankManager = new SampleBankManager(this.context);
@@ -52,10 +69,19 @@ export class AudioEngine {
     this.analyser.smoothingTimeConstant = 0.72;
     this.analyserBuffer = new Float32Array(this.analyser.fftSize) as Float32Array<ArrayBuffer>;
     this.effectsChain = new EffectsChain(this.context, initialState.effects);
+    this.synthPartGain.connect(this.synthPartPanner);
+    this.synthPartPanner.connect(this.masterGain);
+    this.samplePartGain.connect(this.samplePartPanner);
+    this.samplePartPanner.connect(this.masterGain);
+    this.drumPartGain.connect(this.drumPartPanner);
+    this.drumPartPanner.connect(this.masterGain);
     this.masterGain.connect(this.effectsChain.input);
-    this.effectsChain.connect(this.compressor);
+    this.effectsChain.connect(this.fxReturnGain);
+    this.fxReturnGain.connect(this.fxReturnPanner);
+    this.fxReturnPanner.connect(this.compressor);
     this.compressor.connect(this.analyser);
     this.analyser.connect(this.context.destination);
+    this.applyPartMixer(initialState);
   }
 
   async resume(): Promise<void> {
@@ -68,6 +94,7 @@ export class AudioEngine {
     this.state = state;
     this.maxPolyphony = state.polyphony;
     this.setMasterVolume(state.masterVolume);
+    this.applyPartMixer(state);
     this.effectsChain?.update(state.effects);
     this.voices.forEach((voice) => {
       if (isSynthVoice(voice)) {
@@ -130,10 +157,14 @@ export class AudioEngine {
     this.effectsChain?.disconnect();
     this.effectsChain = chain;
     this.masterGain.disconnect();
+    this.disconnectNode(this.fxReturnGain);
+    this.disconnectNode(this.fxReturnPanner);
 
     if (chain) {
       this.masterGain.connect(chain.input);
-      chain.connect(this.compressor);
+      chain.connect(this.fxReturnGain);
+      this.fxReturnGain.connect(this.fxReturnPanner);
+      this.fxReturnPanner.connect(this.compressor);
     } else {
       this.masterGain.connect(this.compressor);
     }
@@ -180,7 +211,7 @@ export class AudioEngine {
   private noteOnSynth(note: number, velocity: number): void {
     const voice = new Voice(this.context, note, velocity, this.state, (endedVoice) => this.removeVoice(endedVoice));
     this.voices.set(note, voice);
-    voice.connect(this.masterGain);
+    voice.connect(this.synthPartGain);
     voice.start();
   }
 
@@ -202,7 +233,8 @@ export class AudioEngine {
         return;
       }
 
-      const zone = this.sampleBankManager.findZone(preset, note, velocity);
+      const presetWithOverrides = this.applySampleZoneOverrides(preset, layer);
+      const zone = this.sampleBankManager.findZone(presetWithOverrides, note, velocity);
 
       if (!zone) {
         console.warn('[AudioEngine] No sample zone matched. Falling back to synth voice.');
@@ -225,7 +257,7 @@ export class AudioEngine {
       });
 
       this.voices.set(note, voice);
-      voice.connect(this.masterGain);
+      voice.connect(preset.category === 'Drum' ? this.drumPartGain : this.samplePartGain);
       voice.start();
     } catch (error) {
       console.warn('[AudioEngine] Sample voice failed. Falling back to synth voice.', error);
@@ -247,5 +279,59 @@ export class AudioEngine {
 
   private voiceCount(): number {
     return this.voices.size;
+  }
+
+  private applyPartMixer(state: SynthEngineState): void {
+    const now = this.context.currentTime;
+    this.applyPartControls('synth', this.synthPartGain, this.synthPartPanner, state, now);
+    this.applyPartControls('sample', this.samplePartGain, this.samplePartPanner, state, now);
+    this.applyPartControls('drum', this.drumPartGain, this.drumPartPanner, state, now);
+    this.applyPartControls('fxReturn', this.fxReturnGain, this.fxReturnPanner, state, now);
+  }
+
+  private applyPartControls(partId: PartMixerPartId, gain: GainNode, panner: StereoPannerNode, state: SynthEngineState, when: number): void {
+    const part = this.findPart(state, partId);
+    gain.gain.setTargetAtTime(part?.enabled === false ? 0 : clamp(part?.level ?? 1, 0, 1.5), when, 0.02);
+    panner.pan.setTargetAtTime(clamp(part?.pan ?? 0, -1, 1), when, 0.02);
+  }
+
+  private findPart(state: SynthEngineState, partId: PartMixerPartId): PartMixerPartState | undefined {
+    return state.partMixer.parts.find((part) => part.id === partId);
+  }
+
+  private applySampleZoneOverrides(preset: SamplePresetDefinition, sampleLayer: SampleLayerState): SamplePresetDefinition {
+    return {
+      ...preset,
+      zones: preset.zones.map((zone) => this.applySampleZoneOverride(zone, sampleLayer)),
+    };
+  }
+
+  private applySampleZoneOverride(zone: SampleZone, sampleLayer: SampleLayerState): SampleZone {
+    const override = sampleLayer.zoneOverrides?.[zone.id];
+    if (!override) {
+      return zone;
+    }
+
+    return {
+      ...zone,
+      rootNote: override.rootNote ?? zone.rootNote,
+      lowNote: override.lowNote ?? zone.lowNote,
+      highNote: override.highNote ?? zone.highNote,
+      lowVelocity: override.lowVelocity ?? zone.lowVelocity,
+      highVelocity: override.highVelocity ?? zone.highVelocity,
+      loop: override.loop ?? zone.loop,
+      loopStart: override.loopStart ?? zone.loopStart,
+      loopEnd: override.loopEnd ?? zone.loopEnd,
+      gain: override.gain ?? zone.gain,
+      pan: override.pan ?? zone.pan,
+    };
+  }
+
+  private disconnectNode(node: AudioNode): void {
+    try {
+      node.disconnect();
+    } catch {
+      // AudioNode.disconnect can throw when the node has no active connection.
+    }
   }
 }

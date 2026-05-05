@@ -139,6 +139,7 @@ function engine(overrides: EngineOverrides): SynthEngineState {
     lfo2: { ...defaults.lfo2, ...overrides.lfo2 },
     waveSequencer: { ...defaults.waveSequencer, ...overrides.waveSequencer },
     vectorMixer: { ...defaults.vectorMixer, ...overrides.vectorMixer },
+    partMixer: { ...defaults.partMixer, ...overrides.partMixer, parts: overrides.partMixer?.parts ?? defaults.partMixer.parts },
     sampleLayer: { ...defaults.sampleLayer, ...overrides.sampleLayer },
     effects: overrides.effects ?? defaults.effects,
   };

@@ -31,6 +31,20 @@ export interface SampleZone {
   pan?: number;
 }
 
+export interface SampleZoneOverrideState {
+  zoneId: string;
+  rootNote?: number;
+  lowNote?: number;
+  highNote?: number;
+  lowVelocity?: number;
+  highVelocity?: number;
+  loop?: boolean;
+  loopStart?: number;
+  loopEnd?: number;
+  gain?: number;
+  pan?: number;
+}
+
 export interface SamplePresetDefinition {
   id: string;
   name: string;
@@ -65,4 +79,5 @@ export interface SampleLayerState {
   filterResonance: number;
   oneShot: boolean;
   preload: boolean;
+  zoneOverrides: Record<string, SampleZoneOverrideState>;
 }

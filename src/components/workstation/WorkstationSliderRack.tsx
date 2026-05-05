@@ -1,5 +1,6 @@
 import type { CSSProperties } from 'react';
 import { useSynthStore } from '../../store/synthStore';
+import type { PartMixerPartId, PartMixerPartState } from '../../types/synth';
 
 interface SliderBarProps {
   label: string;
@@ -33,6 +34,14 @@ function formatSeconds(value: number): string {
   return value < 1 ? `${Math.round(value * 1000)}ms` : `${value.toFixed(2)}s`;
 }
 
+function formatPan(value: number): string {
+  if (Math.abs(value) < 0.01) {
+    return 'C';
+  }
+
+  return value < 0 ? `L${Math.round(Math.abs(value) * 100)}` : `R${Math.round(value * 100)}`;
+}
+
 function SliderBar({ label, value, min, max, step, displayValue, detail, onChange }: SliderBarProps) {
   return (
     <label className="workstation-slider-row">
@@ -55,13 +64,29 @@ function SliderBar({ label, value, min, max, step, displayValue, detail, onChang
   );
 }
 
+const mixerPartLabels: Record<PartMixerPartId, { label: string; detail: string }> = {
+  synth: { label: 'Synth', detail: 'Synth bus' },
+  sample: { label: 'Sample', detail: 'Sample bus' },
+  drum: { label: 'Drum', detail: 'Drum bus' },
+  fxReturn: { label: 'FX Ret', detail: 'FX output' },
+};
+
+function getMixerPart(parts: PartMixerPartState[], partId: PartMixerPartId): PartMixerPartState {
+  return (
+    parts.find((part) => part.id === partId) ?? {
+      id: partId,
+      name: mixerPartLabels[partId].label,
+      enabled: true,
+      level: 1,
+      pan: 0,
+    }
+  );
+}
+
 export function WorkstationSliderRack() {
   const masterVolume = useSynthStore((state) => state.masterVolume);
-  const oscA = useSynthStore((state) => state.oscA);
-  const oscB = useSynthStore((state) => state.oscB);
-  const subOsc = useSynthStore((state) => state.subOsc);
-  const noise = useSynthStore((state) => state.noise);
   const sampleLayer = useSynthStore((state) => state.sampleLayer);
+  const mixerParts = useSynthStore((state) => state.partMixer.parts);
   const filter = useSynthStore((state) => state.filter);
   const ampEnv = useSynthStore((state) => state.ampEnv);
   const lfo1 = useSynthStore((state) => state.lfo1);
@@ -69,10 +94,8 @@ export function WorkstationSliderRack() {
   const modWheel = useSynthStore((state) => state.modWheel);
   const effects = useSynthStore((state) => state.effects);
   const setMasterVolume = useSynthStore((state) => state.setMasterVolume);
-  const updateOscA = useSynthStore((state) => state.updateOscA);
-  const updateOscB = useSynthStore((state) => state.updateOscB);
-  const updateSubOsc = useSynthStore((state) => state.updateSubOsc);
   const updateNoise = useSynthStore((state) => state.updateNoise);
+  const updatePartMixerPart = useSynthStore((state) => state.updatePartMixerPart);
   const updateSampleLayer = useSynthStore((state) => state.updateSampleLayer);
   const updateFilter = useSynthStore((state) => state.updateFilter);
   const updateEnvelope = useSynthStore((state) => state.updateEnvelope);
@@ -81,6 +104,7 @@ export function WorkstationSliderRack() {
   const updateEffect = useSynthStore((state) => state.updateEffect);
   const setModWheel = useSynthStore((state) => state.setModWheel);
 
+  const mixerPartIds: PartMixerPartId[] = ['synth', 'sample', 'drum', 'fxReturn'];
   const fxWet = effects.length > 0 ? effects.reduce((sum, effect) => sum + effect.wet, 0) / effects.length : 0;
   const brightness = clamp(filter.cutoff, 80, 16000);
   const motion = clamp(lfo1.depth, 0, 1);
@@ -122,6 +146,17 @@ export function WorkstationSliderRack() {
     effects.forEach((effect) => updateEffect(effect.id, { wet: value }));
   };
 
+  const setPartLevel = (partId: PartMixerPartId, value: number) => {
+    updatePartMixerPart(partId, {
+      enabled: value > 0.001,
+      level: value,
+    });
+  };
+
+  const setPartPan = (partId: PartMixerPartId, value: number) => {
+    updatePartMixerPart(partId, { pan: value });
+  };
+
   return (
     <aside className="workstation-slider-rack nautilus-slider-rack" aria-label="Performance slider rack">
       <div className="nautilus-rack-header">
@@ -132,12 +167,17 @@ export function WorkstationSliderRack() {
       <section className="workstation-slider-section">
         <h3>Mixer Sliders</h3>
         <SliderBar label="Master" value={masterVolume} min={0} max={1} step={0.01} displayValue={formatPercent(masterVolume)} detail="Main out" onChange={setMasterVolume} />
-        <SliderBar label="Osc A" value={oscA.level} min={0} max={1} step={0.01} displayValue={formatPercent(oscA.level)} detail="Synth layer" onChange={(value) => updateOscA({ level: value })} />
-        <SliderBar label="Osc B" value={oscB.level} min={0} max={1} step={0.01} displayValue={formatPercent(oscB.level)} detail="Synth layer" onChange={(value) => updateOscB({ level: value })} />
-        <SliderBar label="Sub" value={subOsc.level} min={0} max={1} step={0.01} displayValue={formatPercent(subOsc.level)} detail={subOsc.enabled ? 'Sub osc' : 'Sub level'} onChange={(value) => updateSubOsc({ enabled: value > 0.001, level: value })} />
-        <SliderBar label="Noise" value={noise.level} min={0} max={0.5} step={0.01} displayValue={formatPercent(noise.level)} detail={noise.enabled ? 'Noise mix' : 'Noise level'} onChange={(value) => updateNoise({ enabled: value > 0.001, level: value })} />
-        <SliderBar label="Sample" value={sampleLayer.level} min={0} max={1.2} step={0.01} displayValue={formatPercent(sampleLayer.level)} detail="Sample layer" onChange={(value) => updateSampleLayer({ level: value })} />
-        {effects.length > 0 ? <SliderBar label="FX Wet" value={fxWet} min={0} max={1} step={0.01} displayValue={formatPercent(fxWet)} detail={`${effects.length} effects`} onChange={setFxWet} /> : null}
+        {mixerPartIds.map((partId) => {
+          const part = getMixerPart(mixerParts, partId);
+          const label = mixerPartLabels[partId];
+          const level = part.enabled ? part.level : 0;
+          return <SliderBar key={`${partId}-level`} label={label.label} value={level} min={0} max={1.5} step={0.01} displayValue={formatPercent(level)} detail={label.detail} onChange={(value) => setPartLevel(partId, value)} />;
+        })}
+        {mixerPartIds.map((partId) => {
+          const part = getMixerPart(mixerParts, partId);
+          const label = mixerPartLabels[partId];
+          return <SliderBar key={`${partId}-pan`} label={`${label.label} Pan`} value={part.pan} min={-1} max={1} step={0.01} displayValue={formatPan(part.pan)} detail="Stereo" onChange={(value) => setPartPan(partId, value)} />;
+        })}
       </section>
 
       <section className="workstation-slider-section">

@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import type { EngineMode, SampleLayerState } from '../types/soundfont';
+import type { EngineMode, SampleLayerState, SampleZoneOverrideState } from '../types/soundfont';
 import type {
   EffectState,
   EnvelopeState,
@@ -7,6 +7,9 @@ import type {
   LfoState,
   NoiseState,
   OscillatorState,
+  PartMixerPartId,
+  PartMixerPartState,
+  PartMixerState,
   SubOscillatorState,
   SynthEngineState,
   SynthPreset,
@@ -45,6 +48,42 @@ export function createDefaultSampleLayerState(): SampleLayerState {
     filterResonance: 0.8,
     oneShot: false,
     preload: true,
+    zoneOverrides: {},
+  };
+}
+
+export function createDefaultPartMixerState(): PartMixerState {
+  return {
+    parts: [
+      {
+        id: 'synth',
+        name: 'Synth',
+        enabled: true,
+        level: 1,
+        pan: 0,
+      },
+      {
+        id: 'sample',
+        name: 'Sample',
+        enabled: true,
+        level: 1,
+        pan: 0,
+      },
+      {
+        id: 'drum',
+        name: 'Drum',
+        enabled: true,
+        level: 1,
+        pan: 0,
+      },
+      {
+        id: 'fxReturn',
+        name: 'FX Return',
+        enabled: true,
+        level: 1,
+        pan: 0,
+      },
+    ],
   };
 }
 
@@ -127,9 +166,20 @@ export function createDefaultEngineState(): SynthEngineState {
       x: 0.48,
       y: 0.08,
     },
+    partMixer: createDefaultPartMixerState(),
     sampleLayer: createDefaultSampleLayerState(),
     effects: [],
     currentPreset: null,
+  };
+}
+
+function normalizePartMixerState(partMixer: Partial<PartMixerState> | undefined): PartMixerState {
+  const defaults = createDefaultPartMixerState();
+  return {
+    parts: defaults.parts.map((defaultPart) => {
+      const incoming = partMixer?.parts?.find((part) => part.id === defaultPart.id);
+      return incoming ? { ...defaultPart, ...incoming } : defaultPart;
+    }),
   };
 }
 
@@ -153,6 +203,7 @@ export function normalizeEngineState(engine: Partial<SynthEngineState>): SynthEn
       steps: engine.waveSequencer?.steps ?? defaults.waveSequencer.steps,
     },
     vectorMixer: { ...defaults.vectorMixer, ...engine.vectorMixer },
+    partMixer: normalizePartMixerState(engine.partMixer),
     sampleLayer: { ...defaults.sampleLayer, ...engine.sampleLayer },
     effects: engine.effects ?? defaults.effects,
   };
@@ -174,7 +225,11 @@ export interface SynthStore extends SynthEngineState {
   updateWaveStep: (index: number, partial: Partial<WaveStep>) => void;
   reorderWaveSteps: (from: number, to: number) => void;
   updateVectorPosition: (partial: Partial<VectorMixerState>) => void;
+  updatePartMixer: (partial: Partial<PartMixerState>) => void;
+  updatePartMixerPart: (partId: PartMixerPartId, partial: Partial<Omit<PartMixerPartState, 'id'>>) => void;
   updateSampleLayer: (partial: Partial<SampleLayerState>) => void;
+  updateSampleZoneOverride: (zoneId: string, partial: Partial<Omit<SampleZoneOverrideState, 'zoneId'>>) => void;
+  clearSampleZoneOverride: (zoneId: string) => void;
   selectSamplePreset: (bankId: string, presetId: string) => void;
   addEffect: (effect: EffectState) => void;
   updateEffect: (id: string, partial: Partial<EffectState>) => void;
@@ -233,7 +288,47 @@ export const useSynthStore = create<SynthStore>((set) => ({
       },
     })),
   updateVectorPosition: (partial) => set((state) => ({ vectorMixer: { ...state.vectorMixer, ...partial } })),
+  updatePartMixer: (partial) =>
+    set((state) => ({
+      partMixer: {
+        ...state.partMixer,
+        ...partial,
+        parts: partial.parts ?? state.partMixer.parts,
+      },
+    })),
+  updatePartMixerPart: (partId, partial) =>
+    set((state) => ({
+      partMixer: {
+        ...state.partMixer,
+        parts: state.partMixer.parts.map((part) => (part.id === partId ? { ...part, ...partial } : part)),
+      },
+    })),
   updateSampleLayer: (partial) => set((state) => ({ sampleLayer: { ...state.sampleLayer, ...partial } })),
+  updateSampleZoneOverride: (zoneId, partial) =>
+    set((state) => ({
+      sampleLayer: {
+        ...state.sampleLayer,
+        zoneOverrides: {
+          ...state.sampleLayer.zoneOverrides,
+          [zoneId]: {
+            ...state.sampleLayer.zoneOverrides[zoneId],
+            ...partial,
+            zoneId,
+          },
+        },
+      },
+    })),
+  clearSampleZoneOverride: (zoneId) =>
+    set((state) => {
+      const nextOverrides = { ...state.sampleLayer.zoneOverrides };
+      delete nextOverrides[zoneId];
+      return {
+        sampleLayer: {
+          ...state.sampleLayer,
+          zoneOverrides: nextOverrides,
+        },
+      };
+    }),
   selectSamplePreset: (bankId, presetId) =>
     set((state) => ({
       engineMode: 'sample',
@@ -292,6 +387,7 @@ export function selectEngineState(state: SynthStore): SynthEngineState {
     lfo2: state.lfo2,
     waveSequencer: state.waveSequencer,
     vectorMixer: state.vectorMixer,
+    partMixer: state.partMixer,
     sampleLayer: state.sampleLayer,
     effects: state.effects,
     currentPreset: state.currentPreset,

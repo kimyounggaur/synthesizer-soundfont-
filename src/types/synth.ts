@@ -118,6 +118,20 @@ export interface EffectState {
   params: Record<string, number>;
 }
 
+export type PartMixerPartId = 'synth' | 'sample' | 'drum' | 'fxReturn';
+
+export interface PartMixerPartState {
+  id: PartMixerPartId;
+  name: string;
+  enabled: boolean;
+  level: number;
+  pan: number;
+}
+
+export interface PartMixerState {
+  parts: PartMixerPartState[];
+}
+
 export interface SynthEngineState {
   engineMode: EngineMode;
   masterVolume: number;
@@ -136,6 +150,7 @@ export interface SynthEngineState {
   lfo2: LfoState;
   waveSequencer: WaveSequencerState;
   vectorMixer: VectorMixerState;
+  partMixer: PartMixerState;
   sampleLayer: SampleLayerState;
   effects: EffectState[];
   currentPreset: string | null;
