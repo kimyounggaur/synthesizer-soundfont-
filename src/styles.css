@@ -6647,4 +6647,135 @@
       grid-template-rows: auto minmax(6rem, 8rem) auto;
     }
   }
+
+  .program-list-frame {
+    height: clamp(23rem, 52vh, 33rem);
+    max-height: clamp(23rem, 52vh, 33rem);
+    overflow: hidden;
+  }
+
+  .program-list-frame .workstation-lcd-bezel,
+  .program-list-frame .workstation-lcd-screen,
+  .program-lcd-screen {
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .program-list {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(8.75rem, 1fr));
+    grid-auto-rows: minmax(3.25rem, auto);
+    align-content: start;
+    gap: 0.34rem;
+    min-height: 0;
+    max-height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding: 0.34rem 0.3rem 0.34rem 0.08rem;
+    background: #020203;
+    overscroll-behavior: contain;
+  }
+
+  .program-row {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    align-items: stretch;
+    min-width: 0;
+    min-height: 3.25rem;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 2px;
+  }
+
+  .program-row-load {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-rows: auto auto;
+    align-content: center;
+    gap: 0.12rem 0.42rem;
+    min-width: 0;
+    min-height: 100%;
+    padding: 0.46rem 0.55rem;
+  }
+
+  .program-number {
+    grid-row: 1 / span 2;
+    align-self: start;
+    min-width: 1.35rem;
+    color: #f3e66c;
+    font-size: clamp(0.58rem, 0.74vw, 0.72rem);
+    line-height: 1.05;
+    white-space: nowrap;
+  }
+
+  .program-name {
+    min-width: 0;
+    overflow: hidden;
+    color: #ffffff;
+    font-size: clamp(0.62rem, 0.82vw, 0.78rem);
+    line-height: 1.12;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .program-category {
+    grid-column: 2;
+    min-width: 0;
+    overflow: hidden;
+    color: rgba(255, 255, 255, 0.82);
+    font-size: clamp(0.52rem, 0.66vw, 0.64rem);
+    line-height: 1.1;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .program-row:nth-child(4n + 1) {
+    background: linear-gradient(180deg, #84262d, #5f191f) !important;
+  }
+
+  .program-row:nth-child(4n + 2) {
+    background: linear-gradient(180deg, #ba6425, #894017) !important;
+  }
+
+  .program-row:nth-child(4n + 3) {
+    background: linear-gradient(180deg, #656da6, #465083) !important;
+  }
+
+  .program-row:nth-child(4n) {
+    background: linear-gradient(180deg, #aa8e34, #756122) !important;
+  }
+
+  .program-delete-button {
+    position: absolute;
+    top: 0.22rem;
+    right: 0.22rem;
+    min-height: 1.1rem;
+    padding: 0 0.34rem;
+    border-radius: 2px;
+    font-size: 0.52rem;
+    line-height: 1;
+  }
+
+  .program-list .effects-empty {
+    grid-column: 1 / -1;
+  }
+
+  @media (max-width: 1280px) {
+    .program-list {
+      grid-template-columns: repeat(3, minmax(8.25rem, 1fr));
+    }
+  }
+
+  @media (max-width: 900px) {
+    .program-list {
+      grid-template-columns: repeat(2, minmax(7.5rem, 1fr));
+    }
+  }
+
+  @media (max-width: 540px) {
+    .program-list {
+      grid-template-columns: 1fr;
+    }
+  }
 }
