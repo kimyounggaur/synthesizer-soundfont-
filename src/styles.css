@@ -4593,87 +4593,120 @@
   .drum-pad-grid {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 0.48rem;
+    gap: 0.42rem;
     min-width: 0;
-    border: 1px solid rgba(6, 10, 9, 0.82);
-    border-radius: 7px;
+    border: 1px solid rgba(0, 0, 0, 0.92);
+    border-radius: 6px;
     background:
-      linear-gradient(180deg, rgba(255, 255, 255, 0.055), rgba(0, 0, 0, 0.34)),
-      #07090b;
-    padding: 0.58rem;
-    box-shadow: inset 0 0 22px rgba(0, 0, 0, 0.55);
+      radial-gradient(circle at 50% 0%, rgba(123, 141, 148, 0.12), transparent 42%),
+      linear-gradient(180deg, #20262b 0%, #07090b 38%, #030405 100%);
+    padding: 0.5rem;
+    box-shadow:
+      inset 0 0 0 1px rgba(255, 255, 255, 0.035),
+      inset 0 0 22px rgba(0, 0, 0, 0.74);
   }
 
   .drum-pad {
     --pad-color: #5ee8ff;
     position: relative;
-    display: grid;
-    min-height: clamp(4.5rem, 7vw, 6rem);
-    align-content: end;
-    justify-items: start;
+    display: block;
+    min-height: clamp(4.5rem, 7vw, 6.1rem);
+    aspect-ratio: 1;
     overflow: hidden;
-    border: 2px solid color-mix(in srgb, var(--pad-color) 82%, #ffffff);
-    border-radius: 4px;
+    border: 2px solid var(--pad-color);
+    border-radius: 2px;
     background:
-      radial-gradient(circle at 82% 18%, color-mix(in srgb, var(--pad-color) 15%, transparent), transparent 34%),
-      linear-gradient(145deg, #2d343a, #0d1115 70%);
-    color: #eef5f2;
-    padding: 0.48rem;
+      radial-gradient(circle at 24% 16%, rgba(255, 255, 255, 0.13), transparent 18%),
+      linear-gradient(145deg, #343b41 0%, #171b21 48%, #0a0d11 100%);
+    color: #f1f7f5;
+    padding: 0.42rem;
     text-align: left;
     box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.14),
-      inset 0 -7px 13px rgba(0, 0, 0, 0.52),
-      0 0 11px color-mix(in srgb, var(--pad-color) 20%, transparent);
+      inset 0 0 0 1px rgba(0, 0, 0, 0.68),
+      inset 0 0.12rem 0 rgba(255, 255, 255, 0.1),
+      inset 0 -0.55rem 0.8rem rgba(0, 0, 0, 0.5),
+      0 0 0.48rem color-mix(in srgb, var(--pad-color) 24%, transparent);
     touch-action: manipulation;
+    transition: background 110ms ease, box-shadow 110ms ease, transform 110ms ease, filter 110ms ease;
+  }
+
+  .drum-pad::before {
+    content: "";
+    position: absolute;
+    inset: 0.26rem;
+    border: 1px solid rgba(255, 255, 255, 0.035);
+    border-radius: 1px;
+    pointer-events: none;
+  }
+
+  .drum-pad::after {
+    content: "";
+    position: absolute;
+    inset: auto 0.3rem 0.28rem;
+    height: 0.2rem;
+    border-radius: 999px;
+    background: rgba(0, 0, 0, 0.42);
+    opacity: 0.88;
+    pointer-events: none;
   }
 
   .drum-pad-orange {
-    --pad-color: #ffb14a;
+    --pad-color: #ffab3d;
   }
 
   .drum-pad-blue {
-    --pad-color: #78cfff;
+    --pad-color: #6fc9ff;
   }
 
   .drum-pad-green {
-    --pad-color: #8ee69c;
+    --pad-color: #8ee891;
   }
 
   .drum-pad-pink {
-    --pad-color: #ff5b86;
+    --pad-color: #ff4d79;
   }
 
   .drum-pad:hover,
   .drum-pad.is-active {
     background:
-      radial-gradient(circle at 72% 16%, color-mix(in srgb, var(--pad-color) 34%, transparent), transparent 42%),
-      linear-gradient(145deg, color-mix(in srgb, var(--pad-color) 24%, #2d343a), #0c1115 72%);
+      radial-gradient(circle at 28% 18%, color-mix(in srgb, var(--pad-color) 30%, transparent), transparent 34%),
+      linear-gradient(145deg, color-mix(in srgb, var(--pad-color) 20%, #373e44), #0b0f13 72%);
     box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.18),
-      inset 0 -7px 13px rgba(0, 0, 0, 0.46),
-      0 0 18px color-mix(in srgb, var(--pad-color) 48%, transparent);
-    transform: translateY(1px);
+      inset 0 0 0 1px rgba(0, 0, 0, 0.55),
+      inset 0 0.12rem 0 rgba(255, 255, 255, 0.12),
+      inset 0 -0.45rem 0.72rem rgba(0, 0, 0, 0.42),
+      0 0 1.05rem color-mix(in srgb, var(--pad-color) 64%, transparent);
+    filter: saturate(1.16);
+  }
+
+  .drum-pad.is-active {
+    transform: translateY(2px) scale(0.985);
   }
 
   .drum-pad-corner {
     position: absolute;
-    top: 0.28rem;
-    right: 0.28rem;
-    width: 0.58rem;
-    height: 0.58rem;
-    border-top: 2px solid var(--pad-color);
-    border-right: 2px solid var(--pad-color);
-    opacity: 0.9;
+    top: 0.22rem;
+    right: 0.22rem;
+    width: 0.72rem;
+    height: 0.72rem;
+    border-top: 3px solid var(--pad-color);
+    border-right: 3px solid var(--pad-color);
+    opacity: 0.96;
+    filter: drop-shadow(0 0 0.28rem color-mix(in srgb, var(--pad-color) 58%, transparent));
   }
 
   .drum-pad-number {
     position: absolute;
-    top: 0.36rem;
-    left: 0.42rem;
-    color: color-mix(in srgb, var(--pad-color) 74%, white);
+    top: 0.3rem;
+    left: 0.34rem;
+    border-radius: 2px;
+    background: rgba(0, 0, 0, 0.34);
+    color: color-mix(in srgb, var(--pad-color) 62%, #ffffff);
     font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-    font-size: 0.72rem;
+    font-size: 0.64rem;
     font-weight: 900;
+    line-height: 1;
+    padding: 0.12rem 0.18rem;
   }
 
   .drum-pad strong,
@@ -4689,16 +4722,25 @@
   }
 
   .drum-pad strong {
-    color: #f7fffb;
-    font-size: clamp(0.65rem, 0.8vw, 0.82rem);
+    position: absolute;
+    left: 0.42rem;
+    right: 0.42rem;
+    bottom: 0.7rem;
+    color: rgba(248, 255, 252, 0.86);
+    font-size: clamp(0.56rem, 0.68vw, 0.72rem);
     font-weight: 900;
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.72);
   }
 
   .drum-pad em {
-    color: color-mix(in srgb, var(--pad-color) 72%, white);
-    font-size: 0.62rem;
+    position: absolute;
+    left: 0.42rem;
+    bottom: 0.34rem;
+    color: color-mix(in srgb, var(--pad-color) 62%, white);
+    font-size: 0.52rem;
     font-style: normal;
     font-weight: 900;
+    opacity: 0.88;
   }
 
   .drum-pad-map {

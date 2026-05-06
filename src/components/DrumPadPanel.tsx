@@ -35,7 +35,7 @@ const drumPads: DrumPadDefinition[] = [
   { id: 'pad-7', index: 7, code: 'Digit7', alternateCodes: ['Numpad7'], keyLabel: '7', note: 46, name: 'Open Hat', shortName: 'OHH', velocity: 0.82, tone: 'pink' },
   { id: 'pad-8', index: 8, code: 'Digit8', alternateCodes: ['Numpad8'], keyLabel: '8', note: 49, name: 'Crash', shortName: 'CRASH', velocity: 0.88, tone: 'orange' },
   { id: 'pad-9', index: 9, code: 'Digit9', alternateCodes: ['Numpad9'], keyLabel: '9', note: 51, name: 'Ride', shortName: 'RIDE', velocity: 0.84, tone: 'blue' },
-  { id: 'pad-10', index: 10, code: 'Digit0', alternateCodes: ['Numpad0'], keyLabel: '0', note: 37, name: 'Rim', shortName: 'RIM', velocity: 0.84, tone: 'pink' },
+  { id: 'pad-10', index: 10, code: 'Digit0', alternateCodes: ['Numpad0'], keyLabel: '0', note: 37, name: 'Rim', shortName: 'RIM', velocity: 0.84, tone: 'blue' },
   { id: 'pad-11', index: 11, code: 'Digit1', keyLabel: 'S+1', shift: true, note: 56, name: 'Cowbell', shortName: 'COW', velocity: 0.82, tone: 'pink' },
   { id: 'pad-12', index: 12, code: 'Digit2', keyLabel: 'S+2', shift: true, note: 70, name: 'Shaker', shortName: 'SHAKE', velocity: 0.76, tone: 'orange' },
   { id: 'pad-13', index: 13, code: 'Digit3', keyLabel: 'S+3', shift: true, note: 54, name: 'Tambourine', shortName: 'TAMB', velocity: 0.8, tone: 'green' },
