@@ -3692,6 +3692,21 @@
     background: rgba(8, 10, 13, 0.42);
   }
 
+  .workstation-keyboard-between-frame {
+    position: relative;
+    z-index: 1;
+  }
+
+  .workstation-lower-panel-frame {
+    border: 1px solid rgba(188, 197, 206, 0.18);
+    border-radius: 8px;
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.01)),
+      #0c0f13;
+    padding: 0.45rem;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07);
+  }
+
   .workstation-lcd-page {
     display: grid;
     min-width: 0;
@@ -7009,6 +7024,7 @@
   }
 
   .workstation-keybed-frame,
+  .workstation-lower-panel-frame,
   .keyboard-panel,
   .keyboard-bed {
     border-color: rgba(76, 45, 76, 0.28);

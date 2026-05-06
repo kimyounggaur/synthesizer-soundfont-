@@ -177,12 +177,8 @@ export function SynthLayout() {
       parameterRack={<WorkstationParameterRack meter={meter} onPanic={handlePanic} onTestTone={handleTestTone} />}
       sliderRack={<WorkstationSliderRack />}
       performanceStrip={<WorkstationPerformanceStrip onPanic={handlePanic} onTestTone={handleTestTone} />}
-      keybed={
-        <>
-          <MidiPanel onNoteOn={handleNoteOn} onNoteOff={handleNoteOff} onPanic={handlePanic} />
-          <Keyboard onNoteOn={handleNoteOn} onNoteOff={handleNoteOff} />
-        </>
-      }
+      keyboard={<Keyboard onNoteOn={handleNoteOn} onNoteOff={handleNoteOff} />}
+      midiPanel={<MidiPanel onNoteOn={handleNoteOn} onNoteOff={handleNoteOff} onPanic={handlePanic} />}
       engineError={engineError}
     />
   );
