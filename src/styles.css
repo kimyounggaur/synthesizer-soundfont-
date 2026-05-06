@@ -4307,7 +4307,7 @@
 
   .midi-panel {
     display: grid;
-    grid-template-columns: minmax(240px, 0.38fr) minmax(280px, 0.82fr) minmax(220px, 0.52fr) minmax(260px, 0.62fr);
+    grid-template-columns: minmax(220px, 0.34fr) minmax(280px, 0.72fr) minmax(230px, 0.52fr) minmax(220px, 0.48fr) minmax(300px, 0.66fr);
     gap: 0.72rem;
     align-items: stretch;
     border: 1px solid rgba(118, 213, 255, 0.22);
@@ -4321,6 +4321,7 @@
 
   .midi-panel-header,
   .midi-panel-readout,
+  .midi-wireless-guide,
   .midi-device-list,
   .midi-panel-actions {
     min-width: 0;
@@ -4339,7 +4340,8 @@
   }
 
   .midi-panel-header span,
-  .midi-panel-readout span {
+  .midi-panel-readout span,
+  .midi-wireless-guide span {
     color: #81b5c8;
     font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
     font-size: 0.62rem;
@@ -4348,7 +4350,8 @@
   }
 
   .midi-panel-header strong,
-  .midi-panel-readout strong {
+  .midi-panel-readout strong,
+  .midi-wireless-guide strong {
     display: block;
     overflow: hidden;
     margin-top: 0.16rem;
@@ -4431,6 +4434,21 @@
     padding: 0.5rem;
   }
 
+  .midi-wireless-guide {
+    display: grid;
+    align-content: center;
+    gap: 0.45rem;
+    min-width: 0;
+  }
+
+  .midi-wireless-guide p {
+    margin: 0;
+    color: #9fb9c1;
+    font-size: 0.68rem;
+    font-weight: 800;
+    line-height: 1.35;
+  }
+
   .midi-device-list {
     display: grid;
     align-content: center;
@@ -4474,7 +4492,7 @@
 
   .midi-panel-actions {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 0.45rem;
     align-content: center;
   }
@@ -5447,6 +5465,7 @@
     .workstation-wavevector-layout,
     .midi-panel,
     .midi-panel-readout,
+    .midi-wireless-guide,
     .drum-pad-panel,
     .drum-pad-body {
       grid-template-columns: 1fr;

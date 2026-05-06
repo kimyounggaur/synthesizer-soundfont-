@@ -14,6 +14,10 @@ function hasMidiSupport(): boolean {
   return typeof navigator !== 'undefined' && typeof navigator.requestMIDIAccess === 'function';
 }
 
+function hasWebBluetoothSupport(): boolean {
+  return typeof navigator !== 'undefined' && typeof (navigator as Navigator & { bluetooth?: unknown }).bluetooth !== 'undefined';
+}
+
 function isMidiSecureContext(): boolean {
   return typeof window === 'undefined' || window.isSecureContext;
 }
@@ -26,6 +30,11 @@ function noteName(note: number): string {
 function deviceLabel(device: MidiDeviceInfo): string {
   const maker = device.manufacturer && device.manufacturer !== 'Unknown' ? `${device.manufacturer} ` : '';
   return `${maker}${device.name}`;
+}
+
+function looksWirelessMidiDevice(device: MidiDeviceInfo): boolean {
+  const label = `${device.name} ${device.manufacturer}`.toLowerCase();
+  return label.includes('bluetooth') || label.includes('ble') || label.includes('wireless') || label.includes('bt midi');
 }
 
 export function MidiPanel({ onNoteOn, onNoteOff, onPanic }: MidiPanelProps) {
@@ -49,7 +58,7 @@ export function MidiPanel({ onNoteOn, onNoteOff, onPanic }: MidiPanelProps) {
     if (!hasMidiSupport()) {
       return 'WEB MIDI UNAVAILABLE';
     }
-    return 'USB MIDI READY';
+    return 'USB / BT MIDI READY';
   });
   const [lastEvent, setLastEvent] = useState('NO INPUT');
 
@@ -130,17 +139,28 @@ export function MidiPanel({ onNoteOn, onNoteOff, onPanic }: MidiPanelProps) {
       setMessage('PERMISSION REQUEST');
       manager.setDeviceChangeHandler((nextDevices) => {
         setDevices(nextDevices);
-        setMessage(nextDevices.length > 0 ? 'DEVICE CHANGE' : 'NO MIDI INPUT');
+        setMessage(nextDevices.length > 0 ? 'DEVICE CHANGE' : 'PAIR THEN REFRESH');
       });
       const nextDevices = await manager.requestAccess(callbacks);
       setDevices(nextDevices);
       setStatus('connected');
-      setMessage(nextDevices.length > 0 ? 'CONNECTED' : 'NO MIDI INPUT');
+      setMessage(nextDevices.length > 0 ? 'CONNECTED' : 'PAIR THEN REFRESH');
     } catch (error) {
       setStatus('error');
       setMessage(error instanceof Error ? error.message.toUpperCase() : 'MIDI CONNECT FAILED');
     }
   }, [callbacks, manager]);
+
+  const refreshMidiDevices = useCallback(async () => {
+    if (status === 'connected') {
+      const nextDevices = manager.getInputs();
+      setDevices(nextDevices);
+      setMessage(nextDevices.length > 0 ? 'REFRESHED' : 'PAIR THEN REFRESH');
+      return;
+    }
+
+    await connectMidi();
+  }, [connectMidi, manager, status]);
 
   const disconnectMidi = useCallback(() => {
     manager.disconnect();
@@ -160,12 +180,14 @@ export function MidiPanel({ onNoteOn, onNoteOff, onPanic }: MidiPanelProps) {
 
   const connected = status === 'connected';
   const deviceCountLabel = devices.length === 1 ? '1 INPUT' : `${devices.length} INPUTS`;
+  const wirelessDevices = devices.filter(looksWirelessMidiDevice);
+  const wirelessLabel = wirelessDevices.length > 0 ? `${wirelessDevices.length} BT MIDI` : hasWebBluetoothSupport() ? 'OS PAIR FIRST' : 'WEB MIDI PATH';
 
   return (
-    <section className="midi-panel" aria-label="USB MIDI keyboard connection">
+    <section className="midi-panel" aria-label="USB and Bluetooth MIDI keyboard connection">
       <div className="midi-panel-header">
         <div>
-          <span>USB MIDI</span>
+          <span>USB / Bluetooth MIDI</span>
           <strong>Master Keyboard</strong>
         </div>
         <div className={`midi-status-pill midi-status-${status}`}>
@@ -189,13 +211,21 @@ export function MidiPanel({ onNoteOn, onNoteOff, onPanic }: MidiPanelProps) {
         </div>
       </div>
 
+      <div className="midi-wireless-guide" aria-label="Bluetooth MIDI setup">
+        <div>
+          <span>Bluetooth MIDI</span>
+          <strong>{wirelessLabel}</strong>
+        </div>
+        <p>Pair the keyboard in the OS Bluetooth/MIDI settings, then press Connect or Refresh. The browser receives it as a normal MIDI input.</p>
+      </div>
+
       <div className="midi-device-list" aria-label="Detected MIDI input devices">
         {devices.length > 0 ? (
           devices.map((device) => (
             <div key={device.id} className={device.state === 'connected' ? 'midi-device is-connected' : 'midi-device'}>
               <span className="workstation-led-dot is-small" />
               <span>{deviceLabel(device)}</span>
-              <em>{device.state}</em>
+              <em>{looksWirelessMidiDevice(device) ? 'BT' : device.state}</em>
             </div>
           ))
         ) : (
@@ -210,6 +240,9 @@ export function MidiPanel({ onNoteOn, onNoteOff, onPanic }: MidiPanelProps) {
       <div className="midi-panel-actions">
         <button type="button" className="performance-button" onClick={connectMidi} disabled={status === 'requesting' || status === 'unsupported'}>
           CONNECT
+        </button>
+        <button type="button" className="performance-button" onClick={refreshMidiDevices} disabled={status === 'requesting' || status === 'unsupported'}>
+          REFRESH
         </button>
         <button type="button" className="performance-button" onClick={disconnectMidi} disabled={!connected && devices.length === 0}>
           DISCONNECT
