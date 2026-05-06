@@ -68,6 +68,7 @@ export function DrumPadPanel({ onNoteOn, onNoteOff }: DrumPadPanelProps) {
   const sampleLayer = useSynthStore((state) => state.sampleLayer);
   const engineMode = useSynthStore((state) => state.engineMode);
   const [activePads, setActivePads] = useState<Set<string>>(() => new Set());
+  const [padHitCounts, setPadHitCounts] = useState<Record<string, number>>({});
   const releaseTimers = useRef(new Map<string, number>());
   const armed = engineMode === 'sample' && sampleLayer.bankId === drumBankId && sampleLayer.presetId === drumPresetId && sampleLayer.enabled;
   const keyHelp = useMemo(() => drumPads.map((pad) => `${pad.index}:${pad.keyLabel}`).join('  '), []);
@@ -107,6 +108,7 @@ export function DrumPadPanel({ onNoteOn, onNoteOff }: DrumPadPanelProps) {
 
       const velocity = Math.min(1, Math.max(0.08, defaultVelocity * pad.velocity));
       setActivePads((current) => new Set(current).add(pad.id));
+      setPadHitCounts((current) => ({ ...current, [pad.id]: (current[pad.id] ?? 0) + 1 }));
       onNoteOn(pad.note, velocity);
 
       const nextTimer = window.setTimeout(() => {
@@ -163,23 +165,28 @@ export function DrumPadPanel({ onNoteOn, onNoteOff }: DrumPadPanelProps) {
 
       <div className="drum-pad-body">
         <div className="drum-pad-grid">
-          {drumPads.map((pad) => (
-            <button
-              key={pad.id}
-              type="button"
-              className={`drum-pad drum-pad-${pad.tone}${activePads.has(pad.id) ? ' is-active' : ''}`}
-              onPointerDown={(event) => {
-                event.currentTarget.setPointerCapture(event.pointerId);
-                triggerPad(pad);
-              }}
-              title={`${pad.name} / MIDI ${pad.note} / key ${pad.keyLabel}`}
-            >
-              <span className="drum-pad-corner" />
-              <span className="drum-pad-number">{pad.keyLabel}</span>
-              <strong>{pad.shortName}</strong>
-              <em>{pad.note}</em>
-            </button>
-          ))}
+          {drumPads.map((pad) => {
+            const hitCount = padHitCounts[pad.id] ?? 0;
+            return (
+              <button
+                key={pad.id}
+                type="button"
+                className={`drum-pad drum-pad-${pad.tone}${activePads.has(pad.id) ? ' is-active' : ''}`}
+                onPointerDown={(event) => {
+                  event.currentTarget.setPointerCapture(event.pointerId);
+                  triggerPad(pad);
+                }}
+                title={`${pad.name} / MIDI ${pad.note} / key ${pad.keyLabel}`}
+              >
+                <span className="drum-pad-corner" />
+                <span className="drum-pad-glow" />
+                {hitCount > 0 ? <span key={`${pad.id}-${hitCount}`} className="drum-pad-hit-effect" /> : null}
+                <span className="drum-pad-number">{pad.keyLabel}</span>
+                <strong>{pad.shortName}</strong>
+                <em>{pad.note}</em>
+              </button>
+            );
+          })}
         </div>
 
         <div className="drum-pad-map">
