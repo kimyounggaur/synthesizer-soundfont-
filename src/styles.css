@@ -8560,6 +8560,35 @@
       #e9aed3;
   }
 
+  .workstation-workspace-grid {
+    align-items: stretch;
+  }
+
+  .workstation-left-stack,
+  .workstation-lcd-frame,
+  .workstation-page-container,
+  .workstation-slider-rack {
+    align-self: stretch;
+    height: 100%;
+  }
+
+  .workstation-lcd-frame,
+  .workstation-page-container {
+    display: grid;
+    min-height: 100%;
+  }
+
+  .workstation-page-container > .workstation-page-panel,
+  .workstation-page-container > .program-page,
+  .workstation-page-container > .sample-page,
+  .workstation-page-container > .workstation-page-grid {
+    min-height: 100%;
+  }
+
+  .workstation-slider-rack {
+    max-height: none;
+  }
+
   .workstation-slider-section {
     grid-template-columns: repeat(auto-fit, minmax(3.65rem, 1fr));
     align-items: end;
