@@ -34,6 +34,7 @@ export function WorkstationShell({
           </div>
         ) : (
           <>
+            <div className="workstation-keybed-frame workstation-keyboard-between-frame">{keyboard}</div>
             <section className="workstation-main-deck workstation-workspace-grid" aria-label="Workstation edit area">
               <div className="workstation-left-stack">
                 {tabs}
@@ -42,7 +43,6 @@ export function WorkstationShell({
               {lcd}
               {sliderRack}
             </section>
-            <div className="workstation-keybed-frame workstation-keyboard-between-frame">{keyboard}</div>
             {performanceStrip}
             <div className="workstation-lower-panel-frame">{midiPanel}</div>
           </>
