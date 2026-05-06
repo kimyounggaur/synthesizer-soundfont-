@@ -4305,6 +4305,186 @@
     font-weight: 900;
   }
 
+  .midi-panel {
+    display: grid;
+    grid-template-columns: minmax(240px, 0.38fr) minmax(280px, 0.82fr) minmax(220px, 0.52fr) minmax(260px, 0.62fr);
+    gap: 0.72rem;
+    align-items: stretch;
+    border: 1px solid rgba(118, 213, 255, 0.22);
+    border-radius: 8px;
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(0, 0, 0, 0.2)),
+      #10161c;
+    padding: 0.72rem;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), inset 0 -1px 0 rgba(0, 0, 0, 0.72);
+  }
+
+  .midi-panel-header,
+  .midi-panel-readout,
+  .midi-device-list,
+  .midi-panel-actions {
+    min-width: 0;
+    border: 1px solid rgba(118, 213, 255, 0.15);
+    border-radius: 7px;
+    background:
+      linear-gradient(180deg, rgba(84, 211, 255, 0.08), rgba(0, 0, 0, 0.16)),
+      #070c11;
+    padding: 0.65rem;
+  }
+
+  .midi-panel-header {
+    display: grid;
+    align-content: center;
+    gap: 0.55rem;
+  }
+
+  .midi-panel-header span,
+  .midi-panel-readout span {
+    color: #81b5c8;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.62rem;
+    font-weight: 900;
+    text-transform: uppercase;
+  }
+
+  .midi-panel-header strong,
+  .midi-panel-readout strong {
+    display: block;
+    overflow: hidden;
+    margin-top: 0.16rem;
+    color: #d6f8ff;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.86rem;
+    font-weight: 900;
+    text-overflow: ellipsis;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .midi-status-pill {
+    display: inline-grid;
+    width: fit-content;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    gap: 0.42rem;
+    border: 1px solid rgba(118, 213, 255, 0.18);
+    border-radius: 999px;
+    background: rgba(0, 0, 0, 0.28);
+    color: #a8b5bb;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.68rem;
+    font-weight: 900;
+    padding: 0.34rem 0.56rem;
+    text-transform: uppercase;
+  }
+
+  .midi-status-pill span {
+    width: 0.55rem;
+    height: 0.55rem;
+    border-radius: 999px;
+    background: #28323a;
+  }
+
+  .midi-status-connected {
+    border-color: rgba(81, 245, 198, 0.52);
+    color: #9dffdc;
+  }
+
+  .midi-status-connected span {
+    background: #9dffdc;
+    box-shadow: 0 0 12px rgba(90, 244, 190, 0.68);
+  }
+
+  .midi-status-requesting {
+    border-color: rgba(255, 224, 138, 0.52);
+    color: #ffe08a;
+  }
+
+  .midi-status-requesting span {
+    background: #ffe08a;
+    box-shadow: 0 0 12px rgba(255, 224, 138, 0.52);
+  }
+
+  .midi-status-error,
+  .midi-status-unsupported {
+    border-color: rgba(255, 115, 115, 0.5);
+    color: #ffd6d6;
+  }
+
+  .midi-status-error span,
+  .midi-status-unsupported span {
+    background: #ff7373;
+    box-shadow: 0 0 12px rgba(255, 115, 115, 0.45);
+  }
+
+  .midi-panel-readout {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.55rem;
+  }
+
+  .midi-panel-readout div {
+    min-width: 0;
+    border: 1px solid rgba(118, 213, 255, 0.12);
+    border-radius: 5px;
+    background: rgba(0, 0, 0, 0.22);
+    padding: 0.5rem;
+  }
+
+  .midi-device-list {
+    display: grid;
+    align-content: center;
+    gap: 0.38rem;
+  }
+
+  .midi-device {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: 0.42rem;
+    align-items: center;
+    min-width: 0;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 5px;
+    background: rgba(0, 0, 0, 0.22);
+    color: #d6f8ff;
+    padding: 0.42rem 0.5rem;
+  }
+
+  .midi-device.is-connected {
+    border-color: rgba(81, 245, 198, 0.28);
+  }
+
+  .midi-device span:not(.workstation-led-dot) {
+    overflow: hidden;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.72rem;
+    font-weight: 900;
+    text-overflow: ellipsis;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .midi-device em {
+    color: #81b5c8;
+    font-size: 0.62rem;
+    font-style: normal;
+    font-weight: 900;
+    text-transform: uppercase;
+  }
+
+  .midi-panel-actions {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.45rem;
+    align-content: center;
+  }
+
+  .midi-panel-actions .performance-button {
+    min-width: 0;
+    justify-content: center;
+    text-align: center;
+  }
+
   .drum-pad-panel {
     display: grid;
     grid-template-columns: minmax(260px, 0.44fr) minmax(0, 1fr);
@@ -5265,6 +5445,8 @@
     .workstation-sample-layout,
     .workstation-filteramp-layout,
     .workstation-wavevector-layout,
+    .midi-panel,
+    .midi-panel-readout,
     .drum-pad-panel,
     .drum-pad-body {
       grid-template-columns: 1fr;
@@ -5388,7 +5570,8 @@
     .sample-page-search,
     .sample-page-toggle-grid,
     .sample-page-engine-grid,
-    .sample-page-knobs {
+    .sample-page-knobs,
+    .midi-panel-actions {
       grid-template-columns: 1fr;
     }
 
@@ -5540,7 +5723,7 @@
 
   .nautilus-inspired-top {
     display: grid;
-    grid-template-columns: minmax(360px, 0.92fr) minmax(560px, 1.18fr) minmax(360px, 0.92fr);
+    grid-template-columns: minmax(430px, 0.92fr) minmax(520px, 1.08fr) minmax(470px, 0.98fr);
     gap: 0.7rem;
     align-items: stretch;
     min-height: 13.8rem;
@@ -5566,10 +5749,9 @@
 
   .nautilus-left-controls {
     display: grid;
-    grid-template-columns: 3.4rem minmax(180px, 0.82fr) minmax(260px, 1.18fr);
+    grid-template-columns: 3.4rem minmax(0, 1fr);
     grid-template-areas:
-      "fader brand knobs"
-      "fader util util";
+      "fader drum";
     gap: 0.72rem;
     padding: 0.72rem;
   }
@@ -5603,7 +5785,6 @@
   }
 
   .nautilus-brand-readout {
-    grid-area: brand;
     display: flex;
     min-width: 0;
     align-items: center;
@@ -5614,6 +5795,61 @@
       linear-gradient(180deg, rgba(81, 245, 198, 0.08), rgba(0, 0, 0, 0.12)),
       #080d10;
     padding: 0.65rem;
+  }
+
+  .nautilus-left-controls .drum-pad-panel {
+    grid-area: drum;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.5rem;
+    align-self: stretch;
+    padding: 0.54rem;
+  }
+
+  .nautilus-left-controls .drum-pad-header {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-content: center;
+    align-items: center;
+    padding: 0.5rem;
+  }
+
+  .nautilus-left-controls .drum-pad-header strong {
+    font-size: 0.78rem;
+  }
+
+  .nautilus-left-controls .drum-pad-status {
+    font-size: 0.56rem;
+    padding: 0.28rem 0.44rem;
+  }
+
+  .nautilus-left-controls .drum-pad-body {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.45rem;
+  }
+
+  .nautilus-left-controls .drum-pad-grid {
+    gap: 0.34rem;
+    padding: 0.42rem;
+  }
+
+  .nautilus-left-controls .drum-pad {
+    min-height: clamp(2.95rem, 5.7vw, 4.15rem);
+    padding: 0.34rem;
+  }
+
+  .nautilus-left-controls .drum-pad strong {
+    font-size: clamp(0.5rem, 0.56vw, 0.62rem);
+  }
+
+  .nautilus-left-controls .drum-pad em {
+    display: none;
+  }
+
+  .nautilus-left-controls .drum-pad-number {
+    font-size: 0.58rem;
+  }
+
+  .nautilus-left-controls .drum-pad-map {
+    display: none;
   }
 
   .nautilus-brand-readout .brand-mark {
@@ -5944,13 +6180,17 @@
 
   .nautilus-right-controls {
     display: grid;
-    grid-template-columns: minmax(132px, 0.72fr) minmax(170px, 1fr);
+    grid-template-columns: minmax(180px, 0.72fr) minmax(210px, 0.86fr) minmax(230px, 0.9fr);
     grid-template-areas:
-      "encoder quick"
-      "system quick"
-      "mode meter";
+      "system meter brand"
+      "mode meter brand";
     gap: 0.58rem;
     padding: 0.72rem;
+  }
+
+  .nautilus-right-controls .nautilus-brand-readout {
+    grid-area: brand;
+    align-self: stretch;
   }
 
   .nautilus-encoder-area {
@@ -6293,11 +6533,11 @@
     }
 
     .nautilus-left-controls {
-      grid-template-columns: 3.2rem minmax(180px, 0.8fr) minmax(240px, 1.2fr);
+      grid-template-columns: 3.2rem minmax(0, 1fr);
     }
 
     .nautilus-right-controls {
-      grid-template-columns: minmax(150px, 0.55fr) minmax(0, 1fr);
+      grid-template-columns: minmax(150px, 0.55fr) minmax(0, 1fr) minmax(220px, 0.72fr);
     }
   }
 
@@ -6305,10 +6545,8 @@
     .nautilus-left-controls {
       grid-template-columns: 1fr;
       grid-template-areas:
-        "brand"
-        "knobs"
-        "util"
-        "fader";
+        "fader"
+        "drum";
     }
 
     .nautilus-master-fader {
@@ -6334,7 +6572,8 @@
         "quick"
         "system"
         "mode"
-        "meter";
+        "meter"
+        "brand";
     }
 
     .workstation-engine-mode-strip,

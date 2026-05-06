@@ -8,6 +8,7 @@ import { selectEngineState, useSynthStore } from '../../store/synthStore';
 import { useUiStore } from '../../store/uiStore';
 import type { EngineMode } from '../../types/soundfont';
 import type { SynthPreset } from '../../types/synth';
+import { DrumPadPanel } from '../DrumPadPanel';
 import { OutputMeter } from '../OutputMeter';
 
 const engineModes: EngineMode[] = ['synth', 'sample', 'hybrid'];
@@ -15,6 +16,8 @@ const engineModes: EngineMode[] = ['synth', 'sample', 'hybrid'];
 interface WorkstationTopBarProps {
   onPanic: () => void;
   onTestTone: () => void;
+  onNoteOn: (note: number, velocity: number) => void;
+  onNoteOff: (note: number) => void;
   meter: MeterSnapshot;
 }
 
@@ -24,7 +27,7 @@ interface TopBarProgramBank {
   presets: SynthPreset[];
 }
 
-export function WorkstationTopBar({ onPanic, onTestTone, meter }: WorkstationTopBarProps) {
+export function WorkstationTopBar({ onPanic, onTestTone, onNoteOn, onNoteOff, meter }: WorkstationTopBarProps) {
   const masterVolume = useSynthStore((state) => state.masterVolume);
   const bpm = useSynthStore((state) => state.bpm);
   const polyphony = useSynthStore((state) => state.polyphony);
@@ -80,17 +83,7 @@ export function WorkstationTopBar({ onPanic, onTestTone, meter }: WorkstationTop
           <strong>{Math.round(masterVolume * 100)}%</strong>
         </label>
 
-        <div className="nautilus-brand-readout">
-          <div className="brand-mark" aria-hidden="true">
-            VV
-          </div>
-          <div>
-            <div className="brand-name">VECTOR SAMPLE</div>
-            <div className="brand-subtitle">WORKSTATION</div>
-            <small>Hybrid Synth / Sample / FX</small>
-          </div>
-        </div>
-
+        <DrumPadPanel onNoteOn={onNoteOn} onNoteOff={onNoteOff} />
       </section>
 
       <section className="nautilus-touchview" aria-label="Set list touch screen">
@@ -146,6 +139,17 @@ export function WorkstationTopBar({ onPanic, onTestTone, meter }: WorkstationTop
 
         <div className="nautilus-meter-wrap">
           <OutputMeter meter={meter} compact onTestTone={onTestTone} />
+        </div>
+
+        <div className="nautilus-brand-readout">
+          <div className="brand-mark" aria-hidden="true">
+            VV
+          </div>
+          <div>
+            <div className="brand-name">VECTOR SAMPLE</div>
+            <div className="brand-subtitle">WORKSTATION</div>
+            <small>Hybrid Synth / Sample / FX</small>
+          </div>
         </div>
       </section>
     </header>

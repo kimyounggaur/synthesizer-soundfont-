@@ -3,8 +3,8 @@ import { AudioEngine } from '../audio/AudioEngine';
 import type { MeterSnapshot } from '../types/synth';
 import { selectEngineState, useSynthStore } from '../store/synthStore';
 import { useUiStore } from '../store/uiStore';
-import { DrumPadPanel } from './DrumPadPanel';
 import { Keyboard } from './Keyboard';
+import { MidiPanel } from './MidiPanel';
 import { WorkstationLcd } from './workstation/WorkstationLcd';
 import { WorkstationParameterRack } from './workstation/WorkstationParameterRack';
 import { WorkstationPerformanceStrip } from './workstation/WorkstationPerformanceStrip';
@@ -171,7 +171,7 @@ export function SynthLayout() {
 
   return (
     <WorkstationShell
-      topBar={<WorkstationTopBar onPanic={handlePanic} onTestTone={handleTestTone} meter={meter} />}
+      topBar={<WorkstationTopBar onPanic={handlePanic} onTestTone={handleTestTone} onNoteOn={handleNoteOn} onNoteOff={handleNoteOff} meter={meter} />}
       tabs={<WorkstationTabs />}
       lcd={<WorkstationLcd activePageId={activeWorkstationPage}>{renderPage()}</WorkstationLcd>}
       parameterRack={<WorkstationParameterRack meter={meter} onPanic={handlePanic} onTestTone={handleTestTone} />}
@@ -179,7 +179,7 @@ export function SynthLayout() {
       performanceStrip={<WorkstationPerformanceStrip onPanic={handlePanic} onTestTone={handleTestTone} />}
       keybed={
         <>
-          <DrumPadPanel onNoteOn={handleNoteOn} onNoteOff={handleNoteOff} />
+          <MidiPanel onNoteOn={handleNoteOn} onNoteOff={handleNoteOff} onPanic={handlePanic} />
           <Keyboard onNoteOn={handleNoteOn} onNoteOff={handleNoteOff} />
         </>
       }

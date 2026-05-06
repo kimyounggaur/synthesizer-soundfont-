@@ -2,6 +2,8 @@ export interface MidiDeviceInfo {
   id: string;
   name: string;
   manufacturer: string;
+  state: MIDIPortDeviceState;
+  connection: MIDIPortConnectionState;
 }
 
 export interface MidiCallbacks {
@@ -15,28 +17,43 @@ export interface MidiCallbacks {
 export class MidiManager {
   private access: MIDIAccess | null = null;
   private callbacks: MidiCallbacks | null = null;
+  private onDevicesChanged: ((devices: MidiDeviceInfo[]) => void) | null = null;
 
   get supported(): boolean {
-    return typeof navigator.requestMIDIAccess === 'function';
+    return typeof navigator !== 'undefined' && typeof navigator.requestMIDIAccess === 'function';
+  }
+
+  setDeviceChangeHandler(callback: ((devices: MidiDeviceInfo[]) => void) | null): void {
+    this.onDevicesChanged = callback;
   }
 
   async requestAccess(callbacks: MidiCallbacks): Promise<MidiDeviceInfo[]> {
-    const requestMIDIAccess = navigator.requestMIDIAccess;
-    if (!requestMIDIAccess) {
+    if (!this.supported) {
       throw new Error('Web MIDI API is not supported in this browser.');
     }
 
     this.callbacks = callbacks;
-    this.access = await requestMIDIAccess({ sysex: false });
-    const inputs = Array.from(this.access.inputs.values());
-    inputs.forEach((input) => {
-      input.onmidimessage = (event) => this.handleMessage(event);
-    });
+    this.access = await navigator.requestMIDIAccess({ sysex: false });
+    this.access.onstatechange = () => {
+      this.connectInputs();
+      this.onDevicesChanged?.(this.getInputs());
+    };
+    this.connectInputs();
 
-    return inputs.map((input) => ({
+    return this.getInputs();
+  }
+
+  getInputs(): MidiDeviceInfo[] {
+    if (!this.access) {
+      return [];
+    }
+
+    return Array.from(this.access.inputs.values()).map((input) => ({
       id: input.id,
       name: input.name ?? 'MIDI Input',
       manufacturer: input.manufacturer ?? 'Unknown',
+      state: input.state,
+      connection: input.connection,
     }));
   }
 
@@ -44,8 +61,21 @@ export class MidiManager {
     if (!this.access) {
       return;
     }
+    this.access.onstatechange = null;
     this.access.inputs.forEach((input) => {
       input.onmidimessage = null;
+    });
+    this.callbacks = null;
+    this.access = null;
+  }
+
+  private connectInputs(): void {
+    if (!this.access) {
+      return;
+    }
+
+    this.access.inputs.forEach((input) => {
+      input.onmidimessage = (event) => this.handleMessage(event);
     });
   }
 
