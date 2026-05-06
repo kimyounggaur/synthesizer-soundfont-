@@ -154,6 +154,10 @@ export function Keyboard({ onNoteOn, onNoteOff }: KeyboardProps) {
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.defaultPrevented) {
+        return;
+      }
+
       if (isEditableTarget(event.target)) {
         return;
       }
@@ -187,6 +191,10 @@ export function Keyboard({ onNoteOn, onNoteOff }: KeyboardProps) {
     };
 
     const handleKeyUp = (event: KeyboardEvent) => {
+      if (event.defaultPrevented) {
+        return;
+      }
+
       const key = event.code;
       const note = heldKeys.current.get(key);
       if (note === undefined) {

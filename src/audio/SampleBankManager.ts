@@ -182,29 +182,75 @@ export class SampleBankManager {
 
   private async createGeneratedBuffer(url: string): Promise<AudioBuffer> {
     const id = url.slice(generatedUrlPrefix.length);
+    const lowerId = id.toLowerCase();
     const sampleRate = this.context.sampleRate;
     const seconds =
-      id.includes('drum') || id.includes('hit') || id.includes('fx') ? 1.15 : id.includes('organ') || id.includes('bass') ? 1.8 : 2.6;
+      lowerId.includes('crash') || lowerId.includes('ride') || lowerId.includes('splash')
+        ? 1.8
+        : lowerId.includes('open-hat') || lowerId.includes('shaker') || lowerId.includes('tambourine')
+          ? 1.0
+          : lowerId.includes('drum') || lowerId.includes('hit') || lowerId.includes('fx')
+            ? 1.15
+            : lowerId.includes('organ') || lowerId.includes('bass')
+              ? 1.8
+              : 2.6;
     const buffer = this.context.createBuffer(1, Math.ceil(sampleRate * seconds), sampleRate);
     const channel = buffer.getChannelData(0);
     const random = seededRandom(seedFromString(id));
-    const baseFrequency = id.includes('c5') ? 523.251 : id.includes('c3') ? 130.813 : 261.626;
+    const baseFrequency = lowerId.includes('c5') ? 523.251 : lowerId.includes('c3') ? 130.813 : lowerId.includes('c2') ? 65.406 : 261.626;
 
     for (let index = 0; index < channel.length; index += 1) {
       const time = index / sampleRate;
       const attack = 1 - Math.exp(-time * 180);
       let sample = 0;
 
-      if (id.includes('drum') || id.includes('hit')) {
-        const sweep = baseFrequency * (1 + Math.exp(-time * 18) * (id.includes('kick') || id.includes('drop') ? 7 : 3));
-        const envelope = Math.exp(-time * (id.includes('hat') || id.includes('clave') ? 18 : 8.5));
-        sample = Math.sin(Math.PI * 2 * sweep * time) * 0.64 * envelope + random() * 0.22 * Math.exp(-time * 18);
-      } else if (id.includes('fx')) {
-        const sweepDirection = id.includes('riser') || id.includes('sweep') ? time / seconds : 1 - time / seconds;
+      if (lowerId.includes('drum') || lowerId.includes('hit')) {
+        if (lowerId.includes('kick')) {
+          const sweep = 42 + Math.exp(-time * 22) * 120;
+          const body = Math.sin(Math.PI * 2 * sweep * time) * Math.exp(-time * 7.6);
+          const click = random() * Math.exp(-time * 95);
+          sample = body * 0.86 + click * 0.12;
+        } else if (lowerId.includes('snare')) {
+          const body = Math.sin(Math.PI * 2 * 186 * time) * Math.exp(-time * 10);
+          const noise = random() * Math.exp(-time * 17);
+          sample = body * 0.34 + noise * 0.42;
+        } else if (lowerId.includes('clap')) {
+          const burst =
+            Math.exp(-Math.abs(time - 0.016) * 95) +
+            Math.exp(-Math.abs(time - 0.034) * 82) +
+            Math.exp(-Math.abs(time - 0.058) * 64);
+          sample = random() * burst * 0.36 + random() * Math.exp(-time * 14) * 0.18;
+        } else if (lowerId.includes('hat') || lowerId.includes('shaker') || lowerId.includes('tambourine')) {
+          const decay = lowerId.includes('open') || lowerId.includes('shaker') || lowerId.includes('tambourine') ? 5.8 : 34;
+          const metallic = Math.sin(Math.PI * 2 * 7210 * time) * 0.12 + Math.sin(Math.PI * 2 * 9320 * time) * 0.08;
+          sample = (random() * 0.62 + metallic) * Math.exp(-time * decay);
+        } else if (lowerId.includes('crash') || lowerId.includes('ride') || lowerId.includes('splash')) {
+          const decay = lowerId.includes('ride') ? 2.5 : lowerId.includes('splash') ? 4.2 : 2.1;
+          const shimmer =
+            Math.sin(Math.PI * 2 * 2410 * time) * 0.12 +
+            Math.sin(Math.PI * 2 * 4210 * time) * 0.1 +
+            Math.sin(Math.PI * 2 * 6990 * time) * 0.08;
+          sample = (random() * 0.42 + shimmer) * Math.exp(-time * decay);
+        } else if (lowerId.includes('tom') || lowerId.includes('conga')) {
+          const base = lowerId.includes('low') ? 116 : lowerId.includes('mid') ? 154 : 218;
+          const sweep = base + Math.exp(-time * 9) * 38;
+          const slap = random() * Math.exp(-time * 38) * 0.16;
+          sample = Math.sin(Math.PI * 2 * sweep * time) * Math.exp(-time * 5.6) * 0.7 + slap;
+        } else if (lowerId.includes('rim')) {
+          sample = (Math.sin(Math.PI * 2 * 1710 * time) * 0.32 + random() * 0.18) * Math.exp(-time * 28);
+        } else if (lowerId.includes('cowbell')) {
+          sample = (Math.sin(Math.PI * 2 * 540 * time) * 0.34 + Math.sin(Math.PI * 2 * 845 * time) * 0.26) * Math.exp(-time * 8.4);
+        } else {
+          const sweep = baseFrequency * (1 + Math.exp(-time * 18) * (lowerId.includes('drop') ? 7 : 3));
+          const envelope = Math.exp(-time * (lowerId.includes('clave') ? 18 : 8.5));
+          sample = Math.sin(Math.PI * 2 * sweep * time) * 0.64 * envelope + random() * 0.22 * Math.exp(-time * 18);
+        }
+      } else if (lowerId.includes('fx')) {
+        const sweepDirection = lowerId.includes('riser') || lowerId.includes('sweep') ? time / seconds : 1 - time / seconds;
         const sweep = baseFrequency * (0.5 + sweepDirection * 5.5);
         const envelope = Math.sin(Math.PI * Math.min(1, time / seconds));
         sample = Math.sin(Math.PI * 2 * sweep * time) * 0.28 * envelope + random() * 0.18 * envelope;
-      } else if (id.includes('pad') || id.includes('ambient') || id.includes('strings') || id.includes('choir')) {
+      } else if (lowerId.includes('pad') || lowerId.includes('ambient') || lowerId.includes('strings') || lowerId.includes('choir')) {
         const slowAttack = Math.min(1, time / 0.45);
         const shimmer = Math.sin(Math.PI * 2 * baseFrequency * 1.997 * time) * 0.22 + Math.sin(Math.PI * 2 * baseFrequency * 3.01 * time) * 0.08;
         sample =
@@ -213,15 +259,15 @@ export class SampleBankManager {
           shimmer +
           random() * 0.018;
         sample *= slowAttack * (0.78 + Math.sin(Math.PI * 2 * 0.22 * time) * 0.05);
-      } else if (id.includes('brass') || id.includes('wind')) {
-        const attackCurve = Math.min(1, time / (id.includes('brass') ? 0.12 : 0.18));
+      } else if (lowerId.includes('brass') || lowerId.includes('wind')) {
+        const attackCurve = Math.min(1, time / (lowerId.includes('brass') ? 0.12 : 0.18));
         sample =
           Math.sin(Math.PI * 2 * baseFrequency * time) * 0.5 +
           Math.sin(Math.PI * 2 * baseFrequency * 2 * time) * 0.22 +
           Math.sin(Math.PI * 2 * baseFrequency * 3 * time) * 0.08 +
-          random() * (id.includes('wind') ? 0.025 : 0.01);
+          random() * (lowerId.includes('wind') ? 0.025 : 0.01);
         sample *= attackCurve * 0.74;
-      } else if (id.includes('bass')) {
+      } else if (lowerId.includes('bass')) {
         const attackCurve = Math.min(1, time / 0.04);
         sample =
           Math.sin(Math.PI * 2 * baseFrequency * time) * 0.7 +
@@ -229,22 +275,22 @@ export class SampleBankManager {
           Math.sin(Math.PI * 2 * baseFrequency * 3 * time) * 0.06 +
           random() * 0.006;
         sample *= attackCurve * (0.92 + Math.sin(Math.PI * 2 * 0.4 * time) * 0.025);
-      } else if (id.includes('guitar') || id.includes('pluck') || id.includes('mallet')) {
-        const envelope = attack * Math.exp(-time * (id.includes('mallet') ? 2.35 : 3.1));
+      } else if (lowerId.includes('guitar') || lowerId.includes('pluck') || lowerId.includes('mallet')) {
+        const envelope = attack * Math.exp(-time * (lowerId.includes('mallet') ? 2.35 : 3.1));
         sample =
           Math.sin(Math.PI * 2 * baseFrequency * time) * 0.45 +
           Math.sin(Math.PI * 2 * baseFrequency * 2.01 * time) * 0.28 +
           Math.sin(Math.PI * 2 * baseFrequency * 3.02 * time) * 0.12 +
           random() * 0.012;
         sample *= envelope;
-      } else if (id.includes('organ')) {
+      } else if (lowerId.includes('organ')) {
         const steady = Math.min(1, time / 0.08);
         sample =
           Math.sin(Math.PI * 2 * baseFrequency * time) * 0.56 +
           Math.sin(Math.PI * 2 * baseFrequency * 2 * time) * 0.26 +
           Math.sin(Math.PI * 2 * baseFrequency * 3 * time) * 0.13;
         sample *= steady * 0.72;
-      } else if (id.includes('ep') || id.includes('bell')) {
+      } else if (lowerId.includes('ep') || lowerId.includes('bell')) {
         const envelope = attack * Math.exp(-time * 1.85);
         sample =
           Math.sin(Math.PI * 2 * baseFrequency * time) * 0.42 +

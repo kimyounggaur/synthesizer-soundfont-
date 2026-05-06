@@ -4305,6 +4305,231 @@
     font-weight: 900;
   }
 
+  .drum-pad-panel {
+    display: grid;
+    grid-template-columns: minmax(260px, 0.44fr) minmax(0, 1fr);
+    gap: 0.75rem;
+    align-items: stretch;
+    border: 1px solid rgba(176, 190, 186, 0.2);
+    border-radius: 8px;
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.065), rgba(0, 0, 0, 0.18)),
+      #14181d;
+    padding: 0.72rem;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), inset 0 -1px 0 rgba(0, 0, 0, 0.72);
+  }
+
+  .drum-pad-header {
+    display: grid;
+    align-content: center;
+    gap: 0.65rem;
+    min-width: 0;
+    border: 1px solid rgba(132, 255, 212, 0.17);
+    border-radius: 7px;
+    background:
+      linear-gradient(180deg, rgba(141, 255, 216, 0.08), rgba(0, 0, 0, 0.18)),
+      #0a1111;
+    padding: 0.72rem;
+  }
+
+  .drum-pad-header span,
+  .drum-pad-map-title {
+    color: #88b8aa;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.64rem;
+    font-weight: 900;
+    text-transform: uppercase;
+  }
+
+  .drum-pad-header strong {
+    display: block;
+    margin-top: 0.16rem;
+    color: #d7ffef;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 1rem;
+    font-weight: 900;
+    text-transform: uppercase;
+  }
+
+  .drum-pad-status {
+    display: inline-grid;
+    width: fit-content;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    gap: 0.42rem;
+    border: 1px solid rgba(132, 255, 212, 0.16);
+    border-radius: 999px;
+    background: rgba(0, 0, 0, 0.28);
+    color: #9aa7ad;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.68rem;
+    font-weight: 900;
+    padding: 0.34rem 0.56rem;
+    text-transform: uppercase;
+  }
+
+  .drum-pad-status span {
+    width: 0.55rem;
+    height: 0.55rem;
+    border-radius: 999px;
+    background: #28322f;
+  }
+
+  .drum-pad-status.is-armed {
+    border-color: rgba(141, 255, 216, 0.5);
+    color: #9dffdc;
+  }
+
+  .drum-pad-status.is-armed span {
+    background: #9dffdc;
+    box-shadow: 0 0 12px rgba(90, 244, 190, 0.68);
+  }
+
+  .drum-pad-body {
+    display: grid;
+    grid-template-columns: minmax(250px, 390px) minmax(220px, 1fr);
+    gap: 0.75rem;
+    min-width: 0;
+  }
+
+  .drum-pad-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.48rem;
+    min-width: 0;
+    border: 1px solid rgba(6, 10, 9, 0.82);
+    border-radius: 7px;
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.055), rgba(0, 0, 0, 0.34)),
+      #07090b;
+    padding: 0.58rem;
+    box-shadow: inset 0 0 22px rgba(0, 0, 0, 0.55);
+  }
+
+  .drum-pad {
+    --pad-color: #5ee8ff;
+    position: relative;
+    display: grid;
+    min-height: clamp(4.5rem, 7vw, 6rem);
+    align-content: end;
+    justify-items: start;
+    overflow: hidden;
+    border: 2px solid color-mix(in srgb, var(--pad-color) 82%, #ffffff);
+    border-radius: 4px;
+    background:
+      radial-gradient(circle at 82% 18%, color-mix(in srgb, var(--pad-color) 15%, transparent), transparent 34%),
+      linear-gradient(145deg, #2d343a, #0d1115 70%);
+    color: #eef5f2;
+    padding: 0.48rem;
+    text-align: left;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.14),
+      inset 0 -7px 13px rgba(0, 0, 0, 0.52),
+      0 0 11px color-mix(in srgb, var(--pad-color) 20%, transparent);
+    touch-action: manipulation;
+  }
+
+  .drum-pad-orange {
+    --pad-color: #ffb14a;
+  }
+
+  .drum-pad-blue {
+    --pad-color: #78cfff;
+  }
+
+  .drum-pad-green {
+    --pad-color: #8ee69c;
+  }
+
+  .drum-pad-pink {
+    --pad-color: #ff5b86;
+  }
+
+  .drum-pad:hover,
+  .drum-pad.is-active {
+    background:
+      radial-gradient(circle at 72% 16%, color-mix(in srgb, var(--pad-color) 34%, transparent), transparent 42%),
+      linear-gradient(145deg, color-mix(in srgb, var(--pad-color) 24%, #2d343a), #0c1115 72%);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.18),
+      inset 0 -7px 13px rgba(0, 0, 0, 0.46),
+      0 0 18px color-mix(in srgb, var(--pad-color) 48%, transparent);
+    transform: translateY(1px);
+  }
+
+  .drum-pad-corner {
+    position: absolute;
+    top: 0.28rem;
+    right: 0.28rem;
+    width: 0.58rem;
+    height: 0.58rem;
+    border-top: 2px solid var(--pad-color);
+    border-right: 2px solid var(--pad-color);
+    opacity: 0.9;
+  }
+
+  .drum-pad-number {
+    position: absolute;
+    top: 0.36rem;
+    left: 0.42rem;
+    color: color-mix(in srgb, var(--pad-color) 74%, white);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.72rem;
+    font-weight: 900;
+  }
+
+  .drum-pad strong,
+  .drum-pad em {
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+    max-width: 100%;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    text-overflow: ellipsis;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .drum-pad strong {
+    color: #f7fffb;
+    font-size: clamp(0.65rem, 0.8vw, 0.82rem);
+    font-weight: 900;
+  }
+
+  .drum-pad em {
+    color: color-mix(in srgb, var(--pad-color) 72%, white);
+    font-size: 0.62rem;
+    font-style: normal;
+    font-weight: 900;
+  }
+
+  .drum-pad-map {
+    display: grid;
+    align-content: center;
+    gap: 0.4rem;
+    min-width: 0;
+    border: 1px solid rgba(132, 255, 212, 0.14);
+    border-radius: 7px;
+    background: rgba(0, 0, 0, 0.22);
+    padding: 0.72rem;
+  }
+
+  .drum-pad-map-line {
+    color: #d7ffef;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.74rem;
+    font-weight: 900;
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+    text-transform: uppercase;
+  }
+
+  .drum-pad-map-note {
+    color: #89aca2;
+    font-size: 0.74rem;
+    line-height: 1.35;
+  }
+
   .workstation-performance-strip {
     display: grid;
     grid-template-columns: auto minmax(180px, 0.8fr) auto auto auto;
@@ -5033,7 +5258,15 @@
     .main-console-grid,
     .primary-module-grid,
     .modulation-console-grid,
-    .movable-console-grid {
+    .movable-console-grid,
+    .workstation-top-bar,
+    .workstation-main-deck,
+    .workstation-program-layout,
+    .workstation-sample-layout,
+    .workstation-filteramp-layout,
+    .workstation-wavevector-layout,
+    .drum-pad-panel,
+    .drum-pad-body {
       grid-template-columns: 1fr;
     }
 
@@ -5185,6 +5418,14 @@
       justify-content: flex-start;
     }
 
+    .drum-pad-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .workstation-routing-row div {
+      justify-content: flex-start;
+    }
+
     .workstation-topbar {
       grid-template-columns: 1fr;
     }
@@ -5275,7 +5516,12 @@
     .sample-engine-mode,
     .sample-page-toggle-grid,
     .sample-page-engine-grid,
-    .sample-page-knobs {
+    .sample-page-knobs,
+    .workstation-mode-panel,
+    .workstation-tabs,
+    .workstation-side-buttons,
+    .workstation-parameter-rack,
+    .drum-pad-grid {
       grid-template-columns: 1fr;
     }
 

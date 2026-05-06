@@ -97,6 +97,7 @@ const generatedSamplePrograms: GeneratedSampleProgram[] = [
   { bankId: 'gen-drums-fx', presetId: 'open-hat-generated', name: 'Open Hat Generated', category: 'Drum' },
   { bankId: 'gen-drums-fx', presetId: 'electro-tom-generated', name: 'Electro Tom Generated', category: 'Drum' },
   { bankId: 'gen-drums-fx', presetId: 'metal-clave-generated', name: 'Metal Clave Generated', category: 'Drum' },
+  { bankId: 'gen-drums-fx', presetId: 'generated-drum-map', name: 'Generated Drum Map', category: 'Drum' },
   { bankId: 'gen-drums-fx', presetId: 'sub-drop-generated', name: 'Sub Drop Generated', category: 'FX' },
   { bankId: 'gen-drums-fx', presetId: 'noise-riser-generated', name: 'Noise Riser Generated', category: 'FX' },
   { bankId: 'gen-drums-fx', presetId: 'laser-zap-generated', name: 'Laser Zap Generated', category: 'FX' },

@@ -3,6 +3,7 @@ import { AudioEngine } from '../audio/AudioEngine';
 import type { MeterSnapshot } from '../types/synth';
 import { selectEngineState, useSynthStore } from '../store/synthStore';
 import { useUiStore } from '../store/uiStore';
+import { DrumPadPanel } from './DrumPadPanel';
 import { Keyboard } from './Keyboard';
 import { WorkstationLcd } from './workstation/WorkstationLcd';
 import { WorkstationParameterRack } from './workstation/WorkstationParameterRack';
@@ -176,7 +177,12 @@ export function SynthLayout() {
       parameterRack={<WorkstationParameterRack meter={meter} onPanic={handlePanic} onTestTone={handleTestTone} />}
       sliderRack={<WorkstationSliderRack />}
       performanceStrip={<WorkstationPerformanceStrip onPanic={handlePanic} onTestTone={handleTestTone} />}
-      keybed={<Keyboard onNoteOn={handleNoteOn} onNoteOff={handleNoteOff} />}
+      keybed={
+        <>
+          <DrumPadPanel onNoteOn={handleNoteOn} onNoteOff={handleNoteOff} />
+          <Keyboard onNoteOn={handleNoteOn} onNoteOff={handleNoteOff} />
+        </>
+      }
       engineError={engineError}
     />
   );
