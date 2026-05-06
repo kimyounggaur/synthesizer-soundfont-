@@ -8325,9 +8325,11 @@
   .nautilus-inspired-top {
     --topbar-panel-height: clamp(16rem, 23vw, 21rem);
     align-items: start;
+    grid-template-columns: minmax(430px, 0.92fr) minmax(520px, 1.08fr) minmax(430px, 0.92fr);
   }
 
   .nautilus-left-controls,
+  .nautilus-right-controls,
   .nautilus-touchview {
     height: var(--topbar-panel-height);
     max-height: var(--topbar-panel-height);
@@ -8336,6 +8338,55 @@
   .nautilus-left-controls {
     align-items: stretch;
     min-height: 0;
+  }
+
+  .nautilus-right-controls {
+    grid-template-columns: minmax(170px, 0.72fr) minmax(210px, 1fr);
+    grid-template-rows: minmax(4.4rem, auto) auto minmax(0, 1fr);
+    grid-template-areas:
+      "brand brand"
+      "system mode"
+      "meter meter";
+    align-items: stretch;
+    align-content: start;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .nautilus-right-controls .nautilus-brand-readout {
+    grid-area: brand;
+    align-self: stretch;
+    min-height: 0;
+    overflow: hidden;
+    padding: 0.54rem 0.62rem;
+  }
+
+  .nautilus-right-controls .nautilus-brand-readout .brand-mark {
+    width: 2.65rem;
+    height: 2.65rem;
+  }
+
+  .nautilus-right-controls .nautilus-brand-readout .brand-name,
+  .nautilus-right-controls .nautilus-brand-readout .brand-subtitle {
+    font-size: clamp(0.72rem, 1vw, 0.96rem);
+    line-height: 0.98;
+  }
+
+  .nautilus-right-controls .nautilus-brand-readout small {
+    margin-top: 0.2rem;
+    font-size: clamp(0.56rem, 0.72vw, 0.68rem);
+    line-height: 1.1;
+  }
+
+  .nautilus-right-controls .nautilus-system-strip,
+  .nautilus-right-controls .workstation-engine-mode-strip,
+  .nautilus-right-controls .nautilus-meter-wrap {
+    min-height: 0;
+  }
+
+  .nautilus-right-controls .nautilus-meter-wrap {
+    align-self: stretch;
+    overflow: hidden;
   }
 
   .nautilus-left-controls .drum-pad-panel {
@@ -8466,6 +8517,12 @@
     .nautilus-touchview {
       height: clamp(15rem, 52vw, 20rem);
       max-height: clamp(15rem, 52vw, 20rem);
+    }
+
+    .nautilus-right-controls {
+      height: auto;
+      max-height: none;
+      overflow: visible;
     }
 
     .nautilus-setlist-grid {

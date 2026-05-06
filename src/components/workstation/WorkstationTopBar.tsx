@@ -76,42 +76,18 @@ export function WorkstationTopBar({ onPanic, onTestTone, onNoteOn, onNoteOff, me
 
   return (
     <header className="command-panel workstation-topbar nautilus-inspired-top">
-      <section className="nautilus-left-controls" aria-label="Performance controls">
-        <label className="nautilus-master-fader">
-          <span>Master Volume</span>
-          <input type="range" min={0} max={1} step={0.01} value={masterVolume} onChange={(event) => setMasterVolume(Number(event.target.value))} aria-label="Master volume" />
-          <strong>{Math.round(masterVolume * 100)}%</strong>
-        </label>
-
-        <DrumPadPanel onNoteOn={onNoteOn} onNoteOff={onNoteOff} />
-      </section>
-
-      <section className="nautilus-touchview" aria-label="Set list touch screen">
-        <div className="nautilus-touchview-top">
-          <span>SET LIST</span>
-          <strong>{engineState.engineMode.toUpperCase()}</strong>
-          <em>{status}</em>
-        </div>
-        <div className="nautilus-current-program">
-          <span>{currentProgramNumber}</span>
+      <section className="nautilus-right-controls" aria-label="System controls">
+        <div className="nautilus-brand-readout">
+          <div className="brand-mark" aria-hidden="true">
+            VV
+          </div>
           <div>
-            <h2>{currentProgramName}</h2>
-            <p>{programBankId}: {selectedProgramBank.name} / {programCategory} / {currentProgramMeta}</p>
+            <div className="brand-name">VECTOR SAMPLE</div>
+            <div className="brand-subtitle">WORKSTATION</div>
+            <small>Hybrid Synth / Sample / FX</small>
           </div>
         </div>
-        <div className="nautilus-setlist-grid" aria-label="Set list slots">
-          {setListPrograms.map((preset, index) => (
-            <button key={preset.id} type="button" className={preset.id === currentPreset ? 'nautilus-setlist-slot is-active' : 'nautilus-setlist-slot'} onClick={() => loadPreset(preset)}>
-              <span>{String(index).padStart(2, '0')}</span>
-              <strong>{preset.name}</strong>
-              <em>{preset.category}</em>
-            </button>
-          ))}
-          {setListPrograms.length === 0 ? <div className="nautilus-setlist-empty">No programs in this bank/category.</div> : null}
-        </div>
-      </section>
 
-      <section className="nautilus-right-controls" aria-label="System controls">
         <div className="nautilus-system-strip">
           <label>
             <span>BPM</span>
@@ -140,17 +116,41 @@ export function WorkstationTopBar({ onPanic, onTestTone, onNoteOn, onNoteOff, me
         <div className="nautilus-meter-wrap">
           <OutputMeter meter={meter} compact onTestTone={onTestTone} />
         </div>
+      </section>
 
-        <div className="nautilus-brand-readout">
-          <div className="brand-mark" aria-hidden="true">
-            VV
-          </div>
+      <section className="nautilus-touchview" aria-label="Set list touch screen">
+        <div className="nautilus-touchview-top">
+          <span>SET LIST</span>
+          <strong>{engineState.engineMode.toUpperCase()}</strong>
+          <em>{status}</em>
+        </div>
+        <div className="nautilus-current-program">
+          <span>{currentProgramNumber}</span>
           <div>
-            <div className="brand-name">VECTOR SAMPLE</div>
-            <div className="brand-subtitle">WORKSTATION</div>
-            <small>Hybrid Synth / Sample / FX</small>
+            <h2>{currentProgramName}</h2>
+            <p>{programBankId}: {selectedProgramBank.name} / {programCategory} / {currentProgramMeta}</p>
           </div>
         </div>
+        <div className="nautilus-setlist-grid" aria-label="Set list slots">
+          {setListPrograms.map((preset, index) => (
+            <button key={preset.id} type="button" className={preset.id === currentPreset ? 'nautilus-setlist-slot is-active' : 'nautilus-setlist-slot'} onClick={() => loadPreset(preset)}>
+              <span>{String(index).padStart(2, '0')}</span>
+              <strong>{preset.name}</strong>
+              <em>{preset.category}</em>
+            </button>
+          ))}
+          {setListPrograms.length === 0 ? <div className="nautilus-setlist-empty">No programs in this bank/category.</div> : null}
+        </div>
+      </section>
+
+      <section className="nautilus-left-controls" aria-label="Performance controls">
+        <label className="nautilus-master-fader">
+          <span>Master Volume</span>
+          <input type="range" min={0} max={1} step={0.01} value={masterVolume} onChange={(event) => setMasterVolume(Number(event.target.value))} aria-label="Master volume" />
+          <strong>{Math.round(masterVolume * 100)}%</strong>
+        </label>
+
+        <DrumPadPanel onNoteOn={onNoteOn} onNoteOff={onNoteOff} />
       </section>
     </header>
   );
