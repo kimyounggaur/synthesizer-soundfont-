@@ -8616,6 +8616,35 @@
     max-height: none;
   }
 
+  @media (min-width: 1101px) {
+    .workstation-workspace-grid {
+      --workstation-main-panel-height: clamp(24rem, 31vw, 26rem);
+      align-items: start;
+    }
+
+    .workstation-lcd-frame,
+    .workstation-page-container,
+    .workstation-slider-rack {
+      align-self: start;
+      height: var(--workstation-main-panel-height);
+      min-height: 0;
+      max-height: var(--workstation-main-panel-height);
+    }
+
+    .workstation-page-container > .workstation-page-panel,
+    .workstation-page-container > .program-page,
+    .workstation-page-container > .sample-page,
+    .workstation-page-container > .workstation-page-grid {
+      min-height: 0;
+      max-height: 100%;
+      overflow: auto;
+    }
+
+    .workstation-slider-rack {
+      overflow: auto;
+    }
+  }
+
   .workstation-slider-section {
     grid-template-columns: repeat(auto-fit, minmax(3.65rem, 1fr));
     align-items: end;
