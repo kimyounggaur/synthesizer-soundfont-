@@ -8618,7 +8618,7 @@
 
   @media (min-width: 1101px) {
     .workstation-workspace-grid {
-      --workstation-main-panel-height: clamp(24rem, 31vw, 26rem);
+      --workstation-main-panel-height: clamp(25.75rem, 31.8vw, 27.25rem);
       align-items: start;
     }
 
@@ -8642,6 +8642,32 @@
 
     .workstation-slider-rack {
       overflow: auto;
+    }
+
+    .program-page {
+      display: grid;
+      grid-template-rows: auto auto minmax(0, 1fr) auto auto;
+      overflow: hidden;
+    }
+
+    .program-page-layout {
+      min-height: 0;
+      overflow: hidden;
+    }
+
+    .program-bank-buttons,
+    .program-list-frame,
+    .program-page-rack {
+      align-self: stretch;
+      height: 100%;
+      min-height: 0;
+      max-height: 100%;
+    }
+
+    .program-list-frame .workstation-lcd-bezel,
+    .program-list-frame .workstation-lcd-screen {
+      height: 100%;
+      min-height: 0;
     }
   }
 
